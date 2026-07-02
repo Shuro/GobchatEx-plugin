@@ -40,11 +40,6 @@ public sealed class ChatListener : IDisposable
     {
         _config = config;
 
-        // Plugin can load mid-session (e.g. dev-plugin auto-reload, or enabling it after game start);
-        // learn the already-logged-in character instead of waiting for a Login event that already fired.
-        if (Plugin.PlayerState.IsLoaded)
-            RememberCharacter(Plugin.PlayerState.CharacterName);
-
         SettingsChanged();
         Plugin.ChatGui.CheckMessageHandled += OnChatMessage;
         Plugin.ClientState.Login += OnLogin;
@@ -59,30 +54,10 @@ public sealed class ChatListener : IDisposable
     }
 
     private void OnLogin()
-    {
-        RememberCharacter(Plugin.PlayerState.CharacterName);
-        SettingsChanged();
-    }
+        => SettingsChanged();
 
     private void OnLogout(int type, int code)
         => SettingsChanged();
-
-    /// <summary>
-    /// Adds a freshly logged-in character to the remembered list, always inactive (they only start
-    /// mentioning once the user activates them in settings), ported from the app's RememberCharacter.
-    /// No-op when a character with the same name (case-insensitive) is already remembered.
-    /// </summary>
-    private void RememberCharacter(string playerName)
-    {
-        var name = playerName.Trim();
-        if (name.Length == 0)
-            return;
-        if (_config.Characters.Any(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase)))
-            return;
-
-        _config.Characters.Add(new CharacterMentionSettings { Name = name, Active = false });
-        _config.Save();
-    }
 
     /// <summary>Call after any configuration change (and Save()).</summary>
     public void SettingsChanged()
