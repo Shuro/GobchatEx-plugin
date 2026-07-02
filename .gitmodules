@@ -3,3 +3,8 @@
 	url = https://github.com/aers/FFXIVClientStructs.git
 	branch = main
 	shallow = true
+[submodule ".references/Dalamud"]
+	path = .references/Dalamud
+	url = https://github.com/goatcorp/Dalamud.git
+	branch = master
+	shallow = true
