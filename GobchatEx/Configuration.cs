@@ -127,10 +127,19 @@ public class Configuration : IPluginConfiguration
     // ------------------------------------------------------------------
     public bool RpHighlightEnabled { get; set; } = true;
 
-    public SegmentStyle SayStyle { get; set; } = new() { Foreground = 1 };
-    public SegmentStyle EmoteStyle { get; set; } = new() { Foreground = 45 };
-    public SegmentStyle OocStyle { get; set; } = new() { Foreground = 500 };
-    public SegmentStyle MentionStyle { get; set; } = new() { Foreground = 48 };
+    // Defaults picked by Shuro (config v5): Say 549 = F3F3F3 soft white, Emote 500 = FF7B1A
+    // orange, OOC 4 = 808080 grey, Mention 48 = AA81FF purple (values from the game's UIColor
+    // sheet). The v3→v5 migration in Plugin() moves saved values still on the old defaults;
+    // the Formatting tab's reset buttons restore these constants.
+    public const ushort DefaultSayForeground = 549;
+    public const ushort DefaultEmoteForeground = 500;
+    public const ushort DefaultOocForeground = 4;
+    public const ushort DefaultMentionForeground = 48;
+
+    public SegmentStyle SayStyle { get; set; } = new() { Foreground = DefaultSayForeground };
+    public SegmentStyle EmoteStyle { get; set; } = new() { Foreground = DefaultEmoteForeground };
+    public SegmentStyle OocStyle { get; set; } = new() { Foreground = DefaultOocForeground };
+    public SegmentStyle MentionStyle { get; set; } = new() { Foreground = DefaultMentionForeground };
 
     public static readonly IReadOnlyList<XivChatType> DefaultHighlightChannels =
     [

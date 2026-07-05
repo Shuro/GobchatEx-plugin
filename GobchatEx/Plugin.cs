@@ -30,6 +30,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
     [PluginService] internal static ITargetManager TargetManager { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
+    [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
     [PluginService] internal static IFramework Framework { get; private set; } = null!;
     [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static INotificationManager NotificationManager { get; private set; } = null!;
@@ -75,6 +76,22 @@ public sealed class Plugin : IDalamudPlugin
             // empty; users create those themselves in the Groups tab.
             Configuration.FriendGroups = Configuration.CreateDefaultFriendGroups();
             Configuration.Version = 3;
+            Configuration.Save();
+        }
+
+        if (Configuration.Version < 5)
+        {
+            // v3 → v5: new default segment colors (Say soft-white 549, Emote orange 500, OOC
+            // grey 4; Mention keeps 48). Only values still on the old defaults move — customized
+            // colors stay untouched. Version 4 was a short-lived dev-only numbering (2026-07-05)
+            // and is deliberately skipped.
+            if (Configuration.SayStyle.Foreground == 1)
+                Configuration.SayStyle.Foreground = 549;
+            if (Configuration.EmoteStyle.Foreground == 45)
+                Configuration.EmoteStyle.Foreground = 500;
+            if (Configuration.OocStyle.Foreground == 500)
+                Configuration.OocStyle.Foreground = 4;
+            Configuration.Version = 5;
             Configuration.Save();
         }
 

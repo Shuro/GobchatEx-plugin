@@ -1,9 +1,12 @@
+using System.Numerics;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Game.Config;
 using Dalamud.Game.Text;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
+using GobchatEx.Chat;
 using GobchatEx.Localization;
 
 namespace GobchatEx.Windows.SettingsTabs;
@@ -82,23 +85,31 @@ internal sealed class FormattingTab : ISettingsTab
 
     private void DrawSegmentColors()
     {
-        using var table = ImRaii.Table("##segmentColors", 4, ImGuiTableFlags.SizingFixedFit);
+        using var table = ImRaii.Table("##segmentColors", 5, ImGuiTableFlags.SizingFixedFit);
         if (!table)
             return;
 
         ImGui.TableSetupColumn(Loc.Get("Formatting_Column_Type"), ImGuiTableColumnFlags.WidthFixed, 90f * ImGuiHelpers.GlobalScale);
+        ImGui.TableSetupColumn("##segment-actions", ImGuiTableColumnFlags.WidthFixed);
         ImGui.TableSetupColumn(Loc.Get("Formatting_Column_Color"));
         ImGui.TableSetupColumn(Loc.Get("Formatting_Column_Glow"));
         ImGui.TableSetupColumn(Loc.Get("Formatting_Column_Delimiters"), ImGuiTableColumnFlags.WidthStretch);
 
-        // Punctuation examples, not translated — they're syntax, not words.
-        DrawSegmentRow("Formatting_Segment_Say", mutable.SayStyle, "\"…\"  „…“  «…»");
-        DrawSegmentRow("Formatting_Segment_Emote", mutable.EmoteStyle, "*…*  <…>");
-        DrawSegmentRow("Formatting_Segment_Ooc", mutable.OocStyle, "((…))");
-        DrawSegmentRow("Formatting_Segment_Mention", mutable.MentionStyle, Loc.Get("Formatting_Segment_Mention_Delimiters"));
+        // Punctuation examples, not translated — they're syntax, not words. Say and Emote can
+        // import the color the game itself uses for their channel (pattern from Chat 2's Chat
+        // colours page); the other segments have no game channel equivalent.
+        DrawSegmentRow("Formatting_Segment_Say", mutable.SayStyle, "\"…\"  „…“  «…»",
+            Configuration.DefaultSayForeground, UiConfigOption.ColorSay);
+        DrawSegmentRow("Formatting_Segment_Emote", mutable.EmoteStyle, "*…*  <…>",
+            Configuration.DefaultEmoteForeground, UiConfigOption.ColorEmoteUser);
+        DrawSegmentRow("Formatting_Segment_Ooc", mutable.OocStyle, "((…))",
+            Configuration.DefaultOocForeground, importOption: null);
+        DrawSegmentRow("Formatting_Segment_Mention", mutable.MentionStyle, Loc.Get("Formatting_Segment_Mention_Delimiters"),
+            Configuration.DefaultMentionForeground, importOption: null);
     }
 
-    private void DrawSegmentRow(string labelKey, SegmentStyle style, string delimiters)
+    private void DrawSegmentRow(
+        string labelKey, SegmentStyle style, string delimiters, ushort defaultForeground, UiConfigOption? importOption)
     {
         using var id = ImRaii.PushId(labelKey);
         var label = Loc.Get(labelKey);
@@ -112,6 +123,31 @@ internal sealed class FormattingTab : ISettingsTab
         using var disabled = ImRaii.Disabled(!style.Enabled);
 
         ImGui.TableNextColumn();
+        using (ImRaii.PushId("reset"))
+        {
+            if (ImGuiComponents.IconButton(FontAwesomeIcon.Undo))
+            {
+                style.Foreground = defaultForeground;
+                style.Glow = 0;
+            }
+
+            DrawActionTooltip(Loc.Get("Formatting_Reset_Tooltip"));
+        }
+
+        if (importOption is { } option)
+        {
+            ImGui.SameLine();
+            using (ImRaii.PushId("import"))
+            {
+                if (ImGuiComponents.IconButton(FontAwesomeIcon.LongArrowAltDown)
+                    && ImportGameChannelRow(option) is { } gameRow)
+                    style.Foreground = gameRow;
+
+                DrawActionTooltip(Loc.Get("Formatting_ImportGame_Tooltip"));
+            }
+        }
+
+        ImGui.TableNextColumn();
         var foreground = style.Foreground;
         if (colorPicker.Draw("fg", ref foreground, glow: false))
             style.Foreground = foreground;
@@ -123,6 +159,36 @@ internal sealed class FormattingTab : ISettingsTab
 
         ImGui.TableNextColumn();
         ImGui.TextDisabled(delimiters);
+    }
+
+    private static void DrawActionTooltip(string text)
+    {
+        if (!ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            return;
+
+        using (ImRaii.Tooltip())
+            ImGui.TextUnformatted(text);
+    }
+
+    /// <summary>
+    /// The game's configured color for a chat channel (Character Configuration → Log Text
+    /// Color), mapped to the nearest UIColor row — SeString rewriting needs rows, not RGB.
+    /// The config value's low 24 bits are RGB; 0 means "not set" (same reading as Chat 2's
+    /// GetChannelColor). Null when unavailable, leaving the current color untouched.
+    /// </summary>
+    private static ushort? ImportGameChannelRow(UiConfigOption option)
+    {
+        if (!Plugin.GameConfig.TryGet(option, out uint value))
+            return null;
+
+        var rgb = value & 0xFFFFFF;
+        if (rgb == 0)
+            return null;
+
+        return UiColorDimmer.NearestRow(new Vector3(
+            ((rgb >> 16) & 255) / 255f,
+            ((rgb >> 8) & 255) / 255f,
+            (rgb & 255) / 255f));
     }
 
     private void DrawChannels()
