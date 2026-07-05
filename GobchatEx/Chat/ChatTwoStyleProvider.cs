@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Game.Text;
+using Dalamud.Plugin;
 using Dalamud.Plugin.Ipc;
 using Dalamud.Plugin.Services;
 using GobchatEx.Core;
@@ -109,6 +110,7 @@ internal sealed class ChatTwoStyleProvider : IDisposable
         Plugin.ClientState.Login += OnLoginStateChanged;
         Plugin.ClientState.Logout += OnLogout;
         Plugin.Framework.Update += OnFrameworkUpdate;
+        Plugin.PluginInterface.ActivePluginsChanged += OnActivePluginsChanged;
 
         // Plugin construction isn't guaranteed framework-thread (no LoadSync); the snapshot reads
         // IPlayerState, so dispatch — Chat 2 can't call the gate before it exists anyway. The
@@ -127,6 +129,7 @@ internal sealed class ChatTwoStyleProvider : IDisposable
     public void Dispose()
     {
         _disposed = true;
+        Plugin.PluginInterface.ActivePluginsChanged -= OnActivePluginsChanged;
         Plugin.Framework.Update -= OnFrameworkUpdate;
         Plugin.ClientState.Logout -= OnLogout;
         Plugin.ClientState.Login -= OnLoginStateChanged;
@@ -197,6 +200,18 @@ internal sealed class ChatTwoStyleProvider : IDisposable
     }
 
     private void OnAvailable() => TryConnect();
+
+    /// <summary>
+    /// Chat 2 going away (disabled/unloaded) never calls back through the IPC gates above — the
+    /// only way to notice is Dalamud's own plugin-list event. Re-probing on any change involving
+    /// Chat 2 catches that case; a false <see cref="IsConnected"/> would otherwise stick until the
+    /// user manually reconnects (debug builds only) or GEX itself reloads.
+    /// </summary>
+    private void OnActivePluginsChanged(IActivePluginsChangedEventArgs args)
+    {
+        if (IsConnected && args.AffectedInternalNames.Contains("ChatTwo"))
+            TryConnect();
+    }
 
     // ChatListener already refreshes the friend-group lookup on login (shared instance, read
     // live); this only rebuilds the snapshot for the local player's name/worlds.
