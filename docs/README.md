@@ -107,23 +107,33 @@ highlighted-channels list first, and add a mention trigger word. Then:
    custom group that has a color — their sender name recolors on their
    next chat line (group coloring skips Tell/Echo/Error, so use Say or
    Party).
-7. Change any setting and close the window right away — settings apply
+7. Right-click the same player → Groups → untick the group — their next
+   line renders in the normal sender color again. Re-add them by command:
+   `/gobchat group list` prints the group indices, then
+   `/gobchat group <n> add Player Name World` recolors them and
+   `/gobchat group <n> remove Player Name World` clears it.
+8. Put a friend (or an alt on your friend list) into one of the seven
+   friend-list display groups (Star–Club) in the game's social window and
+   give that friend group a color in the Groups tab — their sender name
+   recolors. Add the same player to a colored custom group too — the
+   custom group's color wins over the friend group's.
+9. Change any setting and close the window right away — settings apply
    instantly and save automatically (no Save button; edits commit within
    half a second and closing flushes them). Rebuild (auto-reload) or
    toggle the plugin off and on — the change persists.
-8. Range tab → enable the range filter with a short fade-out/cut-off, tick
-   Say — have a distant alt say something: the line dims to a darkened
-   step instead of your normal color, and vanishes (still visible, darkest
-   step) once they're beyond the cut-off. Say something that mentions your
-   trigger word from beyond the cut-off — with "mentions ignore range" on,
-   it renders normally instead of dimmed.
-9. Only if testing the Chat 2 styling integration (Milestone 3.5): load
-   Chat 2's `local/dev-combined` fork build, open the ChatTwo tab in
-   settings — it should show connected. Give a custom group a Chat 2
-   background color: a group member's message gets that background in
-   Chat 2's window (not the native log, which can't draw backgrounds).
-   Repeat step 8's distance test with Chat 2 open — messages should fade to
-   true partial transparency there instead of a darkened color step.
+10. Range tab → enable the range filter with a short fade-out/cut-off, tick
+    Say — have a distant alt say something: the line dims to a darkened
+    step instead of your normal color, and vanishes (still visible, darkest
+    step) once they're beyond the cut-off. Say something that mentions your
+    trigger word from beyond the cut-off — with "mentions ignore range" on,
+    it renders normally instead of dimmed.
+11. Only if testing the Chat 2 styling integration (Milestone 3.5): load
+    Chat 2's `local/dev-combined` fork build, open the ChatTwo tab in
+    settings — it should show connected. Give a custom group a Chat 2
+    background color: a group member's message gets that background in
+    Chat 2's window (not the native log, which can't draw backgrounds).
+    Repeat step 10's distance test with Chat 2 open — messages should fade
+    to true partial transparency there instead of a darkened color step.
 
 ## Contributing
 
