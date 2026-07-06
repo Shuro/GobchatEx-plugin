@@ -58,8 +58,9 @@ public sealed class Configuration
     /// the sections that actually changed. Writes via temp-file-then-move so a
     /// crash mid-write can't leave a truncated file. A failed write (locked
     /// file, permission error, disk full) is logged and swallowed rather than
-    /// thrown — callers include the login handler in ChatListener, which must
-    /// not crash plugin load over a transient I/O error.
+    /// thrown — callers include the chat context-menu group actions and Chat 2
+    /// tab-policy pruning, which must not throw mid-frame over a transient
+    /// I/O error.
     /// </summary>
     internal static void SaveSection(string fileName, string json)
     {
