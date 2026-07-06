@@ -1,4 +1,4 @@
-<!-- Generated: 2026-07-06 | Files scanned: 57 | Token estimate: ~1450 -->
+<!-- Generated: 2026-07-06 (post instant-apply settings) | Files scanned: 57 | Token estimate: ~1500 -->
 
 # GobchatEx Roleplay Suite Architecture
 
@@ -146,31 +146,35 @@ UI language unless Configuration.LanguageOverride is set; re-resolved via
 
 ## Settings UI (Windows/)
 
-- SettingsWindow.cs (321) — nav rail: General / Appearance (FormattingTab) /
+- SettingsWindow.cs (395) — nav rail: General / Appearance (FormattingTab) /
   Chat (MentionsTab, GroupsTab, RangeTab, ChatTwoTab) / divider / Debug
   (`#if DEBUG`) / About. Native collapse enabled; title-bar Ko-fi button
   ordered via `Priority` to sit left of Dalamud's own options button.
   Instant-apply: tabs edit the live Configuration; a debounced JSON-snapshot
   compare (Update tick + OnClose/Dispose flush) persists and applies changes —
   no Save/Apply/Cancel. Debug builds show live Chat 2 connect/disconnect status.
-- FormattingTab.cs (228) — segment colors gain per-row reset-to-default and
+- SettingsUi.cs (115) — shared tab widgets: section headers, green/red
+  `ToggleSwitch` (custom-drawn; Dalamud's ToggleButton hardcodes gray),
+  Ctrl+Shift-gated `DangerButton` for destructive actions.
+- FormattingTab.cs (233) — segment colors gain per-row reset-to-default and
   (Say/Emote only) "import from the game's own channel color" buttons,
   nearest-UIColor-row matched via `UiColorDimmer.NearestRow`.
-- GroupsTab.cs (296) / RangeTab.cs (134) / ChatTwoTab.cs (104) — group CRUD
+- GroupsTab.cs (294) / RangeTab.cs (143) / ChatTwoTab.cs (105) — group CRUD
   plus Chat 2 background swatch; range distance sliders plus Chat 2 fade/hide
   toggles; per-Chat-2-tab suppress-flag table. All three disable Chat
   2-only controls with a hint while `ChatTwoStyleProvider.IsConnected` is false.
 - UiColorPicker.cs (150) — UIColor sheet swatch popup, sorted greys-first
   then hue band then light→dark (raw sheet order is unusable); duplicate
   rows collapsed to one swatch.
-- DebugTab.cs (259, `#if DEBUG`) — tab bar over `ChatTwoStyleIpcTester`,
+- DebugTab.cs (458, `#if DEBUG`) — tab bar over `ChatTwoStyleIpcTester`,
   DebugRangePane.cs (190: distance simulator, live nearby-player table, test
-  message injection), DebugGroupsPane.cs (67: live FriendGroupLookup dump).
+  message injection), DebugGroupsPane.cs (67: live FriendGroupLookup dump),
+  plus glow/color macro probes printed to the native log.
 
 ## Key Files
 
-- GobchatEx/Chat/ChatTwoStyleProvider.cs (453) — Chat 2 styling IPC producer + snapshot
-- GobchatEx/Chat/ChatListener.cs (403) — 3-pass event subscription, config-derived caches
+- GobchatEx/Chat/ChatTwoStyleProvider.cs (456) — Chat 2 styling IPC producer + snapshot
+- GobchatEx/Chat/ChatListener.cs (413) — 3-pass event subscription, config-derived caches
 - GobchatEx/Chat/ChatTwoStyleIpcTester.cs (254, DEBUG) — manual IPC exerciser
 - GobchatEx/Core/MentionMatcher.cs (180) — compiled regexes + fuzzy tokens, interval merge
 - GobchatEx/Core/PlayerMentionResolver.cs (145) — name parts → whole/partial word lists

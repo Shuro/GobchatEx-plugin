@@ -12,16 +12,18 @@ nothing else in the repo records what was AI-assisted.
 | Date | Scope | Tool | Level | Notes |
 |---|---|---|---|---|
 | 2026-07-01 | v1 project scaffold (`Plugin.cs`, `Configuration.cs`, `Windows/`, `.csproj`, manifest, README) | Claude Code (`dalamud-plugin-scaffold` skill) | Copilot | AI generated the full scaffold from a template; author reviewed the code, built it, and loaded it in-game before accepting. |
+| 2026-07-06 | Settings-window rework, commit `7038efb`: instant-apply (staged Save/Apply/Cancel model removed), green/red toggle switches, movable-window setting removed, range-filter UX (engine-limit markers, slider cap); plus codemap/doc sync | Claude Code | Copilot | AI implemented from a human-approved plan with an AI code-review pass; author directs, reviews, and smoke-tests in-game. |
 
 ## Current disclosure statement
 
 Ready to paste into the PR description for the next DalamudPluginsD17
 submission — update it as new AI-assisted work is added to the log above.
 
-> **AI usage disclosure:** The initial project scaffold (plugin skeleton,
-> windows, manifest) was generated with Claude Code at the Copilot level
-> (AI implements, human plans and reviews). All code was reviewed, built,
-> and tested in-game by the author before acceptance.
+> **AI usage disclosure:** The initial project scaffold and later feature
+> work recorded in the log above (most recently the settings-window rework)
+> were implemented with Claude Code at the Copilot level (AI implements,
+> human plans and reviews). All code was reviewed, built, and tested
+> in-game by the author before acceptance.
 
 Add a row to the log for any PR or work session involving meaningful AI
 assistance beyond autocomplete, so this stays accurate at submission time.

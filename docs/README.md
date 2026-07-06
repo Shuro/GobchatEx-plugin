@@ -61,8 +61,10 @@ needed (`Dalamud.dll`, `DalamudPackager`, `Dalamud.Bindings.ImGui`,
 dotnet build
 ```
 
-That produces `bin/x64/Debug/GobchatEx/` — a packed plugin folder, not
-just a DLL. To load it in-game:
+That produces `GobchatEx/bin/Debug/` — the plugin DLL plus its manifest
+(`GobchatEx.json`), icon, and the German satellite. (A Release build
+additionally packs `bin/Release/GobchatEx/latest.zip` for distribution —
+not needed for dev loading.) To load it in-game:
 
 1. `/xlsettings` → Experimental → "Dev Plugin Locations" → add the full path
    to `GobchatEx.dll` inside that folder.
@@ -105,8 +107,10 @@ highlighted-channels list first, and add a mention trigger word. Then:
    custom group that has a color — their sender name recolors on their
    next chat line (group coloring skips Tell/Echo/Error, so use Say or
    Party).
-7. Rebuild (auto-reload) or toggle the plugin off and on — settings
-   persist.
+7. Change any setting and close the window right away — settings apply
+   instantly and save automatically (no Save button; edits commit within
+   half a second and closing flushes them). Rebuild (auto-reload) or
+   toggle the plugin off and on — the change persists.
 8. Range tab → enable the range filter with a short fade-out/cut-off, tick
    Say — have a distant alt say something: the line dims to a darkened
    step instead of your normal color, and vanishes (still visible, darkest
