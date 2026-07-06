@@ -149,9 +149,9 @@ UI language unless GeneralConfig.LanguageOverride is set; re-resolved via
 
 ## Settings UI (Windows/)
 
-- SettingsWindow.cs (419) — nav rail: General / Appearance (FormattingTab) /
-  Chat (MentionsTab, GroupsTab, RangeTab, ChatTwoTab) / divider / Debug
-  (`#if DEBUG`) / About. Native collapse enabled; title-bar Ko-fi button
+- SettingsWindow.cs (419) — nav rail: General (GeneralTab, Logs placeholder) /
+  Roleplay (FormattingTab, MentionsTab, GroupsTab, RangeTab, ChatTwoTab) /
+  divider / Debug (`#if DEBUG`) / About. Native collapse enabled; title-bar Ko-fi button
   ordered via `Priority` to sit left of Dalamud's own options button.
   Instant-apply: each tab edits its live config section; a debounced
   per-section JSON-snapshot compare (Update tick + OnClose/Dispose flush)

@@ -14,11 +14,10 @@ using GobchatEx.Windows.SettingsTabs;
 namespace GobchatEx.Windows;
 
 /// <summary>
-/// Settings window with a sectioned nav rail mirroring the standalone
-/// GobchatEx app (General / Appearance / Chat, divider, About); pages
-/// without plugin functionality yet are placeholders. Right side is the
-/// page content; a Ko-fi heart sits in the title bar. Edits apply
-/// instantly: tabs write straight to the live configuration and the
+/// Settings window with a sectioned nav rail (General / Roleplay, divider,
+/// About); pages without plugin functionality yet are placeholders. Right
+/// side is the page content; a Ko-fi heart sits in the title bar. Edits
+/// apply instantly: tabs write straight to the live configuration and the
 /// window commits (persists + applies) detected changes on a debounced
 /// tick — see <see cref="CommitIfChanged"/>. There are no Save/Cancel
 /// buttons; destructive actions are Ctrl+Shift-gated instead.
@@ -96,17 +95,12 @@ public class SettingsWindow : Window
             new NavSection("Settings_Nav_General",
             [
                 new GeneralTab(plugin.Configuration.General, plugin.ChatTwoStyles),
-                new PlaceholderTab("Placeholder_Profiles_Name", FontAwesomeIcon.Users,
-                    "Placeholder_Profiles_Description"),
                 new PlaceholderTab("Placeholder_Logs_Name", FontAwesomeIcon.FileAlt,
                     "Placeholder_Logs_Description"),
             ]),
-            new NavSection("Settings_Nav_Appearance",
+            new NavSection("Settings_Nav_Roleplay",
             [
                 new FormattingTab(plugin.Configuration.Formatting),
-            ]),
-            new NavSection("Settings_Nav_Chat",
-            [
                 new MentionsTab(plugin.Configuration.Mentions),
                 new GroupsTab(plugin.Configuration.Groups, plugin.ChatTwoStyles),
                 new RangeTab(plugin.Configuration.RangeFilter, plugin.ChatTwoStyles),

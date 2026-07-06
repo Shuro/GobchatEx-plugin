@@ -16,7 +16,7 @@ namespace GobchatEx.Chat;
 /// "lite" behavior (sender recoloring, darkened-step dimming), which keeps working without Chat 2.
 /// Registers the provider gate when <c>ChatTwo.StyleVersion</c> reports a supported version,
 /// re-registers on <c>ChatTwo.Available</c>, and exposes <see cref="IsConnected"/> so the settings
-/// UI can disable the Chat 2-only options with a hint.
+/// UI can show the connection status and a not-connected hint.
 /// <para>
 /// Threading: Chat 2 calls <see cref="Evaluate"/> once per message on its processing thread. All
 /// decision inputs live in one immutable <see cref="Snapshot"/> built on the framework thread
@@ -39,13 +39,6 @@ internal sealed class ChatTwoStyleProvider : IDisposable
     internal const int SuppressHide = 4;
 
     /// <summary>
-    /// Alpha used beyond the cut-off when hiding in Chat 2 is disabled but fading is on: the
-    /// native filter would suppress the message entirely, so render it at the strongest fade
-    /// that is still readable rather than alpha 0 (which the IPC treats as hidden).
-    /// </summary>
-    private const float HiddenFallbackAlpha = 0.1f;
-
-    /// <summary>
     /// Refresh cadence of the distance snapshot. Chat fading doesn't need frame-exact positions
     /// (the app measured "at the moment the message arrives" too); a quarter second keeps the
     /// per-tick object-table walk negligible.
@@ -56,8 +49,6 @@ internal sealed class ChatTwoStyleProvider : IDisposable
         bool RangeEnabled,
         float FadeOut,
         float CutOff,
-        bool ChatTwoFade,
-        bool ChatTwoHide,
         HashSet<ushort> RangeChannels,
         IReadOnlyList<GroupRule> GroupRules,
         Dictionary<string, uint> GroupBackgrounds,
@@ -339,8 +330,7 @@ internal sealed class ChatTwoStyleProvider : IDisposable
             }
         }
 
-        var rangeActive = _config.RangeFilter.RangeFilterEnabled
-            && (_config.RangeFilter.RangeFilterChatTwoFade || _config.RangeFilter.RangeFilterChatTwoHide);
+        var rangeActive = _config.RangeFilter.RangeFilterEnabled;
         var wantMentions = rangeActive && _config.RangeFilter.RangeFilterMentionsIgnoreRange;
 
         var loaded = Plugin.PlayerState.IsLoaded;
@@ -348,8 +338,6 @@ internal sealed class ChatTwoStyleProvider : IDisposable
             RangeEnabled: rangeActive,
             FadeOut: _config.RangeFilter.RangeFilterFadeOut,
             CutOff: _config.RangeFilter.RangeFilterCutOff,
-            ChatTwoFade: _config.RangeFilter.RangeFilterChatTwoFade,
-            ChatTwoHide: _config.RangeFilter.RangeFilterChatTwoHide,
             RangeChannels: [.. _config.RangeFilter.RangeFilterChannels.Select(c => (ushort)c)],
             GroupRules: rules,
             GroupBackgrounds: backgrounds,
@@ -445,13 +433,8 @@ internal sealed class ChatTwoStyleProvider : IDisposable
             return (background, 1f);
 
         if (visibility == 0)
-        {
-            if (snapshot.ChatTwoHide)
-                return (background, 0f);
+            return (background, 0f);
 
-            return (background, snapshot.ChatTwoFade ? HiddenFallbackAlpha : 1f);
-        }
-
-        return (background, snapshot.ChatTwoFade ? visibility / (float)RangeFade.MaxVisibility : 1f);
+        return (background, visibility / (float)RangeFade.MaxVisibility);
     }
 }

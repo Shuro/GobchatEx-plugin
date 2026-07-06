@@ -17,8 +17,17 @@ internal sealed class GeneralTab : ISettingsTab
     public string Name => Loc.Get("General_TabName");
     public FontAwesomeIcon Icon => FontAwesomeIcon.Cog;
 
+    /// <summary>
+    /// Refresh cadence of the installed-plugin scan behind the Chat 2 status row: a linear walk
+    /// of InstalledPlugins doesn't belong in every frame, and load state doesn't change faster.
+    /// </summary>
+    private const int PluginScanIntervalMs = 1000;
+
     private readonly GeneralConfig config;
     private readonly ChatTwoStyleProvider chatTwoStyles;
+
+    private long nextPluginScan;
+    private bool chatTwoLoaded;
 
     public GeneralTab(GeneralConfig config, ChatTwoStyleProvider chatTwoStyles)
     {
@@ -36,13 +45,23 @@ internal sealed class GeneralTab : ISettingsTab
     }
 
     /// <summary>
-    /// One row per optional plugin GEX integrates with, with a live ✓/✗ for whether the
-    /// integration is usable right now. ✓ means the styling IPC is actually connected — a
-    /// Chat 2 without message-styling support shows ✗, distinguished in the tooltip.
+    /// One row per optional plugin GEX integrates with, with a live tri-state glyph for whether
+    /// the integration is usable right now: green check (styling IPC connected), yellow question
+    /// mark (Chat 2 loaded, but no styling IPC — older/incompatible version), or red cross (Chat 2
+    /// not installed or not loaded). Distinguished further in the tooltip.
     /// </summary>
     private void DrawOptionalPlugins()
     {
         var connected = chatTwoStyles.IsConnected;
+        var now = Environment.TickCount64;
+        if (now >= nextPluginScan)
+        {
+            nextPluginScan = now + PluginScanIntervalMs;
+            chatTwoLoaded = Plugin.PluginInterface.InstalledPlugins
+                .Any(p => p.InternalName == "ChatTwo" && p.IsLoaded);
+        }
+
+        var loaded = connected || chatTwoLoaded;
 
         ImGui.AlignTextToFramePadding();
         ImGui.TextUnformatted("Chat 2");
@@ -51,23 +70,26 @@ internal sealed class GeneralTab : ISettingsTab
         using (ImRaii.PushFont(UiBuilder.IconFont))
         {
             ImGui.AlignTextToFramePadding();
-            ImGui.TextColored(connected ? ImGuiColors.HealerGreen : ImGuiColors.DalamudGrey3,
-                (connected ? FontAwesomeIcon.Check : FontAwesomeIcon.Times).ToIconString());
+            if (connected)
+                ImGui.TextColored(ImGuiColors.HealerGreen, FontAwesomeIcon.Check.ToIconString());
+            else if (loaded)
+                ImGui.TextColored(ImGuiColors.DalamudOrange, FontAwesomeIcon.Question.ToIconString());
+            else
+                ImGui.TextColored(ImGuiColors.DalamudRed, FontAwesomeIcon.Times.ToIconString());
         }
 
         if (!ImGui.IsItemHovered())
             return;
 
         using (ImRaii.Tooltip())
-            ImGui.TextUnformatted(ChatTwoTooltip(connected));
+            ImGui.TextUnformatted(ChatTwoTooltip(connected, loaded));
     }
 
-    private static string ChatTwoTooltip(bool connected)
+    private static string ChatTwoTooltip(bool connected, bool loaded)
     {
         if (connected)
             return Loc.Get("ChatTwo_Status_Connected");
 
-        var loaded = Plugin.PluginInterface.InstalledPlugins.Any(p => p.InternalName == "ChatTwo" && p.IsLoaded);
         return Loc.Get(loaded ? "General_ChatTwo_NoStyling" : "General_ChatTwo_NotInstalled");
     }
 

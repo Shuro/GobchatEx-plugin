@@ -76,26 +76,15 @@ internal sealed class RangeTab : IToggleableTab
     }
 
     /// <summary>
-    /// Chat 2 gets true per-message alpha and render-only hiding through the styling IPC; the
-    /// native log always keeps the darkened-step "lite" dimming above. Disabled with a hint while
-    /// the IPC isn't connected (and, via the caller's scope, while the range filter is off).
+    /// Chat 2 always gets true per-message alpha and render-only hiding through the styling IPC
+    /// when connected — not user-configurable, since a given install only ever renders through
+    /// one chat surface (vanilla log or Chat 2). The native log always keeps the darkened-step
+    /// "lite" dimming above regardless.
     /// </summary>
     private void DrawChatTwoOptions()
     {
         if (!chatTwoStyles.IsConnected)
             SettingsUi.Warning(Loc.Get("ChatTwo_NotConnected_Hint"));
-
-        using var disabled = ImRaii.Disabled(!chatTwoStyles.IsConnected);
-
-        var fade = config.RangeFilterChatTwoFade;
-        if (SettingsUi.Toggle(Loc.Get("Range_ChatTwo_Fade_Name"), ref fade))
-            config.RangeFilterChatTwoFade = fade;
-        ImGuiComponents.HelpMarker(Loc.Get("Range_ChatTwo_Fade_Tooltip"));
-
-        var hide = config.RangeFilterChatTwoHide;
-        if (SettingsUi.Toggle(Loc.Get("Range_ChatTwo_Hide_Name"), ref hide))
-            config.RangeFilterChatTwoHide = hide;
-        ImGuiComponents.HelpMarker(Loc.Get("Range_ChatTwo_Hide_Tooltip"));
     }
 
     private void DrawDistanceSliders()

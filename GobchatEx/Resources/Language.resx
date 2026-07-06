@@ -196,12 +196,9 @@
 
     <data name="Settings_WindowTitle"><value>GobchatEx Roleplay Suite</value></data>
     <data name="Settings_Nav_General"><value>General</value></data>
-    <data name="Settings_Nav_Appearance"><value>Appearance</value></data>
-    <data name="Settings_Nav_Chat"><value>Chat</value></data>
+    <data name="Settings_Nav_Roleplay"><value>Roleplay</value></data>
     <data name="Settings_KofiTooltip"><value>Support on Ko-fi</value></data>
 
-    <data name="Placeholder_Profiles_Name"><value>Profiles</value></data>
-    <data name="Placeholder_Profiles_Description"><value>Multiple settings profiles with import and export.</value></data>
     <data name="Placeholder_Logs_Name"><value>Logs</value></data>
     <data name="Placeholder_Logs_Description"><value>Writing chat to log files on disk.</value></data>
     <data name="Placeholder_ComingSoon"><value>Planned for a future release.</value></data>
@@ -221,10 +218,6 @@
     <data name="Range_EngineLimit_Tooltip"><value>The game engine already limits this channel to a maximum of 20 yalms — messages from further away never arrive, regardless of the distances set above.</value></data>
     <data name="Range_ChatTwo_Header"><value>Chat 2</value></data>
     <data name="Range_ChatTwo_Header_Tooltip"><value>In Chat 2 the range filter can use real per-message transparency instead of the darkened color steps of the native chat log.</value></data>
-    <data name="Range_ChatTwo_Fade_Name"><value>Fade with real transparency</value></data>
-    <data name="Range_ChatTwo_Fade_Tooltip"><value>Messages inside the fade range render with true transparency in Chat 2.</value></data>
-    <data name="Range_ChatTwo_Hide_Name"><value>Hide beyond the cut-off</value></data>
-    <data name="Range_ChatTwo_Hide_Tooltip"><value>Messages beyond the cut-off are hidden in Chat 2 — render-only, they stay in Chat 2's history. When off, they show heavily faded instead.</value></data>
 
     <data name="ChatTwo_TabName"><value>Tab settings</value></data>
     <data name="ChatTwo_Status_Connected"><value>Connected to Chat 2's message styling.</value></data>

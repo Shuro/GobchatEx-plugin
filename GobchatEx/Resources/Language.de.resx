@@ -196,12 +196,9 @@
 
     <data name="Settings_WindowTitle"><value>GobchatEx Roleplay Suite</value></data>
     <data name="Settings_Nav_General"><value>Allgemein</value></data>
-    <data name="Settings_Nav_Appearance"><value>Darstellung</value></data>
-    <data name="Settings_Nav_Chat"><value>Chat</value></data>
+    <data name="Settings_Nav_Roleplay"><value>Rollenspiel</value></data>
     <data name="Settings_KofiTooltip"><value>Auf Ko-fi unterstützen</value></data>
 
-    <data name="Placeholder_Profiles_Name"><value>Profile</value></data>
-    <data name="Placeholder_Profiles_Description"><value>Mehrere Einstellungsprofile mit Import und Export.</value></data>
     <data name="Placeholder_Logs_Name"><value>Protokolle</value></data>
     <data name="Placeholder_Logs_Description"><value>Chat in Protokolldateien auf der Festplatte schreiben.</value></data>
     <data name="Placeholder_ComingSoon"><value>Für eine zukünftige Version geplant.</value></data>
@@ -221,10 +218,6 @@
     <data name="Range_EngineLimit_Tooltip"><value>Die Spiel-Engine begrenzt diesen Kanal bereits auf maximal 20 Yalms — Nachrichten von weiter weg kommen unabhängig von den oben eingestellten Entfernungen nie an.</value></data>
     <data name="Range_ChatTwo_Header"><value>Chat 2</value></data>
     <data name="Range_ChatTwo_Header_Tooltip"><value>In Chat 2 kann der Entfernungsfilter echte Transparenz pro Nachricht nutzen statt der dunkleren Farbstufen des normalen Chatverlaufs.</value></data>
-    <data name="Range_ChatTwo_Fade_Name"><value>Mit echter Transparenz abblenden</value></data>
-    <data name="Range_ChatTwo_Fade_Tooltip"><value>Nachrichten im Abblendbereich werden in Chat 2 mit echter Transparenz dargestellt.</value></data>
-    <data name="Range_ChatTwo_Hide_Name"><value>Jenseits der Grenze verstecken</value></data>
-    <data name="Range_ChatTwo_Hide_Tooltip"><value>Nachrichten jenseits der Ausblende-Entfernung werden in Chat 2 versteckt — nur in der Darstellung, sie bleiben in Chat 2s Verlauf erhalten. Ausgeschaltet erscheinen sie stattdessen stark abgeblendet.</value></data>
 
     <data name="ChatTwo_TabName"><value>Tab-Einstellungen</value></data>
     <data name="ChatTwo_Status_Connected"><value>Mit der Nachrichten-Gestaltung von Chat 2 verbunden.</value></data>
