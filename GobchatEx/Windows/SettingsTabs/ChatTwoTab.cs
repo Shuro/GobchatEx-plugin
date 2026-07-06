@@ -34,7 +34,7 @@ internal sealed class ChatTwoTab : ISettingsTab
     public void Draw()
     {
         if (!chatTwoStyles.IsConnected)
-            ImGui.TextDisabled(Loc.Get("ChatTwo_NotConnected_Hint"));
+            SettingsUi.Warning(Loc.Get("ChatTwo_NotConnected_Hint"));
 
         SettingsUi.SectionHeader(Loc.Get("ChatTwo_Tabs_Header"), Loc.Get("ChatTwo_Tabs_Header_Tooltip"));
 

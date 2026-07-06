@@ -29,6 +29,20 @@ internal static class SettingsUi
         ImGui.Separator();
     }
 
+    /// <summary>
+    /// An orange warning line — exclamation triangle plus wrapped text — for
+    /// "feature unavailable" notices that should read as a warning instead of
+    /// dimmed body text.
+    /// </summary>
+    public static void Warning(string text)
+    {
+        using (ImRaii.PushFont(UiBuilder.IconFont))
+            ImGui.TextColored(ImGuiColors.DalamudOrange, FontAwesomeIcon.ExclamationTriangle.ToIconString());
+        ImGui.SameLine();
+        using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudOrange))
+            ImGui.TextWrapped(text);
+    }
+
     /// <summary>Matches <see cref="ToggleSwitch"/>'s width for layout math.</summary>
     public static float ToggleWidth() => ImGui.GetFrameHeight() * 1.55f;
 

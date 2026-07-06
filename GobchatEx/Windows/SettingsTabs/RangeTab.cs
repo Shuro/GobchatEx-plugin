@@ -83,7 +83,7 @@ internal sealed class RangeTab : IToggleableTab
     private void DrawChatTwoOptions()
     {
         if (!chatTwoStyles.IsConnected)
-            ImGui.TextDisabled(Loc.Get("ChatTwo_NotConnected_Hint"));
+            SettingsUi.Warning(Loc.Get("ChatTwo_NotConnected_Hint"));
 
         using var disabled = ImRaii.Disabled(!chatTwoStyles.IsConnected);
 

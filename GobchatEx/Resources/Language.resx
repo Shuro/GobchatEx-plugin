@@ -229,7 +229,7 @@
     <data name="ChatTwo_TabName"><value>Tab settings</value></data>
     <data name="ChatTwo_Status_Connected"><value>Connected to Chat 2's message styling.</value></data>
     <data name="ChatTwo_Status_NotConnected"><value>Not connected to Chat 2's message styling.</value></data>
-    <data name="ChatTwo_NotConnected_Hint"><value>Requires the Chat 2 plugin with message styling support. Chat 2-only options are disabled until it is available.</value></data>
+    <data name="ChatTwo_NotConnected_Hint"><value>Requires the Chat 2 plugin with message styling support.</value></data>
     <data name="ChatTwo_NotConnected_Tooltip"><value>Needs a connection to Chat 2's message styling — see the Chat 2 page.</value></data>
     <data name="ChatTwo_Connect"><value>Connect</value></data>
     <data name="ChatTwo_Disconnect"><value>Disconnect</value></data>
