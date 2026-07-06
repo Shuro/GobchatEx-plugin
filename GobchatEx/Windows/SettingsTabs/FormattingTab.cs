@@ -65,16 +65,16 @@ internal sealed class FormattingTab : IToggleableTab
 
     public bool Enabled
     {
-        get => mutable.RpHighlightEnabled;
-        set => mutable.RpHighlightEnabled = value;
+        get => config.RpHighlightEnabled;
+        set => config.RpHighlightEnabled = value;
     }
 
-    private readonly Configuration mutable;
+    private readonly Configuration config;
     private readonly UiColorPicker colorPicker = new();
 
-    public FormattingTab(Configuration mutable)
+    public FormattingTab(Configuration config)
     {
-        this.mutable = mutable;
+        this.config = config;
     }
 
     public void Draw()
@@ -104,13 +104,13 @@ internal sealed class FormattingTab : IToggleableTab
         // Punctuation examples, not translated — they're syntax, not words. Say and Emote can
         // import the color the game itself uses for their channel (pattern from Chat 2's Chat
         // colours page); the other segments have no game channel equivalent.
-        DrawSegmentRow("Formatting_Segment_Say", mutable.SayStyle, "\"…\"  „…“  «…»",
+        DrawSegmentRow("Formatting_Segment_Say", config.SayStyle, "\"…\"  „…“  «…»",
             Configuration.DefaultSayForeground, UiConfigOption.ColorSay);
-        DrawSegmentRow("Formatting_Segment_Emote", mutable.EmoteStyle, "*…*  <…>",
+        DrawSegmentRow("Formatting_Segment_Emote", config.EmoteStyle, "*…*  <…>",
             Configuration.DefaultEmoteForeground, UiConfigOption.ColorEmoteUser);
-        DrawSegmentRow("Formatting_Segment_Ooc", mutable.OocStyle, "((…))",
+        DrawSegmentRow("Formatting_Segment_Ooc", config.OocStyle, "((…))",
             Configuration.DefaultOocForeground, importOption: null);
-        DrawSegmentRow("Formatting_Segment_Mention", mutable.MentionStyle, Loc.Get("Formatting_Segment_Mention_Delimiters"),
+        DrawSegmentRow("Formatting_Segment_Mention", config.MentionStyle, Loc.Get("Formatting_Segment_Mention_Delimiters"),
             Configuration.DefaultMentionForeground, importOption: null);
     }
 
@@ -208,7 +208,7 @@ internal sealed class FormattingTab : IToggleableTab
         ImGuiHelpers.ScaledDummy(2f);
         if (SettingsUi.DangerButton(FontAwesomeIcon.Undo, Loc.Get("Formatting_Channels_ResetDefaults"),
                 Loc.Get("Formatting_Channels_ResetDefaults_Tooltip")))
-            mutable.HighlightChannels = [.. Configuration.DefaultHighlightChannels];
+            config.HighlightChannels = [.. Configuration.DefaultHighlightChannels];
     }
 
     private void DrawChannelGrid(string id, (string LabelKey, XivChatType Type)[] choices)
@@ -220,14 +220,14 @@ internal sealed class FormattingTab : IToggleableTab
         foreach (var (labelKey, type) in choices)
         {
             ImGui.TableNextColumn();
-            var active = mutable.HighlightChannels.Contains(type);
+            var active = config.HighlightChannels.Contains(type);
             if (!ImGui.Checkbox(Loc.Get(labelKey), ref active))
                 continue;
 
             if (active)
-                mutable.HighlightChannels.Add(type);
+                config.HighlightChannels.Add(type);
             else
-                mutable.HighlightChannels.Remove(type);
+                config.HighlightChannels.Remove(type);
         }
     }
 }

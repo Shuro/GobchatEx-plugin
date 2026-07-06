@@ -152,8 +152,8 @@ internal sealed class ChatTwoStyleProvider : IDisposable
     }
 
     /// <summary>
-    /// Call on the framework thread after any configuration change (Save/Apply, group membership
-    /// edits) — rebuilds the decision snapshot and re-pushes the per-tab policies.
+    /// Call on the framework thread after any configuration change (settings-window commits, group
+    /// membership edits) — rebuilds the decision snapshot and re-pushes the per-tab policies.
     /// </summary>
     public void SettingsChanged()
     {

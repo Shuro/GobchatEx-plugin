@@ -4,7 +4,6 @@ using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
-using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
@@ -17,14 +16,22 @@ namespace GobchatEx.Windows;
 /// Settings window with a sectioned nav rail mirroring the standalone
 /// GobchatEx app (General / Appearance / Chat, divider, About); pages
 /// without plugin functionality yet are placeholders. Right side is the
-/// page content, footer has Save (persist + close), Apply (persist) and
-/// Cancel (discard + close); a Ko-fi heart sits in the title bar. Edits
-/// are staged into a mutable Configuration copy and only persisted +
-/// applied when the user saves or applies.
+/// page content; a Ko-fi heart sits in the title bar. Edits apply
+/// instantly: tabs write straight to the live configuration and the
+/// window commits (persists + applies) detected changes on a debounced
+/// tick — see <see cref="CommitIfChanged"/>. There are no Save/Cancel
+/// buttons; destructive actions are Ctrl+Shift-gated instead.
 /// </summary>
 public class SettingsWindow : Window
 {
     private const string KofiUrl = "https://ko-fi.com/shuro2005";
+
+    /// <summary>
+    /// How often <see cref="Update"/> checks for configuration changes to
+    /// commit. Coalesces per-frame widget edits (a dragged slider reports a
+    /// change every frame) into at most two disk writes per second.
+    /// </summary>
+    private const long CommitDebounceMs = 500;
 
     // Ko-fi brand red (#FF5E5B) for the title bar heart.
     private static readonly Vector4 KofiIconColor = new(1f, 94f / 255f, 91f / 255f, 1f);
@@ -46,9 +53,25 @@ public class SettingsWindow : Window
     private sealed record NavSection(string? HeaderKey, ISettingsTab[] Tabs);
 
     private readonly Plugin plugin;
-    private readonly Configuration mutable;
     private readonly List<NavSection> sections;
     private ISettingsTab currentTab;
+
+    /// <summary>
+    /// JSON snapshot of the configuration as of the last commit — the
+    /// change-detection baseline for <see cref="CommitIfChanged"/>.
+    /// </summary>
+    private string lastPersistedJson;
+    private long nextCommitCheck;
+
+    /// <summary>
+    /// Requests that <see cref="Update"/> re-baseline change detection before
+    /// its next commit check. Set while the window is closed (construction,
+    /// OnClose): external writers (chat context menu, /gobchat group) persist
+    /// and apply on their own, so their edits must not be committed again when
+    /// the window opens. Handled in Update rather than OnOpen because the
+    /// window host runs Update before it fires the open transition.
+    /// </summary>
+    private bool rebaseline = true;
 
     public SettingsWindow(Plugin plugin)
         : base("GobchatEx Roleplay Suite###GobchatExSettings",
@@ -64,14 +87,13 @@ public class SettingsWindow : Window
         Size = new Vector2(600, 500);
         SizeCondition = ImGuiCond.FirstUseEver;
 
-        mutable = new Configuration();
-        mutable.UpdateFrom(plugin.Configuration);
+        lastPersistedJson = plugin.Configuration.ToJson();
 
         sections =
         [
             new NavSection("Settings_Nav_General",
             [
-                new GeneralTab(mutable, plugin.ChatTwoStyles),
+                new GeneralTab(plugin.Configuration, plugin.ChatTwoStyles),
                 new PlaceholderTab("Placeholder_Profiles_Name", FontAwesomeIcon.Users,
                     "Placeholder_Profiles_Description"),
                 new PlaceholderTab("Placeholder_Logs_Name", FontAwesomeIcon.FileAlt,
@@ -79,14 +101,14 @@ public class SettingsWindow : Window
             ]),
             new NavSection("Settings_Nav_Appearance",
             [
-                new FormattingTab(mutable),
+                new FormattingTab(plugin.Configuration),
             ]),
             new NavSection("Settings_Nav_Chat",
             [
-                new MentionsTab(mutable),
-                new GroupsTab(mutable, plugin.ChatTwoStyles),
-                new RangeTab(mutable, plugin.ChatTwoStyles),
-                new ChatTwoTab(mutable, plugin.ChatTwoStyles),
+                new MentionsTab(plugin.Configuration),
+                new GroupsTab(plugin.Configuration, plugin.ChatTwoStyles),
+                new RangeTab(plugin.Configuration, plugin.ChatTwoStyles),
+                new ChatTwoTab(plugin.Configuration, plugin.ChatTwoStyles),
             ]),
             new NavSection(null,
             [
@@ -114,24 +136,64 @@ public class SettingsWindow : Window
     }
 
     public override void PreDraw()
-    {
-        WindowName = $"{Loc.Get("Settings_WindowTitle")}###GobchatExSettings";
+        => WindowName = $"{Loc.Get("Settings_WindowTitle")}###GobchatExSettings";
 
-        // Reads the saved value, not the staged copy: toggling "movable"
-        // should only take effect once the user hits Save.
-        if (plugin.Configuration.IsConfigWindowMovable)
-            Flags &= ~ImGuiWindowFlags.NoMove;
-        else
-            Flags |= ImGuiWindowFlags.NoMove;
+    /// <summary>
+    /// Debounced instant-apply tick. Runs every frame while the window is
+    /// open — even collapsed, unlike Draw — so edits still commit when the
+    /// user collapses the window right after changing something.
+    /// </summary>
+    public override void Update()
+    {
+        var now = Environment.TickCount64;
+
+        if (rebaseline)
+        {
+            rebaseline = false;
+            lastPersistedJson = plugin.Configuration.ToJson();
+            nextCommitCheck = now + CommitDebounceMs;
+            return;
+        }
+
+        if (now < nextCommitCheck)
+            return;
+
+        nextCommitCheck = now + CommitDebounceMs;
+        CommitIfChanged();
+    }
+
+    /// <summary>Commits an edit made within the debounce window before closing.</summary>
+    public override void OnClose()
+    {
+        CommitIfChanged();
+        rebaseline = true;
+    }
+
+    /// <summary>
+    /// Instant-apply core: tabs (and the nav rail's toggles) write straight
+    /// to the live configuration, and this detects those edits by comparing
+    /// a JSON snapshot against the last-committed one — one mechanism for
+    /// every widget, no per-site change plumbing. On a change: persist
+    /// (reusing the snapshot), rebuild the chat pipeline and Chat 2 styling,
+    /// and re-resolve the UI language. The baseline advances even if the
+    /// disk write failed (Save logs and swallows I/O errors) — the in-memory
+    /// apply has already happened either way.
+    /// </summary>
+    internal void CommitIfChanged()
+    {
+        var json = plugin.Configuration.ToJson();
+        if (json == lastPersistedJson)
+            return;
+
+        plugin.Configuration.Save(json);
+        plugin.ChatListener.SettingsChanged();
+        plugin.ChatTwoStyles.SettingsChanged();
+        plugin.RefreshLanguage();
+        lastPersistedJson = json;
     }
 
     public override void Draw()
     {
-        // Re-stage from the saved config whenever the window (re)opens, so
-        // Cancel or closing via X implicitly reverts unsaved edits.
-        if (ImGui.IsWindowAppearing())
-            mutable.UpdateFrom(plugin.Configuration);
-
         using (var table = ImRaii.Table("##gobchatex-settings-table", 2, ImGuiTableFlags.BordersInnerV))
         {
             if (table)
@@ -145,11 +207,16 @@ public class SettingsWindow : Window
 
                 ImGui.TableNextColumn();
 
-                // Reserve one line below the tab content for the footer row
-                // (height formula from ChatTwo's settings window).
+#if DEBUG
+                // Reserve one line below the tab content for the debug-only
+                // Chat 2 status row (height formula from ChatTwo's settings
+                // window).
                 var style = ImGui.GetStyle();
                 var height = ImGui.GetContentRegionAvail().Y - style.FramePadding.Y * 2
                     - style.ItemSpacing.Y - style.ItemInnerSpacing.Y * 2 - ImGui.CalcTextSize("A").Y;
+#else
+                var height = ImGui.GetContentRegionAvail().Y;
+#endif
 
                 using var child = ImRaii.Child("##gobchatex-settings-tab", new Vector2(-1, height));
                 if (child)
@@ -157,12 +224,11 @@ public class SettingsWindow : Window
             }
         }
 
+#if DEBUG
         ImGui.Separator();
-        DrawFooter();
+        DrawChatTwoStatus();
+#endif
     }
-
-    /// <summary>Matches <see cref="ImGuiComponents.ToggleButton"/>'s own width calc.</summary>
-    private static float ToggleWidth() => ImGui.GetFrameHeight() * 1.55f;
 
     /// <summary>
     /// Nav sizing from actual content: the icon column fits the widest
@@ -199,7 +265,7 @@ public class SettingsWindow : Window
         railWidth = iconColumnWidth + widestLabel + 10f * ImGuiHelpers.GlobalScale;
 
         if (hasToggle)
-            railWidth += ImGui.GetStyle().ItemInnerSpacing.X + ToggleWidth();
+            railWidth += ImGui.GetStyle().ItemInnerSpacing.X + SettingsUi.ToggleWidth();
     }
 
     private void DrawNavRail(float iconColumnWidth)
@@ -208,7 +274,7 @@ public class SettingsWindow : Window
         // is then vertically centered within it. Every row gets this height uniformly, toggle
         // or not, so the rail doesn't look uneven.
         var rowHeight = ImGui.GetFrameHeight();
-        var toggleWidth = ToggleWidth();
+        var toggleWidth = SettingsUi.ToggleWidth();
         var textOffsetY = (rowHeight - ImGui.GetTextLineHeight()) / 2f;
         var rowRightX = ImGui.GetCursorPos().X + ImGui.GetContentRegionAvail().X;
 
@@ -267,54 +333,20 @@ public class SettingsWindow : Window
                     var enabled = toggleable.Enabled;
                     ImGui.SameLine();
                     ImGui.SetCursorPos(new Vector2(rowRightX - toggleWidth, cursor.Y));
-                    if (ImGuiComponents.ToggleButton($"##tab-toggle-{sectionIndex}-{tabIndex}", ref enabled))
+                    if (SettingsUi.ToggleSwitch($"##tab-toggle-{sectionIndex}-{tabIndex}", ref enabled))
                         toggleable.Enabled = enabled;
                 }
             }
         }
     }
 
-    private void DrawFooter()
-    {
-        var persist = false;
-
-        if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Save, Loc.Get("Settings_Footer_Save")))
-        {
-            persist = true;
-            IsOpen = false;
-        }
-
-        ImGui.SameLine();
-        if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Check, Loc.Get("Settings_Footer_Apply")))
-            persist = true;
-
-        ImGui.SameLine();
-        if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Times, Loc.Get("Settings_Footer_Cancel")))
-            IsOpen = false; // IsWindowAppearing re-stages on next open
-
-#if DEBUG
-        ImGui.SameLine();
-        DrawChatTwoStatus();
-#endif
-
-        if (!persist)
-            return;
-
-        plugin.Configuration.UpdateFrom(mutable);
-        plugin.Configuration.Save();
-        plugin.ChatListener.SettingsChanged();
-        plugin.ChatTwoStyles.SettingsChanged();
-        plugin.RefreshLanguage();
-        mutable.UpdateFrom(plugin.Configuration);
-    }
-
 #if DEBUG
     /// <summary>
-    /// Right corner of the footer, debug builds only: Chat 2 styling connection state plus a
-    /// Connect/Disconnect toggle. Release builds rely on the automatic connect (construction,
-    /// ChatTwo.Available) and read the status from the General page's Optional plugins row; this
-    /// manual override exists for testing. Acts on the live provider immediately (not staged) —
-    /// a connection isn't configuration.
+    /// Footer row below the tab content, debug builds only: Chat 2 styling connection state plus
+    /// a Connect/Disconnect toggle. Release builds have no footer — they rely on the automatic
+    /// connect (construction, ChatTwo.Available) and read the status from the General page's
+    /// Optional plugins row; this manual override exists for testing. Acts on the live provider
+    /// immediately without waiting for a commit tick — a connection isn't configuration.
     /// </summary>
     private void DrawChatTwoStatus()
     {

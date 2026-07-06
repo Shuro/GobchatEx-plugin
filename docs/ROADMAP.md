@@ -40,7 +40,7 @@ the logic to port lives.
 - Mention trigger words (case-insensitive whole words)
 - Mention alerts using the game's built-in sound effects, with cooldown
   ([ADR 0003](adr/0003-game-sound-effects-only-v1.md))
-- Settings window (nav rail, staged Save/Apply/Cancel)
+- Settings window (nav rail, instant-apply edits — no Save/Apply/Cancel)
 
 ## Milestone 1 — Advanced mentions (player-name matching) — Done
 
@@ -138,7 +138,7 @@ real transparency on top.
 - Settings: per-group background color in the Groups tab (Chat 2 only), Chat 2
   fade/hide toggles in the Range tab, and a Chat 2 page with connection status
   plus per-tab allow/suppress switches fed by `ChatTwo.GetTabs`/`TabsChanged`
-  and sent through `ChatTwo.SetTabStylePolicies` on Save/Apply.
+  and sent through `ChatTwo.SetTabStylePolicies` when edits commit.
 - Cleanup: retire the `local/dev-combined` Chat 2 build and the fork branches
   once the PRs are merged and released; decide whether the Debug tab stays as
   a diagnostics page or goes.

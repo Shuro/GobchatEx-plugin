@@ -149,6 +149,19 @@ public sealed class Plugin : IDalamudPlugin
 
     public void Dispose()
     {
+        // WindowSystem.RemoveAllWindows never fires OnClose, so commit any
+        // settings edit still inside its debounce window here — before the
+        // ChatListener/ChatTwoStyles consumers a commit notifies are disposed.
+        // Guarded so a failed commit can't abort the rest of the teardown.
+        try
+        {
+            SettingsWindow.CommitIfChanged();
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to commit pending settings edits during dispose.");
+        }
+
 #if DEBUG
         ChatTwoStyleTester.Dispose();
 #endif
@@ -267,7 +280,7 @@ public sealed class Plugin : IDalamudPlugin
     /// <summary>
     /// Re-resolves Loc.Culture from the current Configuration.LanguageOverride
     /// and Dalamud's own UI language. Call after any save that could have
-    /// changed LanguageOverride (SettingsWindow's footer).
+    /// changed LanguageOverride (SettingsWindow's commit).
     /// </summary>
     internal void RefreshLanguage() => OnLanguageChanged(PluginInterface.UiLanguage);
 }

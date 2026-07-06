@@ -8,7 +8,7 @@ namespace GobchatEx.Windows.SettingsTabs;
 
 /// <summary>
 /// "Friend Groups" pane of the Debug page: shows the live <c>FriendGroupLookup</c> snapshot
-/// (Debug page convention — unstaged, body strings unlocalized). Includes a manual refresh button
+/// (Debug page convention — config-read-only, body strings unlocalized). Includes a manual refresh button
 /// because, unlike the removed production one, this is the only way to force a fresh snapshot mid
 /// dev-session without relogging (dev auto-reload never fires Dalamud's Login event).
 /// </summary>

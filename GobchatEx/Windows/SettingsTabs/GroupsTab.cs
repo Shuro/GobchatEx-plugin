@@ -26,18 +26,18 @@ internal sealed class GroupsTab : IToggleableTab
 
     public bool Enabled
     {
-        get => mutable.GroupsEnabled;
-        set => mutable.GroupsEnabled = value;
+        get => config.GroupsEnabled;
+        set => config.GroupsEnabled = value;
     }
 
-    private readonly Configuration mutable;
+    private readonly Configuration config;
     private readonly ChatTwoStyleProvider chatTwoStyles;
     private readonly UiColorPicker colorPicker = new();
     private string newGroupName = string.Empty;
 
-    public GroupsTab(Configuration mutable, ChatTwoStyleProvider chatTwoStyles)
+    public GroupsTab(Configuration config, ChatTwoStyleProvider chatTwoStyles)
     {
-        this.mutable = mutable;
+        this.config = config;
         this.chatTwoStyles = chatTwoStyles;
     }
 
@@ -57,16 +57,16 @@ internal sealed class GroupsTab : IToggleableTab
         DrawAddGroupControl();
         ImGuiHelpers.ScaledDummy(4f);
 
-        if (mutable.Groups.Count == 0)
+        if (config.Groups.Count == 0)
         {
             ImGui.TextDisabled(Loc.Get("Groups_Custom_Empty"));
             return;
         }
 
         var toDelete = -1;
-        for (var i = 0; i < mutable.Groups.Count; ++i)
+        for (var i = 0; i < config.Groups.Count; ++i)
         {
-            var group = mutable.Groups[i];
+            var group = config.Groups[i];
             using var id = ImRaii.PushId(group.Id);
 
             var headerLabel = group.Active
@@ -111,7 +111,7 @@ internal sealed class GroupsTab : IToggleableTab
         }
 
         if (toDelete >= 0)
-            mutable.Groups.RemoveAt(toDelete);
+            config.Groups.RemoveAt(toDelete);
     }
 
     private void DrawAddGroupControl()
@@ -134,10 +134,10 @@ internal sealed class GroupsTab : IToggleableTab
         var name = input.Trim();
         if (name.Length == 0 || IsPureNumericName(name))
             return false;
-        if (mutable.Groups.Any(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+        if (config.Groups.Any(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
             return false;
 
-        mutable.Groups.Add(new PlayerGroup { Id = Guid.NewGuid().ToString(), Name = name, Active = true });
+        config.Groups.Add(new PlayerGroup { Id = Guid.NewGuid().ToString(), Name = name, Active = true });
         return true;
     }
 
@@ -221,7 +221,7 @@ internal sealed class GroupsTab : IToggleableTab
         ImGui.TableSetupColumn(Loc.Get("Formatting_Column_Glow"));
         ImGui.TableSetupColumn(Loc.Get("Groups_Column_ChatTwoBackground"));
 
-        foreach (var group in mutable.FriendGroups.OrderBy(g => g.FfGroup))
+        foreach (var group in config.FriendGroups.OrderBy(g => g.FfGroup))
         {
             using var id = ImRaii.PushId(group.Id);
 

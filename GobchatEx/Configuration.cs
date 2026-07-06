@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Dalamud.Configuration;
 using Dalamud.Game.Text;
 using Newtonsoft.Json;
@@ -20,19 +19,6 @@ public class SegmentStyle
     public bool Enabled { get; set; } = true;
     public ushort Foreground { get; set; }
     public ushort Glow { get; set; }
-
-    /// <summary>
-    /// Copies all values from <paramref name="other"/> in place. In-place
-    /// matters: the settings window's staged copy hands out references to
-    /// these styles (e.g. to the color picker popup), which must stay live
-    /// across re-initialisation.
-    /// </summary>
-    public void CopyFrom(SegmentStyle other)
-    {
-        Enabled = other.Enabled;
-        Foreground = other.Foreground;
-        Glow = other.Glow;
-    }
 }
 
 /// <summary>
@@ -123,8 +109,6 @@ public class Configuration : IPluginConfiguration
     // Bump this and add a migration block in your Plugin constructor when
     // you make backward-incompatible changes to the layout below.
     public int Version { get; set; } = 1;
-
-    public bool IsConfigWindowMovable { get; set; } = true;
 
     /// <summary>UI language for the plugin's own settings window (not in-game chat text).</summary>
     public LanguageOverride LanguageOverride { get; set; } = LanguageOverride.None;
@@ -260,43 +244,12 @@ public class Configuration : IPluginConfiguration
     public Dictionary<Guid, int> ChatTwoTabPolicies { get; set; } = [];
 
     /// <summary>
-    /// Copies all user-editable settings from <paramref name="other"/> in
-    /// place. Used by the settings window's staged-save model: stage into a
-    /// mutable copy, apply back on Save. Must be in place — ChatListener
-    /// holds a reference to the live instance. Version is deliberately
-    /// excluded (migration-managed, never user-edited).
-    /// Adding a property to this class? Add it here too.
+    /// Serializes the full configuration to the JSON persisted by
+    /// <see cref="Save()"/>. Also used by the settings window's instant-apply
+    /// change detection, which compares snapshots of this string — both must
+    /// use identical serializer settings, hence the shared method.
     /// </summary>
-    public void UpdateFrom(Configuration other)
-    {
-        IsConfigWindowMovable = other.IsConfigWindowMovable;
-        LanguageOverride = other.LanguageOverride;
-        RpHighlightEnabled = other.RpHighlightEnabled;
-        SayStyle.CopyFrom(other.SayStyle);
-        EmoteStyle.CopyFrom(other.EmoteStyle);
-        OocStyle.CopyFrom(other.OocStyle);
-        MentionStyle.CopyFrom(other.MentionStyle);
-        HighlightChannels = [.. other.HighlightChannels];
-        MentionsEnabled = other.MentionsEnabled;
-        MentionTriggers = [.. other.MentionTriggers];
-        PlayerMentionsEnabled = other.PlayerMentionsEnabled;
-        Characters = [.. other.Characters.Select(c => c.Clone())];
-        MentionSoundEnabled = other.MentionSoundEnabled;
-        MentionSoundEffect = other.MentionSoundEffect;
-        MentionSoundCooldownMs = other.MentionSoundCooldownMs;
-        SuppressSoundFromSelf = other.SuppressSoundFromSelf;
-        GroupsEnabled = other.GroupsEnabled;
-        Groups = [.. other.Groups.Select(g => g.Clone())];
-        FriendGroups = [.. other.FriendGroups.Select(g => g.Clone())];
-        RangeFilterEnabled = other.RangeFilterEnabled;
-        RangeFilterCutOff = other.RangeFilterCutOff;
-        RangeFilterFadeOut = other.RangeFilterFadeOut;
-        RangeFilterMentionsIgnoreRange = other.RangeFilterMentionsIgnoreRange;
-        RangeFilterChannels = [.. other.RangeFilterChannels];
-        RangeFilterChatTwoFade = other.RangeFilterChatTwoFade;
-        RangeFilterChatTwoHide = other.RangeFilterChatTwoHide;
-        ChatTwoTabPolicies = new Dictionary<Guid, int>(other.ChatTwoTabPolicies);
-    }
+    internal string ToJson() => JsonConvert.SerializeObject(this, Formatting.Indented);
 
     /// <summary>
     /// Persists the configuration to {ConfigDirectory}\config.json, e.g.
@@ -310,14 +263,19 @@ public class Configuration : IPluginConfiguration
     /// swallowed rather than thrown — callers include the login handler in
     /// ChatListener, which must not crash plugin load over a transient I/O error.
     /// </summary>
-    public void Save()
+    public void Save() => Save(ToJson());
+
+    /// <summary>
+    /// <see cref="Save()"/> with the JSON already serialized — lets the
+    /// settings window reuse the snapshot it built for change detection
+    /// instead of serializing twice.
+    /// </summary>
+    internal void Save(string json)
     {
         var path = Path.Combine(Plugin.PluginInterface.ConfigDirectory.FullName, "config.json");
 
         try
         {
-            var json = JsonConvert.SerializeObject(this, Formatting.Indented);
-
             var tempPath = path + ".tmp";
             File.WriteAllText(tempPath, json);
             File.Move(tempPath, path, overwrite: true);

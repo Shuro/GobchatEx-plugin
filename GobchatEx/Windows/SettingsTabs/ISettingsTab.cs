@@ -3,9 +3,9 @@ using Dalamud.Interface;
 namespace GobchatEx.Windows.SettingsTabs;
 
 /// <summary>
-/// One tab in the settings window. Tabs draw against the window's staged
-/// (mutable) configuration copy and never call Save — persisting and
-/// applying happens in SettingsWindow's footer.
+/// One tab in the settings window. Tabs draw against the live configuration
+/// and never call Save — SettingsWindow detects edits on a debounced tick
+/// and commits them (persist + apply) itself.
 /// </summary>
 internal interface ISettingsTab
 {
@@ -16,7 +16,7 @@ internal interface ISettingsTab
 
 /// <summary>
 /// A settings tab with a top-level enable/disable switch shown on its nav-rail row.
-/// The switch reads/writes the tab's own staged config field directly.
+/// The switch reads/writes the tab's own live config field directly.
 /// </summary>
 internal interface IToggleableTab : ISettingsTab
 {

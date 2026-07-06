@@ -16,7 +16,8 @@ GobchatEx/
 ├── Plugin.cs            entry point, [PluginService] injection, commands,
 │                        config migrations (v1→v5), native context menu
 ├── Configuration.cs     IPluginConfiguration; SegmentStyle, CharacterMentionSettings,
-│                        PlayerGroup, range-filter + Chat 2 fields; staged-save via UpdateFrom()
+│                        PlayerGroup, range-filter + Chat 2 fields; ToJson() shared by
+│                        Save() and the settings window's change detection
 ├── Core/                matching/math engine — Dalamud-FREE (ADR 0002, test-enforced)
 ├── Chat/                Dalamud-facing: chat rewrite, groups, range, sound, Chat 2 IPC
 ├── Localization/        Loc.cs ResourceManager wrapper (also Dalamud-free)
@@ -149,8 +150,9 @@ UI language unless Configuration.LanguageOverride is set; re-resolved via
   Chat (MentionsTab, GroupsTab, RangeTab, ChatTwoTab) / divider / Debug
   (`#if DEBUG`) / About. Native collapse enabled; title-bar Ko-fi button
   ordered via `Priority` to sit left of Dalamud's own options button.
-  Staged-save: edits go to a `mutable` Configuration copy; footer
-  Save/Apply/Cancel; Debug builds show live Chat 2 connect/disconnect status.
+  Instant-apply: tabs edit the live Configuration; a debounced JSON-snapshot
+  compare (Update tick + OnClose/Dispose flush) persists and applies changes —
+  no Save/Apply/Cancel. Debug builds show live Chat 2 connect/disconnect status.
 - FormattingTab.cs (228) — segment colors gain per-row reset-to-default and
   (Say/Emote only) "import from the game's own channel color" buttons,
   nearest-UIColor-row matched via `UiColorDimmer.NearestRow`.

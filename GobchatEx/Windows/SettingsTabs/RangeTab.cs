@@ -19,15 +19,22 @@ internal sealed class RangeTab : IToggleableTab
 {
     private const float MaxDistanceYalms = 100f;
 
+    // The cut-off slider only drags up to here — a shorter range keeps the useful low end
+    // precise. Ctrl+click the slider to type any higher value: ImGui only clamps typed input
+    // when AlwaysClamp is set, which it isn't here.
+    private const float MaxCutOffSliderYalms = 60f;
+
     // Only proximity channels are offered: range-filtering a server-wide channel (party, FC,
     // linkshells) would hide messages based on where the sender happens to be standing.
-    private static readonly (string LabelKey, XivChatType Type)[] Channels =
+    // Say/Emote carry an info marker: the game engine only delivers them up to ~20 yalms,
+    // so distances configured beyond that never see a message on these channels.
+    private static readonly (string LabelKey, XivChatType Type, bool EngineLimited)[] Channels =
     [
-        ("Formatting_Channel_Say", XivChatType.Say),
-        ("Formatting_Channel_Emote", XivChatType.CustomEmote),
-        ("Formatting_Channel_StandardEmote", XivChatType.StandardEmote),
-        ("Formatting_Channel_Yell", XivChatType.Yell),
-        ("Formatting_Channel_Shout", XivChatType.Shout),
+        ("Formatting_Channel_Say", XivChatType.Say, true),
+        ("Formatting_Channel_Emote", XivChatType.CustomEmote, true),
+        ("Formatting_Channel_StandardEmote", XivChatType.StandardEmote, false),
+        ("Formatting_Channel_Yell", XivChatType.Yell, false),
+        ("Formatting_Channel_Shout", XivChatType.Shout, false),
     ];
 
     public string Name => Loc.Get("Range_TabName");
@@ -35,16 +42,16 @@ internal sealed class RangeTab : IToggleableTab
 
     public bool Enabled
     {
-        get => mutable.RangeFilterEnabled;
-        set => mutable.RangeFilterEnabled = value;
+        get => config.RangeFilterEnabled;
+        set => config.RangeFilterEnabled = value;
     }
 
-    private readonly Configuration mutable;
+    private readonly Configuration config;
     private readonly ChatTwoStyleProvider chatTwoStyles;
 
-    public RangeTab(Configuration mutable, ChatTwoStyleProvider chatTwoStyles)
+    public RangeTab(Configuration config, ChatTwoStyleProvider chatTwoStyles)
     {
-        this.mutable = mutable;
+        this.config = config;
         this.chatTwoStyles = chatTwoStyles;
     }
 
@@ -53,9 +60,9 @@ internal sealed class RangeTab : IToggleableTab
         DrawDistanceSliders();
 
         ImGuiHelpers.ScaledDummy(6f);
-        var mentionsIgnore = mutable.RangeFilterMentionsIgnoreRange;
+        var mentionsIgnore = config.RangeFilterMentionsIgnoreRange;
         if (SettingsUi.Toggle(Loc.Get("Range_MentionsIgnore_Name"), ref mentionsIgnore))
-            mutable.RangeFilterMentionsIgnoreRange = mentionsIgnore;
+            config.RangeFilterMentionsIgnoreRange = mentionsIgnore;
         ImGuiComponents.HelpMarker(Loc.Get("Range_MentionsIgnore_Tooltip"));
 
         ImGuiHelpers.ScaledDummy(10f);
@@ -79,14 +86,14 @@ internal sealed class RangeTab : IToggleableTab
 
         using var disabled = ImRaii.Disabled(!chatTwoStyles.IsConnected);
 
-        var fade = mutable.RangeFilterChatTwoFade;
+        var fade = config.RangeFilterChatTwoFade;
         if (SettingsUi.Toggle(Loc.Get("Range_ChatTwo_Fade_Name"), ref fade))
-            mutable.RangeFilterChatTwoFade = fade;
+            config.RangeFilterChatTwoFade = fade;
         ImGuiComponents.HelpMarker(Loc.Get("Range_ChatTwo_Fade_Tooltip"));
 
-        var hide = mutable.RangeFilterChatTwoHide;
+        var hide = config.RangeFilterChatTwoHide;
         if (SettingsUi.Toggle(Loc.Get("Range_ChatTwo_Hide_Name"), ref hide))
-            mutable.RangeFilterChatTwoHide = hide;
+            config.RangeFilterChatTwoHide = hide;
         ImGuiComponents.HelpMarker(Loc.Get("Range_ChatTwo_Hide_Tooltip"));
     }
 
@@ -95,18 +102,18 @@ internal sealed class RangeTab : IToggleableTab
         ImGui.TextUnformatted(Loc.Get("Range_FadeOut_Name"));
         ImGuiComponents.HelpMarker(Loc.Get("Range_FadeOut_Tooltip"));
         ImGui.SetNextItemWidth(320f * ImGuiHelpers.GlobalScale);
-        var fadeOut = mutable.RangeFilterFadeOut;
+        var fadeOut = config.RangeFilterFadeOut;
         if (ImGui.SliderFloat("##range-fadeout", ref fadeOut, 0f, MaxDistanceYalms, "%.0f"))
-            mutable.RangeFilterFadeOut = Math.Min(fadeOut, mutable.RangeFilterCutOff);
+            config.RangeFilterFadeOut = Math.Min(fadeOut, config.RangeFilterCutOff);
 
         ImGui.TextUnformatted(Loc.Get("Range_CutOff_Name"));
         ImGuiComponents.HelpMarker(Loc.Get("Range_CutOff_Tooltip"));
         ImGui.SetNextItemWidth(320f * ImGuiHelpers.GlobalScale);
-        var cutOff = mutable.RangeFilterCutOff;
-        if (ImGui.SliderFloat("##range-cutoff", ref cutOff, 0f, MaxDistanceYalms, "%.0f"))
+        var cutOff = config.RangeFilterCutOff;
+        if (ImGui.SliderFloat("##range-cutoff", ref cutOff, 0f, MaxCutOffSliderYalms, "%.0f"))
         {
-            mutable.RangeFilterCutOff = cutOff;
-            mutable.RangeFilterFadeOut = Math.Min(mutable.RangeFilterFadeOut, cutOff);
+            config.RangeFilterCutOff = cutOff;
+            config.RangeFilterFadeOut = Math.Min(config.RangeFilterFadeOut, cutOff);
         }
     }
 
@@ -116,17 +123,21 @@ internal sealed class RangeTab : IToggleableTab
         if (!table)
             return;
 
-        foreach (var (labelKey, type) in Channels)
+        foreach (var (labelKey, type, engineLimited) in Channels)
         {
             ImGui.TableNextColumn();
-            var active = mutable.RangeFilterChannels.Contains(type);
-            if (!ImGui.Checkbox(Loc.Get(labelKey), ref active))
+            var active = config.RangeFilterChannels.Contains(type);
+            var changed = ImGui.Checkbox(Loc.Get(labelKey), ref active);
+            if (engineLimited)
+                ImGuiComponents.HelpMarker(Loc.Get("Range_EngineLimit_Tooltip"));
+
+            if (!changed)
                 continue;
 
             if (active)
-                mutable.RangeFilterChannels.Add(type);
+                config.RangeFilterChannels.Add(type);
             else
-                mutable.RangeFilterChannels.Remove(type);
+                config.RangeFilterChannels.Remove(type);
         }
     }
 }

@@ -16,23 +16,17 @@ internal sealed class GeneralTab : ISettingsTab
     public string Name => Loc.Get("General_TabName");
     public FontAwesomeIcon Icon => FontAwesomeIcon.Cog;
 
-    private readonly Configuration mutable;
+    private readonly Configuration config;
     private readonly ChatTwoStyleProvider chatTwoStyles;
 
-    public GeneralTab(Configuration mutable, ChatTwoStyleProvider chatTwoStyles)
+    public GeneralTab(Configuration config, ChatTwoStyleProvider chatTwoStyles)
     {
-        this.mutable = mutable;
+        this.config = config;
         this.chatTwoStyles = chatTwoStyles;
     }
 
     public void Draw()
     {
-        var movable = mutable.IsConfigWindowMovable;
-        if (SettingsUi.Toggle(Loc.Get("General_MovableWindow_Name"), ref movable))
-            mutable.IsConfigWindowMovable = movable;
-        ImGuiComponents.HelpMarker(Loc.Get("General_MovableWindow_Tooltip"));
-
-        ImGuiHelpers.ScaledDummy(6f);
         DrawLanguage();
 
         ImGuiHelpers.ScaledDummy(10f);
@@ -82,14 +76,14 @@ internal sealed class GeneralTab : ISettingsTab
         ImGuiComponents.HelpMarker(Loc.Get("General_Language_Tooltip"));
 
         ImGui.SetNextItemWidth(320f * ImGuiHelpers.GlobalScale);
-        using (var combo = ImRaii.Combo("##language", mutable.LanguageOverride.Name()))
+        using (var combo = ImRaii.Combo("##language", config.LanguageOverride.Name()))
         {
             if (combo)
             {
                 foreach (var option in Enum.GetValues<LanguageOverride>())
                 {
-                    if (ImGui.Selectable(option.Name(), option == mutable.LanguageOverride))
-                        mutable.LanguageOverride = option;
+                    if (ImGui.Selectable(option.Name(), option == config.LanguageOverride))
+                        config.LanguageOverride = option;
                 }
             }
         }

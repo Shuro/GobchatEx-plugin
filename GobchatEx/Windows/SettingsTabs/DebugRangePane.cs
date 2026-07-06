@@ -12,7 +12,7 @@ namespace GobchatEx.Windows.SettingsTabs;
 
 /// <summary>
 /// "Range dimming" pane of the Debug page: exercises the native range filter against the live
-/// saved configuration (Debug page convention — unstaged, body strings unlocalized). Three tools:
+/// configuration (Debug page convention — config-read-only, body strings unlocalized). Three tools:
 /// a distance simulator over the pure <see cref="RangeFade"/> math, a live object-table view of
 /// what the filter would assign each nearby player right now, and test-message injection printing
 /// native chat lines in each fade-step color — <see cref="ChatListener.FadeStepColors"/> is a
@@ -56,7 +56,7 @@ internal sealed class DebugRangePane
     private void DrawConfigSummary()
     {
         var config = plugin.Configuration;
-        ImGui.TextDisabled("Live saved settings — Save/Apply edits first for them to show here");
+        ImGui.TextDisabled("Live settings — edits on the Range page show here as soon as they commit");
         ImGui.TextUnformatted(
             $"Range filter {(config.RangeFilterEnabled ? "enabled" : "disabled (tools below still evaluate the configured distances)")}"
             + $", fade-out {config.RangeFilterFadeOut:0} yalms, cut-off {config.RangeFilterCutOff:0} yalms");

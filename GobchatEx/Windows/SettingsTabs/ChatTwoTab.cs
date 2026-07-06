@@ -10,22 +10,23 @@ namespace GobchatEx.Windows.SettingsTabs;
 /// <summary>
 /// "Tab settings" page (Milestone 3.5): per-Chat 2-tab switches for which styling (backgrounds /
 /// fading / hiding) may apply there. The tab list comes live from
-/// <see cref="ChatTwoStyleProvider.KnownTabs"/>; the policies themselves are staged in the
-/// mutable configuration like every other setting and pushed to Chat 2 on Save/Apply. Checked =
-/// allowed (the default); unchecked stores the corresponding suppress-flag. Connection status and
-/// the connect/disconnect control live in the settings window's footer, visible from every page.
+/// <see cref="ChatTwoStyleProvider.KnownTabs"/>; the policies themselves live in the
+/// configuration like every other setting and are pushed to Chat 2 when the window commits a
+/// change. Checked = allowed (the default); unchecked stores the corresponding suppress-flag.
+/// Connection status lives on the General page's Optional plugins row (plus, in debug builds,
+/// the footer's connect/disconnect control).
 /// </summary>
 internal sealed class ChatTwoTab : ISettingsTab
 {
     public string Name => Loc.Get("ChatTwo_TabName");
     public FontAwesomeIcon Icon => FontAwesomeIcon.CommentDots;
 
-    private readonly Configuration mutable;
+    private readonly Configuration config;
     private readonly ChatTwoStyleProvider chatTwoStyles;
 
-    public ChatTwoTab(Configuration mutable, ChatTwoStyleProvider chatTwoStyles)
+    public ChatTwoTab(Configuration config, ChatTwoStyleProvider chatTwoStyles)
     {
-        this.mutable = mutable;
+        this.config = config;
         this.chatTwoStyles = chatTwoStyles;
     }
 
@@ -68,7 +69,7 @@ internal sealed class ChatTwoTab : ISettingsTab
             ImGui.AlignTextToFramePadding();
             ImGui.TextUnformatted(name);
 
-            var flags = mutable.ChatTwoTabPolicies.GetValueOrDefault(id);
+            var flags = config.ChatTwoTabPolicies.GetValueOrDefault(id);
             var changed = false;
 
             ImGui.TableNextColumn();
@@ -85,9 +86,9 @@ internal sealed class ChatTwoTab : ISettingsTab
 
             // No entry means "everything allowed" — keep the config free of default entries.
             if (flags == 0)
-                mutable.ChatTwoTabPolicies.Remove(id);
+                config.ChatTwoTabPolicies.Remove(id);
             else
-                mutable.ChatTwoTabPolicies[id] = flags;
+                config.ChatTwoTabPolicies[id] = flags;
         }
     }
 

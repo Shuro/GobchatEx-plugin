@@ -9,13 +9,9 @@ namespace GobchatEx.Chat;
 /// by the slash command, the native right-click context menu, and the Chat 2 IPC integration alike.
 /// Bound to one (name, world) pair at construction (the right-clicked or /gobchat-group-targeted
 /// player); callers iterate <see cref="Configuration.Groups"/> and pass each <see cref="PlayerGroup"/>
-/// in turn. Mutates the <b>live</b> <see cref="Plugin.Configuration"/> directly, not a settings-window
-/// staged copy — none of these entry points are necessarily invoked while the settings window is open.
-/// If the window IS open with unsaved edits and the user then clicks Save, that Save's
-/// <c>Configuration.UpdateFrom(mutable)</c> will overwrite these live edits with its own stale staged
-/// copy; this is a pre-existing limitation of the staged Save/Apply/Cancel model (every other config
-/// field has the same "last save wins" behavior against concurrent external writers), not something
-/// this class attempts to reconcile.
+/// in turn. Mutates the live <see cref="Plugin.Configuration"/> directly and persists + applies via
+/// <see cref="Persist"/> — the same instance the settings window edits, so there is no conflict if
+/// the window happens to be open (its instant-apply commit would just re-save the same state).
 /// </summary>
 internal sealed class GroupMembershipActions
 {

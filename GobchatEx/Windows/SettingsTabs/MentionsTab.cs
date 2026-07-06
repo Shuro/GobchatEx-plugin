@@ -31,17 +31,17 @@ internal sealed class MentionsTab : IToggleableTab
 
     public bool Enabled
     {
-        get => mutable.MentionsEnabled;
-        set => mutable.MentionsEnabled = value;
+        get => config.MentionsEnabled;
+        set => config.MentionsEnabled = value;
     }
 
-    private readonly Configuration mutable;
+    private readonly Configuration config;
     private string newTrigger = string.Empty;
     private readonly Dictionary<string, string> newCustomWordByCharacter = new(StringComparer.OrdinalIgnoreCase);
 
-    public MentionsTab(Configuration mutable)
+    public MentionsTab(Configuration config)
     {
-        this.mutable = mutable;
+        this.config = config;
     }
 
     public void Draw()
@@ -64,41 +64,41 @@ internal sealed class MentionsTab : IToggleableTab
 
     private void DrawSoundSettings()
     {
-        var soundEnabled = mutable.MentionSoundEnabled;
+        var soundEnabled = config.MentionSoundEnabled;
         if (SettingsUi.Toggle(Loc.Get("Mentions_Sound_PlayOnMatch"), ref soundEnabled))
-            mutable.MentionSoundEnabled = soundEnabled;
+            config.MentionSoundEnabled = soundEnabled;
         ImGuiComponents.HelpMarker(Loc.Get("Mentions_Sound_PlayOnMatch_Tooltip"));
 
-        using var disabled = ImRaii.Disabled(!mutable.MentionSoundEnabled);
+        using var disabled = ImRaii.Disabled(!config.MentionSoundEnabled);
 
         ImGui.SetNextItemWidth(180f * ImGuiHelpers.GlobalScale);
-        using (var combo = ImRaii.Combo("##soundEffect", GameSound.Name(mutable.MentionSoundEffect)))
+        using (var combo = ImRaii.Combo("##soundEffect", GameSound.Name(config.MentionSoundEffect)))
         {
             if (combo)
             {
                 for (var effect = GameSound.Min; effect <= GameSound.Max; ++effect)
                 {
-                    if (!ImGui.Selectable(GameSound.Name(effect), effect == mutable.MentionSoundEffect))
+                    if (!ImGui.Selectable(GameSound.Name(effect), effect == config.MentionSoundEffect))
                         continue;
 
-                    mutable.MentionSoundEffect = effect;
-                    SoundPlayer.Play(effect); // instant preview of the (staged) choice
+                    config.MentionSoundEffect = effect;
+                    SoundPlayer.Play(effect); // instant preview of the choice
                 }
             }
         }
 
         ImGui.SameLine();
         if (ImGuiComponents.IconButton(FontAwesomeIcon.Play))
-            SoundPlayer.Play(mutable.MentionSoundEffect);
+            SoundPlayer.Play(config.MentionSoundEffect);
 
-        var cooldownSeconds = mutable.MentionSoundCooldownMs / 1000;
+        var cooldownSeconds = config.MentionSoundCooldownMs / 1000;
         ImGui.SetNextItemWidth(180f * ImGuiHelpers.GlobalScale);
         if (ImGui.SliderInt(Loc.Get("Mentions_Sound_Cooldown"), ref cooldownSeconds, 0, 30, "%d s"))
-            mutable.MentionSoundCooldownMs = cooldownSeconds * 1000;
+            config.MentionSoundCooldownMs = cooldownSeconds * 1000;
 
-        var suppressSelf = mutable.SuppressSoundFromSelf;
+        var suppressSelf = config.SuppressSoundFromSelf;
         if (SettingsUi.Toggle(Loc.Get("Mentions_Sound_SuppressSelf"), ref suppressSelf))
-            mutable.SuppressSoundFromSelf = suppressSelf;
+            config.SuppressSoundFromSelf = suppressSelf;
     }
 
     private void DrawTriggers()
@@ -110,7 +110,7 @@ internal sealed class MentionsTab : IToggleableTab
         if ((ImGui.Button(Loc.Get("Mentions_Trigger_Add")) || submitted) && TryAddTrigger(newTrigger))
             newTrigger = string.Empty;
 
-        if (mutable.MentionTriggers.Count == 0)
+        if (config.MentionTriggers.Count == 0)
         {
             ImGui.TextDisabled(Loc.Get("Mentions_Trigger_Empty"));
             return;
@@ -124,7 +124,7 @@ internal sealed class MentionsTab : IToggleableTab
         ImGui.TableSetupColumn("##delete", ImGuiTableColumnFlags.WidthFixed);
         ImGui.TableSetupColumn("##word", ImGuiTableColumnFlags.WidthStretch);
 
-        for (var i = 0; i < mutable.MentionTriggers.Count; ++i)
+        for (var i = 0; i < config.MentionTriggers.Count; ++i)
         {
             using var id = ImRaii.PushId(i);
 
@@ -132,13 +132,13 @@ internal sealed class MentionsTab : IToggleableTab
             ImGui.TableNextColumn();
             if (SettingsUi.DangerButton(FontAwesomeIcon.Trash, Loc.Get("Mentions_Trigger_Remove_Tooltip")))
             {
-                mutable.MentionTriggers.RemoveAt(i);
+                config.MentionTriggers.RemoveAt(i);
                 return; // list changed; redraw next frame
             }
 
             ImGui.TableNextColumn();
             ImGui.AlignTextToFramePadding();
-            ImGui.TextUnformatted(mutable.MentionTriggers[i]);
+            ImGui.TextUnformatted(config.MentionTriggers[i]);
         }
     }
 
@@ -147,34 +147,34 @@ internal sealed class MentionsTab : IToggleableTab
         var trigger = input.Trim();
         if (trigger.Length == 0)
             return false;
-        if (mutable.MentionTriggers.Any(t => t.Equals(trigger, StringComparison.OrdinalIgnoreCase)))
+        if (config.MentionTriggers.Any(t => t.Equals(trigger, StringComparison.OrdinalIgnoreCase)))
             return false;
 
-        mutable.MentionTriggers.Add(trigger);
+        config.MentionTriggers.Add(trigger);
         return true;
     }
 
     private void DrawPlayerMentions()
     {
-        var enabled = mutable.PlayerMentionsEnabled;
+        var enabled = config.PlayerMentionsEnabled;
         if (SettingsUi.Toggle(Loc.Get("Mentions_Player_MatchLoggedIn"), ref enabled))
-            mutable.PlayerMentionsEnabled = enabled;
+            config.PlayerMentionsEnabled = enabled;
 
-        using var disabledSection = ImRaii.Disabled(!mutable.PlayerMentionsEnabled);
+        using var disabledSection = ImRaii.Disabled(!config.PlayerMentionsEnabled);
 
         DrawAddCurrentCharacterButton();
         ImGuiHelpers.ScaledDummy(4f);
 
-        if (mutable.Characters.Count == 0)
+        if (config.Characters.Count == 0)
         {
             ImGui.TextDisabled(Loc.Get("Mentions_Player_Empty"));
             return;
         }
 
         var toDelete = -1;
-        for (var i = 0; i < mutable.Characters.Count; ++i)
+        for (var i = 0; i < config.Characters.Count; ++i)
         {
-            var character = mutable.Characters[i];
+            var character = config.Characters[i];
             using var id = ImRaii.PushId(i);
 
             var headerLabel = character.Active
@@ -204,7 +204,7 @@ internal sealed class MentionsTab : IToggleableTab
         }
 
         if (toDelete >= 0)
-            mutable.Characters.RemoveAt(toDelete);
+            config.Characters.RemoveAt(toDelete);
     }
 
     /// <summary>
@@ -233,7 +233,7 @@ internal sealed class MentionsTab : IToggleableTab
         if (name.Length == 0)
             return;
 
-        var existing = mutable.Characters
+        var existing = config.Characters
             .FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         if (existing != null)
         {
@@ -241,7 +241,7 @@ internal sealed class MentionsTab : IToggleableTab
             return;
         }
 
-        mutable.Characters.Add(new CharacterMentionSettings { Name = name, Active = true });
+        config.Characters.Add(new CharacterMentionSettings { Name = name, Active = true });
     }
 
     private void DrawCharacterOptions(CharacterMentionSettings character)

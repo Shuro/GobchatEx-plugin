@@ -18,9 +18,9 @@ namespace GobchatEx.Windows.SettingsTabs;
 /// Dev page, split into an ImGui tab bar with one tab per test area: the Chat 2 message styling
 /// IPC (exercised through <see cref="ChatTwoStyleIpcTester"/>), the native range dimming
 /// (<see cref="DebugRangePane"/>), live friend-group state (<see cref="DebugGroupsPane"/>), and
-/// glow/color macro probes printed to the native log. Unlike the other pages everything here
-/// works live — against Chat 2 or the saved configuration — nothing is staged or persisted, and
-/// Save/Apply/Cancel don't affect it. Body strings stay unlocalized on purpose: developer
+/// glow/color macro probes printed to the native log. Unlike the other pages nothing here edits
+/// the configuration — it works live against Chat 2 or reads the saved config, so the window's
+/// instant-apply commit never fires for it. Body strings stay unlocalized on purpose: developer
 /// tooling, not user-facing UI.
 /// </summary>
 internal sealed class DebugTab : ISettingsTab

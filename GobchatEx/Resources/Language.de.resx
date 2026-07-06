@@ -63,8 +63,6 @@
         </value>
     </resheader>
     <data name="General_TabName"><value>Allgemein</value></data>
-    <data name="General_MovableWindow_Name"><value>Verschiebbares Einstellungsfenster</value></data>
-    <data name="General_MovableWindow_Tooltip"><value>Wird erst nach Speichern wirksam.</value></data>
     <data name="General_Language_Name"><value>Sprache</value></data>
     <data name="General_Language_Tooltip"><value>Ändert die Sprache des GobchatEx-Einstellungsfensters. Übersetzt keinen Chattext im Spiel.</value></data>
     <data name="General_OptionalPlugins_Header"><value>Optionale Plugins</value></data>
@@ -200,9 +198,6 @@
     <data name="Settings_Nav_General"><value>Allgemein</value></data>
     <data name="Settings_Nav_Appearance"><value>Darstellung</value></data>
     <data name="Settings_Nav_Chat"><value>Chat</value></data>
-    <data name="Settings_Footer_Save"><value>Speichern</value></data>
-    <data name="Settings_Footer_Apply"><value>Übernehmen</value></data>
-    <data name="Settings_Footer_Cancel"><value>Abbrechen</value></data>
     <data name="Settings_KofiTooltip"><value>Auf Ko-fi unterstützen</value></data>
 
     <data name="Placeholder_Profiles_Name"><value>Profile</value></data>
@@ -218,11 +213,12 @@
     <data name="Range_FadeOut_Name"><value>Abblenden ab (Yalms)</value></data>
     <data name="Range_FadeOut_Tooltip"><value>Bis zu dieser Entfernung bleiben Nachrichten voll lesbar; darüber hinaus werden sie stufenweise dunkler.</value></data>
     <data name="Range_CutOff_Name"><value>Grenze (Yalms)</value></data>
-    <data name="Range_CutOff_Tooltip"><value>Jenseits dieser Entfernung werden Nachrichten im normalen Chatverlauf auf die dunkelste Stufe abgeblendet — nie entfernt, sie bleiben in Verlauf und Protokollen. In Chat 2 können sie nur aus der Anzeige ausgeblendet werden. Gleich dem Abblend-Beginn gesetzt ergibt das einen harten Übergang ohne Abblenden.</value></data>
+    <data name="Range_CutOff_Tooltip"><value>Jenseits dieser Entfernung werden Nachrichten im normalen Chatverlauf auf die dunkelste Stufe abgeblendet — nie entfernt, sie bleiben in Verlauf und Protokollen. In Chat 2 können sie nur aus der Anzeige ausgeblendet werden. Gleich dem Abblend-Beginn gesetzt ergibt das einen harten Übergang ohne Abblenden. Der Regler reicht bis 60 Yalms; per Strg+Klick lässt sich ein höherer Wert eintippen.</value></data>
     <data name="Range_MentionsIgnore_Name"><value>Erwähnungen ignorieren den Filter</value></data>
     <data name="Range_MentionsIgnore_Tooltip"><value>Eine Nachricht, die dich erwähnt, wird nie abgeblendet oder versteckt, egal wie weit der Absender entfernt ist.</value></data>
     <data name="Range_Channels_Header"><value>Gefilterte Kanäle</value></data>
     <data name="Range_Channels_Tooltip"><value>Nur Nähe-Kanäle stehen zur Auswahl — einen serverweiten Kanal nach Entfernung zu filtern würde Nachrichten davon abhängig machen, wo der Absender gerade steht.</value></data>
+    <data name="Range_EngineLimit_Tooltip"><value>Die Spiel-Engine begrenzt diesen Kanal bereits auf maximal 20 Yalms — Nachrichten von weiter weg kommen unabhängig von den oben eingestellten Entfernungen nie an.</value></data>
     <data name="Range_ChatTwo_Header"><value>Chat 2</value></data>
     <data name="Range_ChatTwo_Header_Tooltip"><value>In Chat 2 kann der Entfernungsfilter echte Transparenz pro Nachricht nutzen statt der dunkleren Farbstufen des normalen Chatverlaufs.</value></data>
     <data name="Range_ChatTwo_Fade_Name"><value>Mit echter Transparenz abblenden</value></data>
