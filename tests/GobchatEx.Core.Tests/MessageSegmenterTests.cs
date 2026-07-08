@@ -9,9 +9,10 @@ public sealed class MessageSegmenterTests
         => new(DefaultRules.All, triggers);
 
     private static (string Text, SegmentType Type)[] SegmentSingleRun(
-        MessageSegmenter segmenter, string text, out bool hasMention)
+        MessageSegmenter segmenter, string text, out bool hasMention,
+        SegmentType defaultType = SegmentType.Undefined)
     {
-        var result = segmenter.Segment([text]);
+        var result = segmenter.Segment([text], defaultType);
         result.Should().NotBeNull();
         hasMention = result!.HasMention;
         AssertFullCoverage(text, result.RunSpans[0]);
@@ -115,6 +116,34 @@ public sealed class MessageSegmenterTests
     {
         DefaultSegmenter().Segment([]).Should().BeNull();
         DefaultSegmenter().Segment([""]).Should().BeNull();
+    }
+
+    [Fact]
+    public void DefaultType_AppliesToOtherwiseUndefinedText()
+    {
+        // A /say (or /s) line has no quote marks of its own, but the channel already implies Say.
+        SegmentSingleRun(DefaultSegmenter(), "plain text, no markup", out _, SegmentType.Say)
+            .Should().Equal(("plain text, no markup", SegmentType.Say));
+    }
+
+    [Fact]
+    public void DefaultType_DoesNotOverrideExplicitlyTypedSpans()
+    {
+        // OOC/Emote markup embedded in a /say line still wins; only the untyped leftover falls
+        // back to the channel's default.
+        SegmentSingleRun(DefaultSegmenter(), "he waves *hello* and ((brb))", out _, SegmentType.Say)
+            .Should().Equal(
+                ("he waves ", SegmentType.Say),
+                ("*hello*", SegmentType.Emote),
+                (" and ", SegmentType.Say),
+                ("((brb))", SegmentType.Ooc));
+    }
+
+    [Fact]
+    public void DefaultType_Undefined_LeavesUntypedTextUnclassified()
+    {
+        // The default parameter value must reproduce today's channel-agnostic behavior exactly.
+        DefaultSegmenter().Segment(["plain text, no markup"], SegmentType.Undefined).Should().BeNull();
     }
 
     [Fact]

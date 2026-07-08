@@ -36,8 +36,11 @@ public sealed class MessageSegmenter
     /// <summary>
     /// Segments the text runs of one message. Returns null when nothing
     /// matched, so callers can leave the message untouched (fast path).
+    /// <paramref name="defaultType"/>, when not <see cref="SegmentType.Undefined"/>, is applied to
+    /// whatever text the token rules and mention overlay left untyped — e.g. a plain, unquoted
+    /// /say line still renders as Say once the channel implies it.
     /// </summary>
-    public SegmentationResult? Segment(IReadOnlyList<string> runTexts)
+    public SegmentationResult? Segment(IReadOnlyList<string> runTexts, SegmentType defaultType = SegmentType.Undefined)
     {
         if (runTexts.Count == 0)
             return null;
@@ -60,8 +63,26 @@ public sealed class MessageSegmenter
             spans = overlaid;
         }
 
+        if (defaultType != SegmentType.Undefined)
+            spans = ApplyDefaultType(spans, defaultType);
+
         var anyTyped = spans.Any(runSpans => runSpans.Any(s => s.Type != SegmentType.Undefined));
         return anyTyped ? new SegmentationResult(spans, hasMention) : null;
+    }
+
+    /// <summary>Recolors any still-Undefined span to <paramref name="defaultType"/>, leaving typed spans as-is.</summary>
+    private static List<IReadOnlyList<SegmentSpan>> ApplyDefaultType(
+        IReadOnlyList<IReadOnlyList<SegmentSpan>> spans, SegmentType defaultType)
+    {
+        var result = new List<IReadOnlyList<SegmentSpan>>(spans.Count);
+        foreach (var runSpans in spans)
+        {
+            result.Add(runSpans.Any(s => s.Type == SegmentType.Undefined)
+                ? runSpans.Select(s => s.Type == SegmentType.Undefined ? s with { Type = defaultType } : s).ToList()
+                : runSpans);
+        }
+
+        return result;
     }
 
     private static IReadOnlyList<IReadOnlyList<SegmentSpan>> InitialSpans(IReadOnlyList<string> runTexts)

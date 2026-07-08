@@ -213,6 +213,20 @@ public sealed class ChatListener : IDisposable
             _ => _config.Formatting.MentionStyle,
         };
 
+    /// <summary>
+    /// A /say (or its /s alias) or /emote (or /em) line is implicitly said/emoted even without the
+    /// usual quote or asterisk delimiters — Dalamud already resolves both aliases to the same
+    /// <see cref="XivChatType"/> as their long form, so no literal command-text matching is needed.
+    /// Only applies when the corresponding style is enabled, matching <see cref="SettingsChanged"/>'s
+    /// existing rule that a disabled style never produces that <see cref="SegmentType"/>.
+    /// </summary>
+    private SegmentType DefaultTypeFor(XivChatType channel) => channel switch
+    {
+        XivChatType.Say when StyleFor(SegmentType.Say).Enabled => SegmentType.Say,
+        XivChatType.CustomEmote when StyleFor(SegmentType.Emote).Enabled => SegmentType.Emote,
+        _ => SegmentType.Undefined,
+    };
+
     private void OnChatMessage(IHandleableChatMessage message)
     {
         // Range outcome first (the distance and mention probe read the raw message), but styling
@@ -295,7 +309,7 @@ public sealed class ChatListener : IDisposable
         if (runTexts == null)
             return;
 
-        var result = _segmenter.Segment(runTexts);
+        var result = _segmenter.Segment(runTexts, DefaultTypeFor(message.LogKind));
         if (result == null)
             return;
 
