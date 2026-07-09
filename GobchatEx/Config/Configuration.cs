@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -86,15 +87,25 @@ public sealed class Configuration
     /// so the broken file stays inspectable until the next save); the other
     /// sections are unaffected.
     /// </summary>
-    public static Configuration Load() => new()
+    public static Configuration Load()
     {
-        General = LoadSection<GeneralConfig>("general.json"),
-        Formatting = LoadSection<FormattingConfig>("formatting.json"),
-        Mentions = LoadSection<MentionsConfig>("mentions.json"),
-        Groups = LoadSection<GroupsConfig>("groups.json"),
-        RangeFilter = LoadSection<RangeFilterConfig>("rangefilter.json"),
-        Tabs = LoadSection<TabsConfig>("tabs.json"),
-    };
+        var config = new Configuration
+        {
+            General = LoadSection<GeneralConfig>("general.json"),
+            Formatting = LoadSection<FormattingConfig>("formatting.json"),
+            Mentions = LoadSection<MentionsConfig>("mentions.json"),
+            Groups = LoadSection<GroupsConfig>("groups.json"),
+            RangeFilter = LoadSection<RangeFilterConfig>("rangefilter.json"),
+            Tabs = LoadSection<TabsConfig>("tabs.json"),
+        };
+
+        // FriendGroups are seeded in FfGroup order, but a hand-edited groups.json may not be:
+        // normalize the live list once here so per-frame consumers (the Groups tab) can iterate
+        // it directly. GroupRuleBuilder still orders defensively when building rules.
+        config.Groups.FriendGroups.Sort((a, b) => Comparer<int?>.Default.Compare(a.FfGroup, b.FfGroup));
+
+        return config;
+    }
 
     private static T LoadSection<T>(string fileName) where T : new()
     {

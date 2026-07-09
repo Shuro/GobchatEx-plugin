@@ -205,7 +205,12 @@ internal sealed class MentionsTab : IToggleableTab
         }
 
         if (toDelete >= 0)
+        {
+            // Drop any half-typed custom word for the deleted character, or it would silently
+            // resurface in the input box if a character with the same name is re-added.
+            newCustomWordByCharacter.Remove(config.Characters[toDelete].Name);
             config.Characters.RemoveAt(toDelete);
+        }
     }
 
     /// <summary>

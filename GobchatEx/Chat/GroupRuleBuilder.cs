@@ -40,9 +40,10 @@ internal static class GroupRuleBuilder
     }
 
     /// <summary>
-    /// The FfGroup-ordered friend groups — the same defensive ordering the rules use, also used
-    /// by the Groups tab so the displayed order always matches the matching order.
+    /// The FfGroup-ordered friend groups — <see cref="Build"/>'s per-settings-change defensive
+    /// ordering. The Groups tab iterates the live list directly; Configuration.Load normalizes
+    /// its order once, so the displayed order still matches the matching order.
     /// </summary>
-    public static IEnumerable<PlayerGroup> OrderedFriendGroups(GroupsConfig groups)
+    private static IEnumerable<PlayerGroup> OrderedFriendGroups(GroupsConfig groups)
         => groups.FriendGroups.OrderBy(g => g.FfGroup);
 }
