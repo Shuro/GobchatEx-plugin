@@ -123,6 +123,25 @@ public sealed class ChatListener : IDisposable
 
     private static readonly MentionRules NoMentionRules = new([], [], [], FuzzyMatchLevel.Conservative);
 
+    // The channel universe the sound-only mention probe listens on: every conversational channel
+    // the Formatting tab offers (its Main/Linkshell/Crossworld grids — keep in sync), independent
+    // of which ones the user selected for highlighting. CheckMessageHandled also fires for combat,
+    // loot, and system LogKinds, which must stay out: battle log lines routinely contain player
+    // names (false mention dings) and would pay the segmentation scan on every non-chat line.
+    private static readonly HashSet<XivChatType> MentionSoundChannels =
+    [
+        XivChatType.Say, XivChatType.CustomEmote, XivChatType.StandardEmote,
+        XivChatType.Yell, XivChatType.Shout,
+        XivChatType.Party, XivChatType.CrossParty, XivChatType.Alliance,
+        XivChatType.FreeCompany, XivChatType.TellIncoming, XivChatType.TellOutgoing,
+        XivChatType.NoviceNetwork, XivChatType.Echo,
+        XivChatType.Ls1, XivChatType.Ls2, XivChatType.Ls3, XivChatType.Ls4,
+        XivChatType.Ls5, XivChatType.Ls6, XivChatType.Ls7, XivChatType.Ls8,
+        XivChatType.CrossLinkShell1, XivChatType.CrossLinkShell2, XivChatType.CrossLinkShell3,
+        XivChatType.CrossLinkShell4, XivChatType.CrossLinkShell5, XivChatType.CrossLinkShell6,
+        XivChatType.CrossLinkShell7, XivChatType.CrossLinkShell8,
+    ];
+
     // Tells and Echo carry no real sender to group (Echo is local-only, matching IsFromSelf's own
     // reasoning); error messages are game system text. Mirrors the old app's channel exclusion.
     // Internal so ChatTwoStyleProvider applies the same exclusion to group backgrounds.
@@ -310,8 +329,18 @@ public sealed class ChatListener : IDisposable
         // instead of flattening everything to one grey line.
         var fadeStep = RangeFadeStep(message);
 
+        // The mention sound is independent of the highlighting gate: SettingsChanged builds
+        // mention rules whenever the sound alert needs them, so when the highlighting pass
+        // (which plays the sound itself) doesn't run for this message, probe here — bounded
+        // to conversational channels (see MentionSoundChannels). The MentionsEnabled guard
+        // skips a per-message segmentation that could never match (BuildMentionRules returns
+        // NoMentionRules with the master switch off).
         if (_enabled && _channels.Contains(message.LogKind))
             ApplyBodyHighlighting(message, fadeStep);
+        else if (_config.Mentions.MentionSoundEnabled && _config.Mentions.MentionsEnabled
+            && MentionSoundChannels.Contains(message.LogKind)
+            && HasMention(message))
+            TryPlayMentionSound(message);
 
         ApplySenderGroupColor(message, fadeStep);
 
@@ -349,10 +378,11 @@ public sealed class ChatListener : IDisposable
     }
 
     /// <summary>
-    /// Mention probe for the range filter's bypass: segments the message body without rewriting
-    /// anything. Costs one extra segmentation for bypassed messages (which then get segmented
-    /// again by <see cref="ApplyBodyHighlighting"/>) — same order of cost as the existing
-    /// sound-only mention path, and only paid by messages already inside fade range.
+    /// Mention probe for the range filter's bypass and the sound-only mention path: segments the
+    /// message body without rewriting anything. Costs one extra segmentation for range-bypassed
+    /// messages (which then get segmented again by <see cref="ApplyBodyHighlighting"/>), only
+    /// paid by messages already inside fade range; the sound-only path segments exactly once,
+    /// since it only runs when the highlighting pass doesn't.
     /// </summary>
     private bool HasMention(IHandleableChatMessage message)
     {

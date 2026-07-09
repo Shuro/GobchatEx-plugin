@@ -17,7 +17,10 @@ namespace GobchatEx.Chat;
 /// </summary>
 internal sealed class FriendGroupLookup
 {
-    private Dictionary<(string Name, string World), int> _index = new();
+    // volatile: written on the framework thread (Refresh), read from Chat 2's processing
+    // thread (ChatTwoStyleProvider.EvaluateCore) — same contract as that provider's own
+    // _snapshot/_playerDistances fields.
+    private volatile Dictionary<(string Name, string World), int> _index = new();
 
     /// <summary>Read-only snapshot for the Debug page's Friend Groups pane; not for matching logic.</summary>
     public IReadOnlyDictionary<(string Name, string World), int> Entries => _index;

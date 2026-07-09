@@ -123,16 +123,9 @@ internal static class GroupCommandHandler
 
     private static void ExecuteClear(Plugin plugin, PlayerGroup group)
     {
-        if (group.Members.Count == 0)
-        {
-            Plugin.ChatGui.Print(string.Format(Loc.Get("Commands_Group_AlreadyEmpty"), group.Name));
-            return;
-        }
-
-        group.Members.Clear();
-        plugin.Configuration.Save();
-        plugin.ChatListener.SettingsChanged();
-        Plugin.ChatGui.Print(string.Format(Loc.Get("Commands_Group_Cleared"), group.Name));
+        Plugin.ChatGui.Print(GroupMembershipActions.ClearGroup(plugin, group)
+            ? string.Format(Loc.Get("Commands_Group_Cleared"), group.Name)
+            : string.Format(Loc.Get("Commands_Group_AlreadyEmpty"), group.Name));
     }
 
     private static void ListGroups(Plugin plugin)

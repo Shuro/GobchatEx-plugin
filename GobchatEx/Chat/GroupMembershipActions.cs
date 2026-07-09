@@ -59,7 +59,24 @@ internal sealed class GroupMembershipActions
     /// </summary>
     private bool Matches(GroupMember member) => GroupMatcher.IsMember(member, name, world);
 
-    private void Persist()
+    /// <summary>
+    /// Empties a group's member list. Static — clear targets no player, so there is no
+    /// (name, world) pair to bind — but persists through the same path as add/remove.
+    /// </summary>
+    /// <returns>False if the group was already empty (no-op, not persisted).</returns>
+    public static bool ClearGroup(Plugin plugin, PlayerGroup group)
+    {
+        if (group.Members.Count == 0)
+            return false;
+
+        group.Members.Clear();
+        Persist(plugin);
+        return true;
+    }
+
+    private void Persist() => Persist(plugin);
+
+    private static void Persist(Plugin plugin)
     {
         plugin.Configuration.Save();
         plugin.ChatListener.SettingsChanged();
