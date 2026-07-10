@@ -22,10 +22,12 @@ internal static class SettingsUi
 {
     // Toggle track colors: green = on, red = off (hover variants slightly
     // brighter). Deliberately muted so a rail full of switches doesn't scream.
-    private static readonly Vector4 ToggleOnTrack = new(0.10f, 0.60f, 0.25f, 1f);
-    private static readonly Vector4 ToggleOnTrackHover = new(0.12f, 0.72f, 0.30f, 1f);
-    private static readonly Vector4 ToggleOffTrack = new(0.65f, 0.18f, 0.18f, 1f);
-    private static readonly Vector4 ToggleOffTrackHover = new(0.78f, 0.22f, 0.22f, 1f);
+    // Also the on/off background of the Quickbar's feature buttons, so both
+    // surfaces read as the same on/off state.
+    internal static readonly Vector4 ToggleOnTrack = new(0.10f, 0.60f, 0.25f, 1f);
+    internal static readonly Vector4 ToggleOnTrackHover = new(0.12f, 0.72f, 0.30f, 1f);
+    internal static readonly Vector4 ToggleOffTrack = new(0.65f, 0.18f, 0.18f, 1f);
+    internal static readonly Vector4 ToggleOffTrackHover = new(0.78f, 0.22f, 0.22f, 1f);
 
     public static void SectionHeader(string label, string? help = null)
     {

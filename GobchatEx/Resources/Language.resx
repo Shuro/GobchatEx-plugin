@@ -69,7 +69,23 @@
     <data name="General_OptionalPlugins_Tooltip"><value>Plugins GobchatEx integrates with when they are available.</value></data>
     <data name="General_ChatTwo_NotInstalled"><value>Chat 2 is not installed or not loaded.</value></data>
     <data name="General_ChatTwo_NoStyling"><value>Chat 2 is loaded, but this version has no message styling support yet.</value></data>
+    <data name="General_ShowQuickbar_Name"><value>Show Quickbar</value></data>
+    <data name="General_ShowQuickbar_Tooltip"><value>Shows a small movable bar with quick toggles for GobchatEx's main features.</value></data>
     <data name="Language_Option_UseDalamudDefault"><value>Use Dalamud's default language</value></data>
+
+    <data name="Quickbar_StartRpLog_Tooltip"><value>Start RP-Log — planned feature, not available yet.</value></data>
+    <data name="Quickbar_OpenSettings_Tooltip"><value>Open the GobchatEx settings.</value></data>
+    <data name="Quickbar_Hide_Tooltip"><value>Hide the Quickbar. Re-enable it under General settings.</value></data>
+    <data name="Quickbar_HideDuringCutscenes_Name"><value>Hide during cutscenes</value></data>
+    <data name="Quickbar_HideDuringCutscenes_Tooltip"><value>Hide the Quickbar during cutscenes and group pose.</value></data>
+    <data name="Quickbar_HideWhenNotLoggedIn_Name"><value>Hide when not logged in</value></data>
+    <data name="Quickbar_HideWhenNotLoggedIn_Tooltip"><value>Hide the Quickbar when you are not logged in to a character.</value></data>
+    <data name="Quickbar_HideWhenUiHidden_Name"><value>Hide when game UI is hidden</value></data>
+    <data name="Quickbar_HideWhenUiHidden_Tooltip"><value>Hide the Quickbar when the game UI is hidden.</value></data>
+    <data name="Quickbar_HideInLoadingScreens_Name"><value>Hide during loading screens</value></data>
+    <data name="Quickbar_HideInLoadingScreens_Tooltip"><value>Hide the Quickbar during loading screens.</value></data>
+    <data name="Quickbar_HideInBattle_Name"><value>Hide during battle</value></data>
+    <data name="Quickbar_HideInBattle_Tooltip"><value>Hide the Quickbar during battle.</value></data>
 
     <data name="Formatting_TabName"><value>Formatting</value></data>
     <data name="Formatting_ColorSelection_Header"><value>Color selection for text types</value></data>

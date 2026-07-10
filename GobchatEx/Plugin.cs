@@ -28,6 +28,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IClientState ClientState { get; private set; } = null!;
+    [PluginService] internal static ICondition Condition { get; private set; } = null!;
     [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
     [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
     [PluginService] internal static ITargetManager TargetManager { get; private set; } = null!;
@@ -61,6 +62,7 @@ public sealed class Plugin : IDalamudPlugin
 #endif
     internal ChatTwoStyleProvider ChatTwoStyles { get; init; }
     private SettingsWindow SettingsWindow { get; init; }
+    private QuickbarWindow QuickbarWindow { get; init; }
 
     public Plugin()
     {
@@ -79,6 +81,8 @@ public sealed class Plugin : IDalamudPlugin
 
         SettingsWindow = new SettingsWindow(this);
         WindowSystem.AddWindow(SettingsWindow);
+        QuickbarWindow = new QuickbarWindow(this);
+        WindowSystem.AddWindow(QuickbarWindow);
 
         // Dalamud has no alias mechanism on CommandInfo, so each command
         // name gets its own handler pointing at the same action.
@@ -98,7 +102,7 @@ public sealed class Plugin : IDalamudPlugin
 
         PluginInterface.UiBuilder.Draw += DrawUI;
         // Both the installer's cog and its "Open" button lead to settings —
-        // the settings window is the plugin's only window.
+        // the Quickbar overlay manages its own visibility via config.
         PluginInterface.UiBuilder.OpenConfigUi += ToggleSettingsUI;
         PluginInterface.UiBuilder.OpenMainUi += ToggleSettingsUI;
         PluginInterface.LanguageChanged += OnLanguageChanged;
@@ -232,6 +236,13 @@ public sealed class Plugin : IDalamudPlugin
 
     private void DrawUI() => WindowSystem.Draw();
     public void ToggleSettingsUI() => SettingsWindow.Toggle();
+
+    /// <summary>Opens (never closes) and focuses the settings window — the Quickbar's cog.</summary>
+    public void OpenSettingsUI()
+    {
+        SettingsWindow.IsOpen = true;
+        SettingsWindow.BringToFront();
+    }
 
     private void OnLanguageChanged(string langCode)
     {

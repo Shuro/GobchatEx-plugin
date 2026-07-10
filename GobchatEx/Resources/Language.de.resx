@@ -69,7 +69,23 @@
     <data name="General_OptionalPlugins_Tooltip"><value>Plugins, mit denen GobchatEx zusammenarbeitet, wenn sie verfügbar sind.</value></data>
     <data name="General_ChatTwo_NotInstalled"><value>Chat 2 ist nicht installiert oder nicht geladen.</value></data>
     <data name="General_ChatTwo_NoStyling"><value>Chat 2 ist geladen, aber diese Version bietet noch keine Nachrichten-Gestaltung.</value></data>
+    <data name="General_ShowQuickbar_Name"><value>Schnellleiste anzeigen</value></data>
+    <data name="General_ShowQuickbar_Tooltip"><value>Zeigt eine kleine bewegliche Leiste mit Schnellschaltern für die Hauptfunktionen von GobchatEx.</value></data>
     <data name="Language_Option_UseDalamudDefault"><value>Dalamuds Standardsprache verwenden</value></data>
+
+    <data name="Quickbar_StartRpLog_Tooltip"><value>RP-Log starten — geplante Funktion, noch nicht verfügbar.</value></data>
+    <data name="Quickbar_OpenSettings_Tooltip"><value>Öffnet die GobchatEx-Einstellungen.</value></data>
+    <data name="Quickbar_Hide_Tooltip"><value>Blendet die Schnellleiste aus. Unter Allgemein wieder aktivierbar.</value></data>
+    <data name="Quickbar_HideDuringCutscenes_Name"><value>Während Cutscenes ausblenden</value></data>
+    <data name="Quickbar_HideDuringCutscenes_Tooltip"><value>Blendet die Schnellleiste während Cutscenes und im Gruppenpose-Modus aus.</value></data>
+    <data name="Quickbar_HideWhenNotLoggedIn_Name"><value>Ausblenden, wenn nicht eingeloggt</value></data>
+    <data name="Quickbar_HideWhenNotLoggedIn_Tooltip"><value>Blendet die Schnellleiste aus, wenn kein Charakter eingeloggt ist.</value></data>
+    <data name="Quickbar_HideWhenUiHidden_Name"><value>Ausblenden, wenn das Spiel-UI verborgen ist</value></data>
+    <data name="Quickbar_HideWhenUiHidden_Tooltip"><value>Blendet die Schnellleiste aus, wenn das Spiel-UI verborgen ist.</value></data>
+    <data name="Quickbar_HideInLoadingScreens_Name"><value>Während Ladebildschirmen ausblenden</value></data>
+    <data name="Quickbar_HideInLoadingScreens_Tooltip"><value>Blendet die Schnellleiste während Ladebildschirmen aus.</value></data>
+    <data name="Quickbar_HideInBattle_Name"><value>Im Kampf ausblenden</value></data>
+    <data name="Quickbar_HideInBattle_Tooltip"><value>Blendet die Schnellleiste im Kampf aus.</value></data>
 
     <data name="Formatting_TabName"><value>Formatierung</value></data>
     <data name="Formatting_ColorSelection_Header"><value>Farbwahl für Textarten</value></data>

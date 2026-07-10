@@ -38,9 +38,53 @@ internal sealed class GeneralTab : ISettingsTab
     {
         DrawLanguage();
 
+        ImGuiHelpers.ScaledDummy(6f);
+        var showQuickbar = config.ShowQuickbar;
+        if (SettingsUi.Toggle(Loc.Get("General_ShowQuickbar_Name"), ref showQuickbar))
+            config.ShowQuickbar = showQuickbar;
+        ImGuiComponents.HelpMarker(Loc.Get("General_ShowQuickbar_Tooltip"));
+
+        if (config.ShowQuickbar)
+            DrawQuickbarHideOptions();
+
         ImGuiHelpers.ScaledDummy(10f);
         SettingsUi.SectionHeader(Loc.Get("General_OptionalPlugins_Header"), Loc.Get("General_OptionalPlugins_Tooltip"));
         DrawOptionalPlugins();
+    }
+
+    /// <summary>
+    /// Sub-options controlling when the Quickbar hides, indented under the
+    /// "Show Quickbar" toggle and only visible while it's on. Names and
+    /// semantics mirror Chat 2's display options; defaults are all-on.
+    /// </summary>
+    private void DrawQuickbarHideOptions()
+    {
+        using var indent = ImRaii.PushIndent();
+
+        var cutscenes = config.QuickbarHideDuringCutscenes;
+        if (SettingsUi.Toggle(Loc.Get("Quickbar_HideDuringCutscenes_Name"), ref cutscenes))
+            config.QuickbarHideDuringCutscenes = cutscenes;
+        ImGuiComponents.HelpMarker(Loc.Get("Quickbar_HideDuringCutscenes_Tooltip"));
+
+        var notLoggedIn = config.QuickbarHideWhenNotLoggedIn;
+        if (SettingsUi.Toggle(Loc.Get("Quickbar_HideWhenNotLoggedIn_Name"), ref notLoggedIn))
+            config.QuickbarHideWhenNotLoggedIn = notLoggedIn;
+        ImGuiComponents.HelpMarker(Loc.Get("Quickbar_HideWhenNotLoggedIn_Tooltip"));
+
+        var uiHidden = config.QuickbarHideWhenUiHidden;
+        if (SettingsUi.Toggle(Loc.Get("Quickbar_HideWhenUiHidden_Name"), ref uiHidden))
+            config.QuickbarHideWhenUiHidden = uiHidden;
+        ImGuiComponents.HelpMarker(Loc.Get("Quickbar_HideWhenUiHidden_Tooltip"));
+
+        var loading = config.QuickbarHideInLoadingScreens;
+        if (SettingsUi.Toggle(Loc.Get("Quickbar_HideInLoadingScreens_Name"), ref loading))
+            config.QuickbarHideInLoadingScreens = loading;
+        ImGuiComponents.HelpMarker(Loc.Get("Quickbar_HideInLoadingScreens_Tooltip"));
+
+        var battle = config.QuickbarHideInBattle;
+        if (SettingsUi.Toggle(Loc.Get("Quickbar_HideInBattle_Name"), ref battle))
+            config.QuickbarHideInBattle = battle;
+        ImGuiComponents.HelpMarker(Loc.Get("Quickbar_HideInBattle_Tooltip"));
     }
 
     /// <summary>
