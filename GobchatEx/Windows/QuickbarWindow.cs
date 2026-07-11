@@ -11,9 +11,10 @@ using GobchatEx.Localization;
 namespace GobchatEx.Windows;
 
 /// <summary>
-/// Compact movable overlay bar (like a game hotbar) with one-click on/off
-/// buttons for the four main features plus quick access to the settings
-/// window. Icon-only to stay small; tooltips carry the names. Visibility is
+/// Compact movable overlay bar (like a game hotbar) with a start/stop button
+/// for the session chat log, one-click on/off buttons for the four main
+/// features, plus quick access to the settings window. Icon-only to stay
+/// small; tooltips carry the names. Visibility is
 /// driven entirely by <see cref="Config.GeneralConfig.ShowQuickbar"/> — see
 /// <see cref="PreOpenCheck"/> — and every click persists and applies itself
 /// immediately (the settings window's debounced commit is not involved).
@@ -82,9 +83,19 @@ public class QuickbarWindow : Window
         DrawGrip();
         ImGui.SameLine();
 
-        using (ImRaii.Disabled(true))
-            ImGuiComponents.IconButton(FontAwesomeIcon.FileSignature);
-        SettingsUi.Tooltip(Loc.Get("Quickbar_StartRpLog_Tooltip"));
+        // Session-scoped runtime state on the ChatLogger, not config — same start/stop logic as
+        // the Logs tab's button, and nothing to persist or apply.
+        var chatLogger = plugin.ChatLogger;
+        if (FeatureButton(FontAwesomeIcon.FileSignature, chatLogger.IsLogging))
+        {
+            if (chatLogger.IsLogging)
+                chatLogger.StopLogging();
+            else
+                chatLogger.StartLogging();
+        }
+        SettingsUi.Tooltip(Loc.Get(chatLogger.IsLogging
+            ? "Quickbar_StopLog_Tooltip"
+            : "Quickbar_StartLog_Tooltip"));
 
         VerticalDivider();
 

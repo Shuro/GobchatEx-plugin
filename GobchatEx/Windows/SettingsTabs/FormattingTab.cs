@@ -20,8 +20,9 @@ namespace GobchatEx.Windows.SettingsTabs;
 internal sealed class FormattingTab : IToggleableTab
 {
     // These three grids also define ChatListener.MentionSoundChannels' conversational-channel
-    // universe — keep that set in sync when adding or removing a channel here.
-    private static readonly (string LabelKey, XivChatType Type)[] MainChannels =
+    // universe — keep that set in sync when adding or removing a channel here. Internal because
+    // ChatLogTab offers the same conversational channels in its own grids.
+    internal static readonly (string LabelKey, XivChatType Type)[] MainChannels =
     [
         ("Formatting_Channel_Say", XivChatType.Say),
         ("Formatting_Channel_Emote", XivChatType.CustomEmote),
@@ -38,7 +39,7 @@ internal sealed class FormattingTab : IToggleableTab
         ("Formatting_Channel_Echo", XivChatType.Echo),
     ];
 
-    private static readonly (string LabelKey, XivChatType Type)[] LinkshellChannels =
+    internal static readonly (string LabelKey, XivChatType Type)[] LinkshellChannels =
     [
         ("Formatting_Channel_Linkshell1", XivChatType.Ls1),
         ("Formatting_Channel_Linkshell2", XivChatType.Ls2),
@@ -50,7 +51,7 @@ internal sealed class FormattingTab : IToggleableTab
         ("Formatting_Channel_Linkshell8", XivChatType.Ls8),
     ];
 
-    private static readonly (string LabelKey, XivChatType Type)[] CrossworldLinkshellChannels =
+    internal static readonly (string LabelKey, XivChatType Type)[] CrossworldLinkshellChannels =
     [
         ("Formatting_Channel_Cwls1", XivChatType.CrossLinkShell1),
         ("Formatting_Channel_Cwls2", XivChatType.CrossLinkShell2),

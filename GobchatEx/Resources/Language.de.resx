@@ -73,7 +73,8 @@
     <data name="General_ShowQuickbar_Tooltip"><value>Zeigt eine kleine bewegliche Leiste mit Schnellschaltern für die Hauptfunktionen von GobchatEx.</value></data>
     <data name="Language_Option_UseDalamudDefault"><value>Dalamuds Standardsprache verwenden</value></data>
 
-    <data name="Quickbar_StartRpLog_Tooltip"><value>RP-Log starten — geplante Funktion, noch nicht verfügbar.</value></data>
+    <data name="Quickbar_StartLog_Tooltip"><value>Chat-Protokollierung starten</value></data>
+    <data name="Quickbar_StopLog_Tooltip"><value>Chat-Protokollierung stoppen</value></data>
     <data name="Quickbar_OpenSettings_Tooltip"><value>Öffnet die GobchatEx-Einstellungen.</value></data>
     <data name="Quickbar_Hide_Tooltip"><value>Blendet die Schnellleiste aus. Unter Allgemein wieder aktivierbar.</value></data>
     <data name="Quickbar_HideDuringCutscenes_Name"><value>Während Cutscenes ausblenden</value></data>
@@ -225,9 +226,30 @@
     <data name="Settings_Nav_Roleplay"><value>Rollenspiel</value></data>
     <data name="Settings_KofiTooltip"><value>Auf Ko-fi unterstützen</value></data>
 
-    <data name="Placeholder_Logs_Name"><value>Protokolle</value></data>
-    <data name="Placeholder_Logs_Description"><value>Chat in Protokolldateien auf der Festplatte schreiben.</value></data>
     <data name="Placeholder_ComingSoon"><value>Für eine zukünftige Version geplant.</value></data>
+
+    <data name="ChatLog_TabName"><value>Protokolle</value></data>
+    <data name="ChatLog_Button_Start"><value>Protokollierung starten</value></data>
+    <data name="ChatLog_Button_Stop"><value>Protokollierung stoppen</value></data>
+    <data name="ChatLog_Button_StartStop_Tooltip"><value>Die Protokollierung startet nie von selbst und stoppt immer beim Ausloggen. Stoppen schließt die aktuelle Datei nicht ab — ein erneuter Start im selben Login setzt sie fort; eine neue Datei beginnt bei Login, Charakterwechsel oder geänderten Ordner-Einstellungen.</value></data>
+    <data name="ChatLog_Status_Inactive"><value>Protokollierung ist gestoppt.</value></data>
+    <data name="ChatLog_Status_Active"><value>Protokollierung ist aktiv.</value></data>
+    <data name="ChatLog_Status_WaitingForMessage"><value>Protokollierung ist aktiv — die Protokolldatei wird mit der ersten Nachricht angelegt.</value></data>
+    <data name="ChatLog_Status_CurrentFile"><value>Aktuelle Datei: {0}</value></data>
+    <data name="ChatLog_Folder_Header"><value>Protokollordner</value></data>
+    <data name="ChatLog_Folder_Tooltip"><value>Protokolldateien werden hier abgelegt, eine Datei pro Login oder Charakterwechsel. Leer lassen für den Standardordner im Konfigurationsverzeichnis des Plugins.</value></data>
+    <data name="ChatLog_Folder_Hint"><value>Standardordner</value></data>
+    <data name="ChatLog_Folder_Browse_Tooltip"><value>Eigenen Ordner auswählen.</value></data>
+    <data name="ChatLog_Folder_PickerTitle"><value>Protokollordner auswählen</value></data>
+    <data name="ChatLog_Folder_Reset_Tooltip"><value>Auf den Standardordner zurücksetzen.</value></data>
+    <data name="ChatLog_Folder_Resolved"><value>Schreibt nach: {0}</value></data>
+    <data name="ChatLog_Folder_InvalidPath"><value>Der eingestellte Ordner ist nicht nutzbar — es wird stattdessen in den Standardordner geschrieben.</value></data>
+    <data name="ChatLog_CharacterFolders"><value>Unterordner pro Charakter anlegen</value></data>
+    <data name="ChatLog_CharacterFolders_Tooltip"><value>Die Protokolldateien jedes Charakters landen in einem eigenen, nach dem Charakter benannten Unterordner.</value></data>
+    <data name="ChatLog_Channels_Header"><value>Protokollierte Kanäle</value></data>
+    <data name="ChatLog_Channels_Tooltip"><value>Nur Nachrichten aus den ausgewählten Kanälen werden in die Protokolldatei geschrieben.</value></data>
+    <data name="ChatLog_Channels_ResetDefaults"><value>Auf Standardkanäle zurücksetzen</value></data>
+    <data name="ChatLog_Channels_ResetDefaults_Tooltip"><value>Strg+Umschalt gedrückt halten und klicken, um auf die Standardkanäle zurückzusetzen.</value></data>
 
     <data name="Formatting_Reset_Tooltip"><value>Strg+Umschalt gedrückt halten und klicken, um auf die Standardfarbe zurückzusetzen.</value></data>
     <data name="Formatting_ImportGame_Tooltip"><value>Übernimmt die Farbe, die das Spiel selbst für diesen Kanal nutzt (Charakterkonfiguration → Log-Textfarbe), abgebildet auf die nächstgelegene UIColor-Zeile.</value></data>

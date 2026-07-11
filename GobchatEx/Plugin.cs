@@ -54,6 +54,7 @@ public sealed class Plugin : IDalamudPlugin
     public Configuration Configuration { get; init; }
     public readonly WindowSystem WindowSystem = new("GobchatEx");
     internal ChatListener ChatListener { get; init; }
+    internal ChatLogger ChatLogger { get; init; }
     internal LegacyCommandListener LegacyCommandListener { get; init; }
     internal FriendGroupLookup FriendGroups { get; } = new();
     // Shared by the chat handler and the Mentions tab's preview button, so
@@ -77,6 +78,7 @@ public sealed class Plugin : IDalamudPlugin
 
         // Before SettingsWindow, which hands these to its tabs.
         ChatTwoStyles = new ChatTwoStyleProvider(Configuration, FriendGroups);
+        ChatLogger = new ChatLogger(Configuration.ChatLog);
 #if DEBUG
         // Debug builds only: the styling-IPC exerciser behind the Debug page. It suspends the
         // production provider while it holds Chat 2's single-provider gate.
@@ -149,6 +151,7 @@ public sealed class Plugin : IDalamudPlugin
         FriendListListener.Dispose();
         LegacyCommandListener.Dispose();
         ChatListener.Dispose();
+        ChatLogger.Dispose();
         SoundPlayer.Dispose();
         WindowSystem.RemoveAllWindows();
 

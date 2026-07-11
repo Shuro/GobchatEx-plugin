@@ -22,7 +22,9 @@ the logic to port lives.
   express — land in Chat 2 through its upstream styling IPC
   ([ChatTwo#186](https://github.com/Infiziert90/ChatTwo/issues/186)) without
   making Chat 2 a dependency.
-- **Chat logging comes last.** Useful, but not urgent.
+- **Chat logging was pulled ahead of profiles.** Originally sequenced last as
+  useful-but-not-urgent; shipped as Milestone 5 while profiles (Milestone 4)
+  wait.
 - **Chat Tabs are dropped.** Tabs only make sense inside an overlay window,
   and the native chat log already has game-managed tabs.
 - **Per-channel Colors are dropped.** The game's own settings (Character
@@ -152,9 +154,9 @@ of Milestones 2 and 3.
 
 Complexity: medium.
 
-## Milestone 4 — Profiles
+## Milestone 4 — Profiles — Deferred
 
-Config portability:
+Skipped in favor of Milestone 5 for now; still planned. Config portability:
 
 - Export/import the plugin configuration as JSON
 - Optional: import a profile from the standalone GobchatEx app (mapping the
@@ -163,16 +165,32 @@ Config portability:
 
 Complexity: low-medium.
 
-## Milestone 5 — Chat logging (last)
+## Milestone 5 — Chat logging — Done
 
 Write chat to disk, ported from the app's `Module/Misc/Chatlogger/`:
 
-- Per-session `.log` files with a customizable format string
-  (`{channel} [{date} {time-full}] {sender}: {message}`)
-- Per-channel selection, optional per-character subfolders, new file per
-  login, hardened path handling (`Core/Util/PathSecurityUtil.cs`)
-
-Complexity: low-medium.
+- Per-session `.log` files (`chatlog_{date}_{character}.log`), one per
+  login/character switch, created lazily with the first loggable message —
+  an idle session never leaves an empty stray file
+- The app's token format engine ported and unit-tested
+  (`Core/ChatLogFormatter.cs`) but writing a clean new format: no legacy
+  `Chatlogger Id:` header lines, channel names from a stable plugin-owned map
+  (`TellIncoming`, `Linkshell1` — not the app's `TellRecieve`/`LinkShell_1`),
+  UTF-8 without BOM — Gobchat-Log-Browser compatibility is explicitly not a
+  goal. The format string stays the app default
+  (`{channel} [{date} {time-full}] {sender}: {message}`), hand-editable in
+  chatlog.json; no editor UI yet
+- Logs tab: start/stop button with live status (mirrored by the Quickbar's
+  log button), per-channel selection (conversational defaults incl. Echo),
+  per-character subfolder toggle (default on), default folder
+  `{ConfigDirectory}\logs` with a folder picker for any custom location —
+  logging is a session-scoped manual action: never persisted, never
+  auto-started, always stopped at logout
+- Hardened path handling ported (`Core/Util/PathSecurityUtil.cs`): a
+  hand-edited relative path resolves inside the config directory or falls
+  back to the default with a warning
+- Batched framework-thread writes (1 s flush); messages suppressed by other
+  plugins (IsHandled) are not logged — the log mirrors what the player sees
 
 ## Backlog / opportunistic
 

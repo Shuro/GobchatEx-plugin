@@ -87,10 +87,10 @@ public class SettingsWindow : Window
 
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(550, 400),
+            MinimumSize = new Vector2(700, 500),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue),
         };
-        Size = new Vector2(600, 500);
+        Size = new Vector2(700, 500);
         SizeCondition = ImGuiCond.FirstUseEver;
 
         lastPersisted = SnapshotSections();
@@ -100,8 +100,7 @@ public class SettingsWindow : Window
             new NavSection("Settings_Nav_General",
             [
                 new GeneralTab(plugin.Configuration.General, plugin.ChatTwoStyles),
-                new PlaceholderTab("Placeholder_Logs_Name", FontAwesomeIcon.FileAlt,
-                    "Placeholder_Logs_Description"),
+                new ChatLogTab(plugin.Configuration.ChatLog, plugin.ChatLogger),
             ]),
             new NavSection("Settings_Nav_Roleplay",
             [
@@ -201,6 +200,7 @@ public class SettingsWindow : Window
             return;
 
         plugin.ChatListener.SettingsChanged();
+        plugin.ChatLogger.SettingsChanged();
         plugin.ChatTwoStyles.SettingsChanged();
         plugin.RefreshLanguage();
     }

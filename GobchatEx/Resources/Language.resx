@@ -73,7 +73,8 @@
     <data name="General_ShowQuickbar_Tooltip"><value>Shows a small movable bar with quick toggles for GobchatEx's main features.</value></data>
     <data name="Language_Option_UseDalamudDefault"><value>Use Dalamud's default language</value></data>
 
-    <data name="Quickbar_StartRpLog_Tooltip"><value>Start RP-Log — planned feature, not available yet.</value></data>
+    <data name="Quickbar_StartLog_Tooltip"><value>Start chat logging</value></data>
+    <data name="Quickbar_StopLog_Tooltip"><value>Stop chat logging</value></data>
     <data name="Quickbar_OpenSettings_Tooltip"><value>Open the GobchatEx settings.</value></data>
     <data name="Quickbar_Hide_Tooltip"><value>Hide the Quickbar. Re-enable it under General settings.</value></data>
     <data name="Quickbar_HideDuringCutscenes_Name"><value>Hide during cutscenes</value></data>
@@ -225,9 +226,30 @@
     <data name="Settings_Nav_Roleplay"><value>Roleplay</value></data>
     <data name="Settings_KofiTooltip"><value>Support on Ko-fi</value></data>
 
-    <data name="Placeholder_Logs_Name"><value>Logs</value></data>
-    <data name="Placeholder_Logs_Description"><value>Writing chat to log files on disk.</value></data>
     <data name="Placeholder_ComingSoon"><value>Planned for a future release.</value></data>
+
+    <data name="ChatLog_TabName"><value>Logs</value></data>
+    <data name="ChatLog_Button_Start"><value>Start logging</value></data>
+    <data name="ChatLog_Button_Stop"><value>Stop logging</value></data>
+    <data name="ChatLog_Button_StartStop_Tooltip"><value>Logging never starts by itself and always stops at logout. Stopping does not finalize the current file — starting again during the same login continues it; a new file begins at login, character switch, or when the folder settings change.</value></data>
+    <data name="ChatLog_Status_Inactive"><value>Logging is stopped.</value></data>
+    <data name="ChatLog_Status_Active"><value>Logging is active.</value></data>
+    <data name="ChatLog_Status_WaitingForMessage"><value>Logging is active — the log file is created with the first message.</value></data>
+    <data name="ChatLog_Status_CurrentFile"><value>Current file: {0}</value></data>
+    <data name="ChatLog_Folder_Header"><value>Log folder</value></data>
+    <data name="ChatLog_Folder_Tooltip"><value>Log files are written here, one file per login or character switch. Leave empty for the default folder inside the plugin configuration directory.</value></data>
+    <data name="ChatLog_Folder_Hint"><value>Default folder</value></data>
+    <data name="ChatLog_Folder_Browse_Tooltip"><value>Choose a custom folder.</value></data>
+    <data name="ChatLog_Folder_PickerTitle"><value>Choose log folder</value></data>
+    <data name="ChatLog_Folder_Reset_Tooltip"><value>Reset to the default folder.</value></data>
+    <data name="ChatLog_Folder_Resolved"><value>Writing to: {0}</value></data>
+    <data name="ChatLog_Folder_InvalidPath"><value>The configured folder is not usable — writing to the default folder instead.</value></data>
+    <data name="ChatLog_CharacterFolders"><value>Create a subfolder per character</value></data>
+    <data name="ChatLog_CharacterFolders_Tooltip"><value>Each character's log files go into their own subfolder, named after the character.</value></data>
+    <data name="ChatLog_Channels_Header"><value>Logged channels</value></data>
+    <data name="ChatLog_Channels_Tooltip"><value>Only messages from the selected channels are written to the log file.</value></data>
+    <data name="ChatLog_Channels_ResetDefaults"><value>Reset to default channels</value></data>
+    <data name="ChatLog_Channels_ResetDefaults_Tooltip"><value>Hold Ctrl+Shift and click to reset to the default channels.</value></data>
 
     <data name="Formatting_Reset_Tooltip"><value>Hold Ctrl+Shift and click to reset to the default color.</value></data>
     <data name="Formatting_ImportGame_Tooltip"><value>Import the game's own color for this channel (Character Configuration → Log Text Color), mapped to the closest UIColor row.</value></data>

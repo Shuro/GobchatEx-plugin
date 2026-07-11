@@ -21,6 +21,7 @@ public sealed class Configuration
     public GroupsConfig Groups { get; init; } = new();
     public RangeFilterConfig RangeFilter { get; init; } = new();
     public TabsConfig Tabs { get; init; } = new();
+    public ChatLogConfig ChatLog { get; init; } = new();
 
     /// <summary>
     /// The fixed section→file mapping that <see cref="Save"/> and the settings
@@ -34,6 +35,7 @@ public sealed class Configuration
         ("groups.json", Groups),
         ("rangefilter.json", RangeFilter),
         ("tabs.json", Tabs),
+        ("chatlog.json", ChatLog),
     ];
 
     /// <summary>
@@ -97,6 +99,7 @@ public sealed class Configuration
             Groups = LoadSection<GroupsConfig>("groups.json"),
             RangeFilter = LoadSection<RangeFilterConfig>("rangefilter.json"),
             Tabs = LoadSection<TabsConfig>("tabs.json"),
+            ChatLog = LoadSection<ChatLogConfig>("chatlog.json"),
         };
 
         // FriendGroups are seeded in FfGroup order, but a hand-edited groups.json may not be:
