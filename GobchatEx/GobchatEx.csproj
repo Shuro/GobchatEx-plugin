@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Dalamud.NET.Sdk/15.0.0">
+<Project Sdk="Dalamud.NET.Sdk">
   <PropertyGroup>
     <Version>0.9.1</Version>
     <AssemblyName>GobchatExPlugin</AssemblyName>
     <RootNamespace>GobchatEx</RootNamespace>
     <Description>Roleplay Highlighting in the native chat. Mentions notification with sound effects and more.</Description>
-    <PackageProjectUrl>https://github.com/Shuro/GobchatEx-plugin</PackageProjectUrl>
-    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <!--
-    The Dalamud.NET.Sdk implicitly references:
+    The Dalamud.NET.Sdk version is pinned in the repo-root global.json
+    (msbuild-sdks); IsPackable / license / project URL live in the repo-root
+    Directory.Build.props. The SDK implicitly references:
       - Dalamud.dll (from %AppData%\XIVLauncher\addon\Hooks\dev)
       - DalamudPackager
       - Dalamud.Bindings.ImGui
