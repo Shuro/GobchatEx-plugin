@@ -107,7 +107,7 @@ public class SettingsWindow : Window
                 new FormattingTab(plugin.Configuration.Formatting),
                 new MentionsTab(plugin.Configuration.Mentions, plugin.SoundPlayer),
                 new GroupsTab(plugin.Configuration.Groups, plugin.ChatTwoStyles),
-                new RangeTab(plugin.Configuration.RangeFilter, plugin.ChatTwoStyles),
+                new RangeTab(plugin.Configuration.RangeFilter, plugin.ChatTwoStyles, plugin.RangeRings),
                 new ChatTwoTab(plugin.Configuration.Tabs, plugin.ChatTwoStyles),
             ]),
             new NavSection(null,

@@ -49,16 +49,19 @@ internal sealed class RangeTab : IToggleableTab
 
     private readonly RangeFilterConfig config;
     private readonly ChatTwoStyleProvider chatTwoStyles;
+    private readonly RangeRingsOverlay rangeRings;
 
-    public RangeTab(RangeFilterConfig config, ChatTwoStyleProvider chatTwoStyles)
+    public RangeTab(RangeFilterConfig config, ChatTwoStyleProvider chatTwoStyles, RangeRingsOverlay rangeRings)
     {
         this.config = config;
         this.chatTwoStyles = chatTwoStyles;
+        this.rangeRings = rangeRings;
     }
 
     public void Draw()
     {
         DrawDistanceSliders();
+        DrawPreviewButton();
 
         ImGuiHelpers.ScaledDummy(6f);
         var mentionsIgnore = config.RangeFilterMentionsIgnoreRange;
@@ -106,6 +109,23 @@ internal sealed class RangeTab : IToggleableTab
         var endOpacity = config.RangeFilterEndOpacity;
         if (ImGui.SliderInt("##range-end-opacity", ref endOpacity, 1, 100, "%d%%", ImGuiSliderFlags.AlwaysClamp))
             config.RangeFilterEndOpacity = endOpacity;
+    }
+
+    /// <summary>
+    /// Fires the transient in-game preview (RangeRingsOverlay): ground rings at the two slider
+    /// distances for ~8 seconds. Radii are read at click time — the sliders above edit the live
+    /// config, so a re-click after dragging previews the new values. Needs a loaded character to
+    /// have something to draw around (mirrors MentionsTab's add-current-character gate).
+    /// </summary>
+    private void DrawPreviewButton()
+    {
+        ImGuiHelpers.ScaledDummy(2f);
+        using (ImRaii.Disabled(!Plugin.PlayerState.IsLoaded))
+        {
+            if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Bullseye, Loc.Get("Range_Preview_Button")))
+                rangeRings.Show(config.RangeFilterFadeOut, config.RangeFilterCutOff);
+        }
+        SettingsUi.Tooltip(Loc.Get("Range_Preview_Tooltip"));
     }
 
     private void DrawDistanceSliders()

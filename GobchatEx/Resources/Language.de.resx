@@ -274,6 +274,8 @@
     <data name="Range_FadeOut_Tooltip"><value>Bis zu dieser Entfernung bleiben Nachrichten voll lesbar; darüber hinaus werden sie stufenweise dunkler.</value></data>
     <data name="Range_CutOff_Name"><value>Grenze (Yalms)</value></data>
     <data name="Range_CutOff_Tooltip"><value>Jenseits dieser Entfernung werden Nachrichten im normalen Chatverlauf auf die dunkelste Stufe abgeblendet — nie entfernt, sie bleiben in Verlauf und Protokollen. In Chat 2 können sie nur aus der Anzeige ausgeblendet werden. Gleich dem Abblend-Beginn gesetzt ergibt das einen harten Übergang ohne Abblenden. Der Regler reicht bis 60 Yalms; per Strg+Klick lässt sich ein höherer Wert eintippen.</value></data>
+    <data name="Range_Preview_Button"><value>Entfernungen im Spiel anzeigen</value></data>
+    <data name="Range_Preview_Tooltip"><value>Zeigt beide Entfernungen für etwa 8 Sekunden als Ringe um deinen Charakter: gelb = Abblend-Beginn, orange = Grenze.</value></data>
     <data name="Range_MentionsIgnore_Name"><value>Erwähnungen ignorieren den Filter</value></data>
     <data name="Range_MentionsIgnore_Tooltip"><value>Eine Nachricht, die dich erwähnt, wird nie abgeblendet oder versteckt, egal wie weit der Absender entfernt ist.</value></data>
     <data name="Range_Channels_Header"><value>Gefilterte Kanäle</value></data>

@@ -274,6 +274,8 @@
     <data name="Range_FadeOut_Tooltip"><value>Up to this distance, messages stay fully readable; beyond it they darken step by step.</value></data>
     <data name="Range_CutOff_Name"><value>Cut-off (yalms)</value></data>
     <data name="Range_CutOff_Tooltip"><value>Beyond this distance messages dim to the darkest step in the native log — never removed, so they stay in the chat history and logs. In Chat 2 they can be hidden from display only. Set it equal to the fade start for a hard transition without fading. The slider goes up to 60 yalms; Ctrl+click it to type a higher value.</value></data>
+    <data name="Range_Preview_Button"><value>Show ranges in-game</value></data>
+    <data name="Range_Preview_Tooltip"><value>Shows both distances as rings around your character for about 8 seconds: yellow = fade start, orange = cut-off.</value></data>
     <data name="Range_MentionsIgnore_Name"><value>Mentions ignore the range filter</value></data>
     <data name="Range_MentionsIgnore_Tooltip"><value>A message that mentions you is never faded or hidden, no matter how far away the sender is.</value></data>
     <data name="Range_Channels_Header"><value>Filtered channels</value></data>

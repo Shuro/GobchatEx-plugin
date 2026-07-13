@@ -63,6 +63,9 @@ public sealed class Plugin : IDalamudPlugin
     // (which hands it to MentionsTab); disposed after ChatListener.
     internal SoundPlayer SoundPlayer { get; } = new();
     internal FriendListAddonListener FriendListListener { get; init; }
+    // The Range tab's transient in-game range preview. Created before SettingsWindow (which
+    // hands it to RangeTab); drawn from DrawUI, no state to persist or dispose.
+    internal RangeRingsOverlay RangeRings { get; } = new();
     private ChatTwoContextMenuIntegration ChatTwoIntegration { get; init; }
 #if DEBUG
     internal ChatTwoStyleIpcTester ChatTwoStyleTester { get; init; }
@@ -235,7 +238,11 @@ public sealed class Plugin : IDalamudPlugin
 
     private void OnCommand(string command, string args) => CommandDispatcher.Execute(this, args);
 
-    private void DrawUI() => WindowSystem.Draw();
+    private void DrawUI()
+    {
+        WindowSystem.Draw();
+        RangeRings.Draw();
+    }
     public void ToggleSettingsUI() => SettingsWindow.Toggle();
 
     /// <summary>Opens (never closes) and focuses the settings window — the Quickbar's cog.</summary>
