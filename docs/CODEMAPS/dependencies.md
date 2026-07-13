@@ -1,4 +1,4 @@
-<!-- Generated: 2026-07-12 (v0.9.0) | Files scanned: 73 (+19 tests) | Token estimate: ~750 -->
+<!-- Generated: 2026-07-13 (v0.10.2) | Files scanned: 75 (+20 tests) | Token estimate: ~750 -->
 
 # Dependencies
 
@@ -9,8 +9,9 @@ SDK: `Dalamud.NET.Sdk/15.0.0` — pins TargetFramework and implicitly references
 
 - Dalamud.dll (from `%AppData%\XIVLauncher\addon\Hooks\dev`)
 - DalamudPackager (build output = packed plugin folder)
-- Dalamud.Bindings.ImGui (settings UI, Quickbar; incl. `ImGuiP` internals —
-  `FindWindowByName` for the Quickbar's Chat 2 window anchor)
+- Dalamud.Bindings.ImGui (settings UI, Quickbar, range preview rings on the
+  background draw list; incl. `ImGuiP` internals — `FindWindowByName` for
+  the Quickbar's Chat 2 window anchor)
 - FFXIVClientStructs — `UIGlobals.PlayChatSoundEffect` (Chat/SoundPlayer.cs)
   and `InfoProxyFriendList` friend-list snapshot (Chat/FriendGroupLookup.cs,
   Windows/SettingsTabs/DebugGroupsPane.cs)
@@ -47,7 +48,8 @@ range filter, /gex player) · ITargetManager (`<t>` resolution in
 CommandDispatcher; GroupsTab add-current-target) · IDataManager (Excel
 sheets) · IGameConfig (import game channel color; range fade's
 channel-native text color) · IGameGui (ChatLog addon position for the
-Quickbar's attach mode) · IFramework (RunOnFrameworkThread; distance-snapshot
+Quickbar's attach mode; WorldToScreen for the range preview rings) ·
+IFramework (RunOnFrameworkThread; distance-snapshot
 timer; ChatLogger flush tick) · IAddonLifecycle ("FriendList"
 PostRequestedUpdate → live friend-group refresh) · ITextureProvider (About
 tab icon) · IPluginLog.

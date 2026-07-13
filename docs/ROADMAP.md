@@ -133,8 +133,9 @@ real transparency on top.
   it is registered and resumes it on unregister.
 - Per-message decision from the already-tested Core pieces: group background
   via `GroupMatcher` (per-group `ChatTwoBackground` color), range alpha from
-  `RangeFade.CalculateVisibility`, honoring channel scope and "mentions
-  ignore range" against the message text. All inputs live in an immutable
+  `RangeFade.CalculateVisibility` remapped through the app's start/end
+  opacity curve (`RangeFade.RemapOpacity`, defaults 80→30 %), honoring
+  channel scope and "mentions ignore range" against the message text. All inputs live in an immutable
   snapshot rebuilt on settings changes.
 - Threading: Chat 2 calls the provider on its message-processing thread;
   the `SenderDistance` lookup marshals to the framework thread, everything
@@ -199,6 +200,15 @@ Write chat to disk, ported from the app's `Module/Misc/Chatlogger/`:
   [ADR 0004](adr/0004-custom-sound-files-naudio.md))
 - Localization — done (the settings UI ships EN/DE strings via
   `GobchatEx/Localization/Loc.cs`, with resx fallback to English)
+- Emote autodetect in Say/Party channels — done (port of the app's
+  `autodetectEmoteInSay`/`-InParty` rule: a quoted span flags the remaining
+  unmarked text as Emote; Say on / Party off by default)
+- Chat 2 range fade start/end opacity — done (port of the app's rangefilter
+  start-/endopacity curve; native darkened steps unchanged)
+- Own-message mention suppression — done (no highlight and no sound for
+  your own messages by default; Echo exempt for testing)
+- In-game preview rings for the range distance sliders — done (plugin-new,
+  no app equivalent)
 
 ## Explicitly not migrating
 

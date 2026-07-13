@@ -22,10 +22,14 @@ in configured channels are recolored per segment —
   "fancy font" text is unicode-folded before matching. Optionally plays a
   game sound effect (`<se.1>`–`<se.16>`) or a custom sound file (wav, mp3,
   ogg vorbis/opus — with its own volume slider) with a per-sound cooldown.
+  Your own messages don't alert — and by default aren't highlighted either
+  (Echo is exempt, so `/echo` mention tests keep working).
 
 On `/say` and `/em`, text outside any delimiter counts as said or emoted
 too — an unquoted `/say` line still renders in the Say color (while that
-style is enabled). Colors are free RGB values (color-picker swatches in the
+style is enabled). When a `/say` line mixes quotes with unquoted text
+(`"hi" waves`), the unquoted rest is autodetected as an emote instead
+(default on; optional for Party channels, off by default). Colors are free RGB values (color-picker swatches in the
 config window; right-click a swatch to clear, each row has a
 reset-to-default, and Say/Emote can import the color the game itself uses
 for that channel). Delimiters may span item/player
@@ -47,7 +51,8 @@ and follows Dalamud's language unless overridden.
 **Range filter** fades chat from distant players: messages in configured
 channels (default Say and both Emotes) darken in steps with distance and
 render at the darkest step beyond the cut-off; mentions can bypass it so a
-far-away ping still reads normally.
+far-away ping still reads normally. A preview button in the Range tab draws
+the two distances as rings on the ground around your character.
 
 **Chat logging** writes chat to per-session `.log` files on demand — start
 and stop from the Logs tab or the Quickbar; it never starts by itself and
@@ -141,14 +146,18 @@ highlighted-channels list first, and add a mention trigger word. Then:
    soft white (`F8F8F8`), so quotes only stand out in channels whose base
    color isn't white. Also send an unquoted line with `/say` — the whole
    line renders in the Say color (unmarked `/say` text is implicitly Say;
-   likewise `/em` and the Emote color).
+   likewise `/em` and the Emote color). Then `/say "hi" waves` — the
+   quoted part renders Say, the unquoted rest Emote (emote autodetect,
+   Formatting tab).
 2. Repeat with an item link (Ctrl-click an item into the message) inside the
    quotes — the link keeps working and the quote color resumes after it.
 3. Send the line twice — the next chat line must render in normal colors
    (balanced color payloads).
 4. Add a trigger word, enable the mention sound, have someone (or an alt)
    say it — sound plays, respecting cooldown and the "not for my own
-   messages" toggle.
+   messages" toggle. Say the trigger yourself in `/say` — no highlight and
+   no sound (own-message suppression, both default on); in `/echo` it
+   still highlights.
 5. Mentions tab → "Add Current Character" (it starts active), then
    `/echo Yourfirstname likes this` — your name recolors as a mention.
 6. Right-click a player name in the chat log → Groups → add them to a
@@ -192,14 +201,18 @@ highlighted-channels list first, and add a mention trigger word. Then:
     demonstrate all of this directly without needing an alt: the
     "Unformatted text per channel" line prints one segment per channel in
     its own faded color, labeled with which source won (Chat 2 / vanilla /
-    fallback).
+    fallback). The Range tab's preview button draws a yellow (fade-out) and
+    an orange (cut-off) ring around your character for ~8 seconds — check
+    they match the slider distances.
 11. Only if testing the Chat 2 styling integration (Milestone 3.5): load
     Chat 2's `local/dev-combined` fork build, open the ChatTwo tab in
     settings — it should show connected. Give a custom group a Chat 2
     background color: a group member's message gets that background in
     Chat 2's window (not the native log, which can't draw backgrounds).
     Repeat step 10's distance test with Chat 2 open — messages should fade
-    to true partial transparency there instead of a darkened color step.
+    to true partial transparency there instead of a darkened color step,
+    stepping to the start opacity at the fade-out distance and ramping to
+    the end opacity at the cut-off (sliders under Range → Chat 2).
     Separately (works with any Chat 2 build, not just the fork): customize
     a channel's color on Chat 2's own "Chat colours" page, leave another
     channel at default, then use step 10's Debug page buttons — the

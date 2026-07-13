@@ -1,4 +1,4 @@
-<!-- Generated: 2026-07-12 (v0.9.0, post M5 chat logging + Quickbar + /gex commands) | Files scanned: 73 (+19 tests) | Token estimate: ~1800 -->
+<!-- Generated: 2026-07-13 (v0.10.2, post emote autodetect + Chat 2 fade opacity + range preview rings) | Files scanned: 75 (+20 tests) | Token estimate: ~1900 -->
 
 # GobchatEx Roleplay Suite Architecture
 
@@ -32,6 +32,7 @@ GobchatEx/
 ├── Localization/        Loc.cs ResourceManager wrapper (also Dalamud-free)
 ├── Resources/           Language.resx + Language.de.resx (UI chrome only)
 └── Windows/             ImGui UI (WindowSystem): SettingsWindow + QuickbarWindow;
+                         RangeRingsOverlay (not a Window — background draw list);
                          SettingsTabs/ incl. #if DEBUG-only pages
 ```
 
@@ -51,6 +52,11 @@ pre-dimmed), then applied to everything else last:
    → Core/MessageSegmenter.Segment → SegmentParser (OOC>Emote>Say) → MentionMatcher
      channel default type: text left unmarked on /say → Say, /em → Emote
      (ChatListener.DefaultTypeFor, only while that style is enabled)
+     emote autodetect: a quoted Say span flips remaining unmarked text to
+     Emote — after mentions, before the channel default (DetectEmoteInSay
+     default on / DetectEmoteInParty off, gated on the Emote style)
+     own messages skip the mention overlay (SuppressHighlightFromSelf,
+     default on; Echo exempt) — detection still runs for the sound decision
    → Chat/PayloadRewriter.Rewrite  spans → balanced raw Color/EdgeColor macro
      pairs (SeStringColorMacro, packed RGBA — not UIColor rows), pre-dimmed
      via UiColorDimmer.DimRgba when a fade step applies
@@ -169,8 +175,9 @@ pass's darkened color steps).
   services directly — blocking there risks deadlocking Chat 2's unload.
 - Decision reuses the same Core pieces as the native passes: `GroupMatcher`
   over `GroupRuleBuilder` rules for `PlayerGroup.ChatTwoBackground`,
-  `RangeFade.CalculateVisibility` for alpha, same mentions-bypass segmenter,
-  `SelfSender` for identity completion.
+  `RangeFade.CalculateVisibility` remapped through `RangeFade.RemapOpacity`
+  (start/end opacity curve, defaults 80→30 %) for alpha, same
+  mentions-bypass segmenter, `SelfSender` for identity completion.
 - Per-Chat-2-tab suppress flags (`TabsConfig.ChatTwoTabPolicies`) pushed
   via `ChatTwo.SetTabStylePolicies`; tab list from `GetTabs`/`TabsChanged`,
   pruned when a tab disappears.
@@ -203,6 +210,20 @@ and /gex player distance; full snapshot for the Chat 2 provider's message
 thread and /gex player count|list). Mentions optionally bypass the filter
 entirely. Configurable per-channel scope, defaults Say/Emote/StandardEmote.
 
+Chat 2's per-message alpha follows the app's fade curve instead of the raw
+ramp: `RangeFade.RemapOpacity` lerps from RangeFilterStartOpacity (80 %, at
+the fade-out distance) to RangeFilterEndOpacity (30 %, at the cut-off);
+beyond the cut-off the render-only hide is unchanged.
+
+Preview rings: the Range tab's preview button draws transient ground rings
+around the character — yellow at fade-out, orange at cut-off — for ~8 s,
+fading over the last second. Geometry/timing are Dalamud-free in
+`Core/RangeRingMath` (ring points, fade alpha); `Windows/RangeRingsOverlay`
+projects them via IGameGui.WorldToScreen and strokes the main viewport's
+*background* draw list from Plugin.DrawUI (not a Window — rings sit behind
+every plugin window). Zero radius renders as a dot at the character's feet;
+radii are captured at click time.
+
 ## Mentions (Milestone 1)
 
 Global trigger words union per-character resolved words for the logged-in,
@@ -222,7 +243,10 @@ sound effect (game's own SFX mixer) or a custom audio file via NAudio with
 its own volume (ADR 0004; wav/mp3 via AudioFileReader, ogg/vorbis via
 NAudio.Vorbis, ogg/opus via Concentus). File loaded lazily, cached until
 the path changes; a failed file play logs, falls back to the game effect,
-retries next alert. Own messages never alert (`Core/SelfSender`).
+retries next alert. Own messages never alert (`Core/SelfSender`) and by
+default aren't highlighted either (SuppressHighlightFromSelf; Echo exempt
+as the designated mention test channel); every skipped mention sound
+(disabled/self/cooldown) logs a Debug reason.
 
 ## Player Groups (Milestone 2)
 
@@ -269,17 +293,21 @@ UI language unless GeneralConfig.LanguageOverride is set; re-resolved via
   aligned slider rows, Ctrl+Shift-gated `DangerButton`.
 - GeneralTab.cs (199) — language override, Quickbar toggle + attach-to-chat +
   hide-condition grid, legacy echo fallback, optional-plugin (Chat 2) status.
-- ChatLogTab.cs (133) — start/stop button driving ChatLogger's runtime state
+- ChatLogTab.cs (146) — start/stop button driving ChatLogger's runtime state
   directly (not config), live status line, folder picker
   (ImGuiFileDialog), per-character subfolders, channel grid.
-- MentionsTab.cs (442) — trigger words, per-character matching, fuzzy level,
-  sound: game-effect picker or custom file (file picker + volume + preview
-  through the same SoundPlayer pipeline).
-- FormattingTab.cs (215) — segment colors, per-row reset, import from the
-  game's own channel color (direct RGBA conversion).
-- GroupsTab.cs (349) / RangeTab.cs (112) / ChatTwoTab.cs (106) — group CRUD
+- MentionsTab.cs (471) — trigger words, per-character matching (+ warning
+  when the logged-in character isn't registered and active), own-message
+  highlight suppression, fuzzy level, sound: game-effect picker or custom
+  file (file picker + volume + preview through the same SoundPlayer
+  pipeline).
+- FormattingTab.cs (235) — segment colors, per-row reset, import from the
+  game's own channel color (direct RGBA conversion), emote-autodetect
+  toggles (Say/Party).
+- GroupsTab.cs (349) / RangeTab.cs (154) / ChatTwoTab.cs (106) — group CRUD
   (rename, add current target) + Chat 2 background swatch; range sliders +
-  Chat 2 fade/hide toggles; per-Chat-2-tab suppress-flag table. Chat 2-only
+  in-game ring preview button + Chat 2 fade/hide toggles + start/end
+  opacity sliders; per-Chat-2-tab suppress-flag table. Chat 2-only
   controls disabled with a hint while `IsConnected` is false.
 - DebugTab.cs (442, `#if DEBUG`) — tab bar over `ChatTwoStyleIpcTester`,
   DebugRangePane.cs (274), DebugGroupsPane.cs (69), plus glow/color macro
@@ -287,16 +315,17 @@ UI language unless GeneralConfig.LanguageOverride is set; re-resolved via
 
 ## Key Files
 
-- GobchatEx/Chat/ChatListener.cs (568) — 3-pass rewrite subscription, config caches, channel-color resolution
-- GobchatEx/Chat/ChatTwoStyleProvider.cs (465) — Chat 2 styling IPC producer + snapshot
-- GobchatEx/Windows/QuickbarWindow.cs (305) — overlay bar, hide conditions, chat-window anchoring
-- GobchatEx/Chat/ChatLogger.cs (257) — Dalamud shell of the chat logger: mapping, batching, folder resolution
-- GobchatEx/Chat/SoundPlayer.cs (210) — game-effect + NAudio custom-file playback, cooldown
+- GobchatEx/Chat/ChatListener.cs (608) — 3-pass rewrite subscription, config caches, channel-color resolution
+- GobchatEx/Chat/ChatTwoStyleProvider.cs (472) — Chat 2 styling IPC producer + snapshot
+- GobchatEx/Windows/QuickbarWindow.cs (311) — overlay bar, hide conditions, chat-window anchoring
+- GobchatEx/Chat/ChatLogger.cs (280) — Dalamud shell of the chat logger: mapping, batching, folder resolution
+- GobchatEx/Chat/SoundPlayer.cs (214) — game-effect + NAudio custom-file playback, cooldown
 - GobchatEx/Chat/UiColorDimmer.cs (201) — fade-step dimming: RGBA multiply, UIColor-row remap, channel-color wrap
 - GobchatEx/Core/MentionMatcher.cs (179) — compiled regexes + fuzzy tokens, interval merge
+- GobchatEx/Core/MessageSegmenter.cs (162) — pipeline orchestration + mention overlay + emote autodetect + channel default type
 - GobchatEx/Core/PlayerMentionResolver.cs (148) — name parts → whole/partial word lists
-- GobchatEx/Core/MessageSegmenter.cs (145) — pipeline orchestration + mention overlay + channel default type
 - GobchatEx/Chat/GroupCommandHandler.cs (145) — /gex group add|remove|list parsing + execution
+- GobchatEx/Windows/RangeRingsOverlay.cs (142) — preview rings: WorldToScreen projection onto the background draw list
 - GobchatEx/Chat/PayloadRewriter.cs (132) — span → raw color-macro payload translation (+ RewriteUniform)
 - GobchatEx/Chat/PlayerCommandHandler.cs (118) — /gex player count|list|distance execution
 - GobchatEx/Core/ChatLogSession.cs (115) — chat-log session state machine (pure, injected clock)
@@ -306,14 +335,16 @@ UI language unless GeneralConfig.LanguageOverride is set; re-resolved via
 - GobchatEx/Core/ChatLogFormatter.cs (82) — {token} template → log line
 - GobchatEx/Core/Util/PathSecurityUtil.cs (75) — containment check for the log folder
 - GobchatEx/Core/CommandRouter.cs (66) — pure /gex subcommand routing
-- GobchatEx/Core/RangeFade.cs (41) — pure distance→visibility/fade-step math
+- GobchatEx/Core/RangeFade.cs (57) — pure distance→visibility/fade-step math + Chat 2 opacity remap
+- GobchatEx/Core/RangeRingMath.cs (49) — preview-ring geometry + fade timing (pure)
 
 ## Testing
 
-tests/GobchatEx.Core.Tests (19 files, 264 tests) compiles `GobchatEx/Core/**/*.cs`
+tests/GobchatEx.Core.Tests (20 files, 294 tests) compiles `GobchatEx/Core/**/*.cs`
 and `GobchatEx/Localization/**/*.cs` directly (no project reference) — any
 Dalamud using-directive there breaks `dotnet test` (ADR 0002). Covers the
-parser/mention/group/range engines, command routing (CommandRouter,
+parser/mention/group/range engines (incl. RangeFade's opacity remap and
+RangeRingMath's preview geometry), command routing (CommandRouter,
 PlayerCommandVerbParser, LegacyEchoCommand), and the chat-log engine
 (ChatLogSession with injected clock, ChatLogFormatter, ChatLogNaming,
 PathSecurityUtil). Loc tests run against throwaway resx fixtures. The
