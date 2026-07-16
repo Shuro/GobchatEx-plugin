@@ -147,8 +147,8 @@ internal sealed class MentionsTab : IToggleableTab
 
     private void DrawSoundSettings()
     {
-        // Highlight suppression is independent of the sound alert, so it stays outside the
-        // sound-disabled scope below.
+        // Highlight suppression is independent of the sound alert, so it stays above the
+        // sound-gated block below.
         var suppressHighlight = config.SuppressHighlightFromSelf;
         if (SettingsUi.Toggle(Loc.Get("Mentions_Highlight_SuppressSelf"), ref suppressHighlight))
             config.SuppressHighlightFromSelf = suppressHighlight;
@@ -159,58 +159,24 @@ internal sealed class MentionsTab : IToggleableTab
             config.MentionSoundEnabled = soundEnabled;
         ImGuiComponents.HelpMarker(Loc.Get("Mentions_Sound_PlayOnMatch_Tooltip"));
 
-        using var disabled = ImRaii.Disabled(!config.MentionSoundEnabled);
+        // Hidden (not grayed) while the sound is off, matching the Groups tab's per-group blocks.
+        if (!config.MentionSoundEnabled)
+            return;
 
-        // The volume slider stays in this tab's two-up cooldown/volume row below rather than
-        // inside the shared editor (showVolume: false).
-        soundEditor.Draw(config, showVolume: false);
+        using var indent = ImRaii.PushIndent();
+        soundEditor.Draw(config);
 
-        DrawCooldownVolumeRow(showVolume: config.MentionSoundUseCustomFile);
+        var cooldownMs = config.MentionSoundCooldownMs;
+        var volume = config.MentionSoundVolume;
+        AlertSoundEditor.DrawCooldownVolumeRow(
+            Loc.Get("Mentions_Sound_Cooldown"), Loc.Get("Mentions_Sound_Volume"),
+            ref cooldownMs, ref volume, showVolume: config.MentionSoundUseCustomFile);
+        config.MentionSoundCooldownMs = cooldownMs;
+        config.MentionSoundVolume = volume;
 
         var suppressSelf = config.SuppressSoundFromSelf;
         if (SettingsUi.Toggle(Loc.Get("Mentions_Sound_SuppressSelf"), ref suppressSelf))
             config.SuppressSoundFromSelf = suppressSelf;
-    }
-
-    /// <summary>
-    /// Cooldown and volume side by side, labels above the sliders (the RangeTab style —
-    /// right-hand slider labels wouldn't fit two-up in German at the minimum window width).
-    /// Laid out as two shared lines (both labels, then both sliders) rather than two groups
-    /// SameLine'd next to each other: items on one line always share height and baseline,
-    /// while a text item following a group inherits the group's frame-padding baseline and
-    /// renders a few pixels low. Cooldown comes first: volume only applies to custom sound
-    /// files (game sound effects have no volume API), so game-sound mode draws the cooldown
-    /// alone in the same spot.
-    /// </summary>
-    private void DrawCooldownVolumeRow(bool showVolume)
-    {
-        var spacing = ImGui.GetStyle().ItemSpacing.X;
-        var sliderWidth = MathF.Min(
-            (ImGui.GetContentRegionAvail().X - spacing) / 2f,
-            320f * ImGuiHelpers.GlobalScale);
-
-        var rowStartX = ImGui.GetCursorPosX();
-        ImGui.TextUnformatted(Loc.Get("Mentions_Sound_Cooldown"));
-        if (showVolume)
-        {
-            ImGui.SameLine();
-            ImGui.SetCursorPosX(rowStartX + sliderWidth + spacing);
-            ImGui.TextUnformatted(Loc.Get("Mentions_Sound_Volume"));
-        }
-
-        ImGui.SetNextItemWidth(sliderWidth);
-        var cooldownSeconds = config.MentionSoundCooldownMs / 1000;
-        if (ImGui.SliderInt("##cooldown", ref cooldownSeconds, 0, 30, "%d s"))
-            config.MentionSoundCooldownMs = cooldownSeconds * 1000;
-
-        if (!showVolume)
-            return;
-
-        ImGui.SameLine();
-        ImGui.SetNextItemWidth(sliderWidth);
-        var volumePercent = (int)Math.Round(config.MentionSoundVolume * 100f);
-        if (ImGui.SliderInt("##volume", ref volumePercent, 0, 100, "%d%%"))
-            config.MentionSoundVolume = volumePercent / 100f;
     }
 
     private void DrawTriggers()
@@ -459,21 +425,41 @@ internal sealed class MentionsTab : IToggleableTab
         }
 
         ImGuiHelpers.ScaledDummy(6f);
-        ImGui.TextUnformatted(Loc.Get("Mentions_Character_NameStyle"));
-        ImGui.SameLine();
-        ImGuiComponents.HelpMarker(Loc.Get("Mentions_Character_NameStyle_Tooltip"));
-        ImGui.SameLine();
-        var nameForeground = character.NameForeground;
-        if (SettingsUi.RgbaColorEdit("##nameFg", ref nameForeground, allowAlpha: false))
-            character.NameForeground = nameForeground;
-        ImGui.SameLine();
-        var nameGlow = character.NameGlow;
-        if (SettingsUi.RgbaColorEdit("##nameGlow", ref nameGlow, allowAlpha: false))
-            character.NameGlow = nameGlow;
+        DrawNameStyle(character);
 
         ImGuiHelpers.ScaledDummy(4f);
         ImGui.TextUnformatted(Loc.Get("Mentions_Character_CustomWords"));
         DrawCustomWords(character);
+    }
+
+    /// <summary>
+    /// The character's name highlight swatches under the same column titles the Groups tab
+    /// uses (<see cref="GroupsTab"/>'s color tables), so it's clear which swatch drives what.
+    /// </summary>
+    private static void DrawNameStyle(CharacterMentionSettings character)
+    {
+        ImGui.TextUnformatted(Loc.Get("Mentions_Character_NameStyle"));
+        ImGui.SameLine();
+        ImGuiComponents.HelpMarker(Loc.Get("Mentions_Character_NameStyle_Tooltip"));
+
+        using var table = ImRaii.Table("##name-style", 2, ImGuiTableFlags.SizingFixedFit);
+        if (!table)
+            return;
+
+        ImGui.TableSetupColumn(Loc.Get("Groups_Column_NameColor"), ImGuiTableColumnFlags.WidthFixed);
+        ImGui.TableSetupColumn(Loc.Get("Groups_Column_NameGlow"), ImGuiTableColumnFlags.WidthFixed);
+        ImGui.TableHeadersRow();
+
+        ImGui.TableNextRow();
+        ImGui.TableNextColumn();
+        var nameForeground = character.NameForeground;
+        if (SettingsUi.RgbaColorEdit("##nameFg", ref nameForeground, allowAlpha: false))
+            character.NameForeground = nameForeground;
+
+        ImGui.TableNextColumn();
+        var nameGlow = character.NameGlow;
+        if (SettingsUi.RgbaColorEdit("##nameGlow", ref nameGlow, allowAlpha: false))
+            character.NameGlow = nameGlow;
     }
 
     /// <summary>One cell of the name-match grid: a toggle switch, optionally disabled with a

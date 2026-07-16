@@ -297,7 +297,7 @@
     <data name="ChatTwo_Status_Connected"><value>Mit der Nachrichten-Gestaltung von Chat 2 verbunden.</value></data>
     <data name="ChatTwo_Status_NotConnected"><value>Nicht mit der Nachrichten-Gestaltung von Chat 2 verbunden.</value></data>
     <data name="ChatTwo_NotConnected_Hint"><value>Benötigt das Chat-2-Plugin mit Unterstützung für Nachrichten-Gestaltung.</value></data>
-    <data name="ChatTwo_NotConnected_Tooltip"><value>Benötigt eine Verbindung zur Nachrichten-Gestaltung von Chat 2 — siehe die Chat-2-Seite.</value></data>
+    <data name="ChatTwo_NotConnected_Tooltip"><value>Benötigt eine Verbindung zur Nachrichten-Gestaltung von Chat 2.</value></data>
     <data name="ChatTwo_Connect"><value>Verbinden</value></data>
     <data name="ChatTwo_Disconnect"><value>Trennen</value></data>
     <data name="ChatTwo_Tabs_Header"><value>Chat-2-Tabs</value></data>

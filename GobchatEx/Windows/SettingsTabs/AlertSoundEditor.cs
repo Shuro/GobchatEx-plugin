@@ -15,10 +15,12 @@ namespace GobchatEx.Windows.SettingsTabs;
 
 /// <summary>
 /// The shared alert-sound editor — game-effect/custom-file source radio, effect combo with
-/// instant preview, file path + browse + preview with missing/failed/too-long warnings, and an
-/// optional volume slider — drawing against any <see cref="IAlertSoundSettings"/>. Extracted
-/// from the Mentions tab so the Groups tab's per-group sounds (Milestone 6) reuse the same
-/// widget instead of duplicating it. One instance serves many settings objects in the same tab:
+/// instant preview, and file path + browse + preview with missing/failed/too-long warnings —
+/// drawing against any <see cref="IAlertSoundSettings"/>. Extracted from the Mentions tab so
+/// the Groups tab's per-group sounds (Milestone 6) reuse the same widget instead of
+/// duplicating it. Cooldown and volume live in the shared
+/// <see cref="DrawCooldownVolumeRow"/> both tabs draw under the editor.
+/// One instance serves many settings objects in the same tab:
 /// the exists/duration probe is cached per distinct path (a per-frame File.Exists would hit the
 /// disk while the tab is open) and a failed preview is remembered per path. Callers drawing it
 /// more than once per frame must scope each call with their own PushId.
@@ -54,11 +56,7 @@ internal sealed class AlertSoundEditor
         this.soundPlayer = soundPlayer;
     }
 
-    /// <summary>
-    /// <paramref name="showVolume"/> draws the volume slider under the file row; the Mentions
-    /// tab passes false and keeps its own two-up cooldown/volume layout instead.
-    /// </summary>
-    public void Draw(IAlertSoundSettings settings, bool showVolume)
+    public void Draw(IAlertSoundSettings settings)
     {
         if (ImGui.RadioButton(Loc.Get("Sound_SourceGame"), !settings.SoundUseCustomFile))
             settings.SoundUseCustomFile = false;
@@ -67,9 +65,58 @@ internal sealed class AlertSoundEditor
             settings.SoundUseCustomFile = true;
 
         if (settings.SoundUseCustomFile)
-            DrawCustomFile(settings, showVolume);
+            DrawCustomFile(settings);
         else
             DrawGameEffect(settings);
+    }
+
+    /// <summary>
+    /// Cooldown and volume side by side, labels above the sliders (the RangeTab style —
+    /// right-hand slider labels wouldn't fit two-up in German at the minimum window width).
+    /// Laid out as two shared lines (both labels, then both sliders) rather than two groups
+    /// SameLine'd next to each other: items on one line always share height and baseline,
+    /// while a text item following a group inherits the group's frame-padding baseline and
+    /// renders a few pixels low. Cooldown comes first: volume only applies to custom sound
+    /// files (game sound effects have no volume API), so game-sound mode draws the cooldown
+    /// alone in the same spot. Refs are only written on an actual slider change, so callers
+    /// can copy properties to locals and assign back unconditionally.
+    /// </summary>
+    internal static void DrawCooldownVolumeRow(string cooldownLabel, string volumeLabel,
+        ref int cooldownMs, ref float volume, bool showVolume, string? cooldownTooltip = null)
+    {
+        var spacing = ImGui.GetStyle().ItemSpacing.X;
+        var sliderWidth = MathF.Min(
+            (ImGui.GetContentRegionAvail().X - spacing) / 2f,
+            320f * ImGuiHelpers.GlobalScale);
+
+        var rowStartX = ImGui.GetCursorPosX();
+        ImGui.TextUnformatted(cooldownLabel);
+        if (cooldownTooltip != null)
+        {
+            ImGui.SameLine();
+            ImGuiComponents.HelpMarker(cooldownTooltip);
+        }
+
+        if (showVolume)
+        {
+            ImGui.SameLine();
+            ImGui.SetCursorPosX(rowStartX + sliderWidth + spacing);
+            ImGui.TextUnformatted(volumeLabel);
+        }
+
+        ImGui.SetNextItemWidth(sliderWidth);
+        var cooldownSeconds = cooldownMs / 1000;
+        if (ImGui.SliderInt("##cooldown", ref cooldownSeconds, 0, 30, "%d s"))
+            cooldownMs = cooldownSeconds * 1000;
+
+        if (!showVolume)
+            return;
+
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(sliderWidth);
+        var volumePercent = (int)Math.Round(volume * 100f);
+        if (ImGui.SliderInt("##volume", ref volumePercent, 0, 100, "%d%%"))
+            volume = volumePercent / 100f;
     }
 
     private static void DrawGameEffect(IAlertSoundSettings settings)
@@ -95,7 +142,7 @@ internal sealed class AlertSoundEditor
             SoundPlayer.Play(settings.SoundEffect);
     }
 
-    private void DrawCustomFile(IAlertSoundSettings settings, bool showVolume)
+    private void DrawCustomFile(IAlertSoundSettings settings)
     {
         var path = settings.SoundFilePath;
         var reserved = SettingsUi.IconButtonWidth(FontAwesomeIcon.FolderOpen)
@@ -120,14 +167,6 @@ internal sealed class AlertSoundEditor
 
         ImGui.SameLine();
         var previewClicked = ImGuiComponents.IconButton(FontAwesomeIcon.Play);
-
-        if (showVolume)
-        {
-            ImGui.SetNextItemWidth(180f * ImGuiHelpers.GlobalScale);
-            var volumePercent = (int)Math.Round(settings.SoundVolume * 100f);
-            if (ImGui.SliderInt($"{Loc.Get("Sound_Volume")}##volume", ref volumePercent, 0, 100, "%d%%"))
-                settings.SoundVolume = volumePercent / 100f;
-        }
 
         if (settings.SoundFilePath.Length == 0)
             return;

@@ -84,3 +84,11 @@ minus Tells/Echo, which groups still intentionally exclude), plus a
 referencing the same shared field, so both passes stay in sync. The rest of
 this ADR's decisions (shared cooldown, mention-wins precedence, own-messages-
 never-alert, sound cache) are unchanged.
+
+## Amendment (2026-07-16, UI only)
+
+The settings-UI consistency pass replaced the always-visible tab-bottom
+shared-cooldown slider: the cooldown now renders inside each enabled group's
+sound block, next to that group's volume (the Mentions tab's two-up row),
+still editing the one shared `GroupSoundCooldownMs` — its tooltip states the
+sharing. The decision itself (one timer across all groups) is unchanged.

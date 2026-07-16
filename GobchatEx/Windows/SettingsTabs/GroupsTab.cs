@@ -51,6 +51,9 @@ internal sealed class GroupsTab : IToggleableTab
 
     public void Draw()
     {
+        // No tab-level Chat 2 warning here (unlike the Range/Chat 2 tabs, where everything is
+        // disabled without the connection): only the "Row background (Chat 2)" swatches depend
+        // on it, and their disabled-state hover tooltip already explains the dependency.
         SettingsUi.SectionHeader(Loc.Get("Groups_Custom_Header"), Loc.Get("Groups_Custom_Header_Tooltip"));
         DrawCustomGroups();
 
@@ -90,7 +93,7 @@ internal sealed class GroupsTab : IToggleableTab
             using var indent = ImRaii.PushIndent();
 
             var active = group.Active;
-            if (ImGui.Checkbox(Loc.Get("Groups_Custom_Active"), ref active))
+            if (SettingsUi.Toggle(Loc.Get("Groups_Custom_Active"), ref active))
                 group.Active = active;
 
             ImGui.SameLine();
@@ -120,16 +123,14 @@ internal sealed class GroupsTab : IToggleableTab
 
         if (toDelete >= 0)
             config.Groups.RemoveAt(toDelete);
-
-        ImGuiHelpers.ScaledDummy(4f);
-        DrawSoundCooldown();
     }
 
     /// <summary>
-    /// The group's alert sound (Milestone 6): an enable toggle, then the shared sound editor
-    /// while enabled (hidden when off to keep each group's header compact — unlike the Mentions
-    /// tab there can be many of these). The editor call is safe to repeat per group because the
-    /// loop already scopes each group with PushId.
+    /// The group's alert sound (Milestone 6): an enable toggle, then — hidden while off, same
+    /// as the Mentions tab's sound block — the shared sound editor and the cooldown/volume row.
+    /// The cooldown slider edits the ONE value all groups share (ADR 0005; its tooltip says
+    /// so), so the same slider appears in every enabled group's block. The editor call is safe
+    /// to repeat per group because the loop already scopes each group with PushId.
     /// </summary>
     private void DrawGroupSound(PlayerGroup group)
     {
@@ -142,27 +143,16 @@ internal sealed class GroupsTab : IToggleableTab
             return;
 
         using var indent = ImRaii.PushIndent();
-        soundEditor.Draw(group, showVolume: true);
-    }
+        soundEditor.Draw(group);
 
-    /// <summary>
-    /// The cooldown all group sounds share (ADR 0005). Always drawn (stable layout), disabled
-    /// until any group's sound is enabled.
-    /// </summary>
-    private void DrawSoundCooldown()
-    {
-        var anySound = config.Groups.Any(g => g.SoundEnabled);
-        using (ImRaii.Disabled(!anySound))
-        {
-            ImGui.SetNextItemWidth(180f * ImGuiHelpers.GlobalScale);
-            var cooldownSeconds = config.GroupSoundCooldownMs / 1000;
-            if (ImGui.SliderInt($"{Loc.Get("Groups_Sound_Cooldown")}##groupSoundCooldown",
-                    ref cooldownSeconds, 0, 30, "%d s"))
-                config.GroupSoundCooldownMs = cooldownSeconds * 1000;
-        }
-
-        ImGui.SameLine();
-        ImGuiComponents.HelpMarker(Loc.Get("Groups_Sound_Cooldown_Tooltip"));
+        var cooldownMs = config.GroupSoundCooldownMs;
+        var volume = group.SoundVolume;
+        AlertSoundEditor.DrawCooldownVolumeRow(
+            Loc.Get("Groups_Sound_Cooldown"), Loc.Get("Sound_Volume"),
+            ref cooldownMs, ref volume, showVolume: group.SoundUseCustomFile,
+            cooldownTooltip: Loc.Get("Groups_Sound_Cooldown_Tooltip"));
+        config.GroupSoundCooldownMs = cooldownMs;
+        group.SoundVolume = volume;
     }
 
     private void DrawAddGroupControl()
