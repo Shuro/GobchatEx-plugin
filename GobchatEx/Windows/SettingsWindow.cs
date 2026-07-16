@@ -86,7 +86,7 @@ public class SettingsWindow : Window
     /// which the window host pairs with PreDraw unconditionally — even
     /// collapsed.
     /// </summary>
-    private ImRaii.ColorDisposable? windowStyleColors;
+    private ImRaii.ColorDisposable? windowThemeColors;
 
     public SettingsWindow(Plugin plugin)
         : base("GobchatEx Roleplay Suite###GobchatExSettings",
@@ -149,22 +149,22 @@ public class SettingsWindow : Window
     {
         WindowName = $"{Loc.Get("Settings_WindowTitle")}###GobchatExSettings";
 
-        var style = SettingsWindowStyle.ById(plugin.Configuration.General.WindowStyleId);
-        if (style.Frame is { } frame)
+        var theme = SettingsWindowTheme.ById(plugin.Configuration.General.WindowThemeId);
+        if (theme.Frame is { } frame)
         {
-            windowStyleColors = ImRaii.PushColor(ImGuiCol.WindowBg, frame.WindowBg)
+            windowThemeColors = ImRaii.PushColor(ImGuiCol.WindowBg, frame.WindowBg)
                 .Push(ImGuiCol.TitleBg, frame.TitleBg)
                 .Push(ImGuiCol.TitleBgActive, frame.TitleBgActive)
                 .Push(ImGuiCol.TitleBgCollapsed, frame.TitleBgCollapsed);
         }
 
-        SettingsUi.TrackOverride = style.Tracks;
+        SettingsUi.TrackOverride = theme.Tracks;
     }
 
     public override void PostDraw()
     {
-        windowStyleColors?.Dispose();
-        windowStyleColors = null;
+        windowThemeColors?.Dispose();
+        windowThemeColors = null;
         SettingsUi.TrackOverride = null;
     }
 

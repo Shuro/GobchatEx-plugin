@@ -65,9 +65,15 @@
     <data name="General_TabName"><value>Allgemein</value></data>
     <data name="General_Language_Name"><value>Sprache</value></data>
     <data name="General_Language_Tooltip"><value>Ändert die Sprache des GobchatEx-Einstellungsfensters. Übersetzt keinen Chattext im Spiel.</value></data>
-    <data name="General_WindowStyle_Name"><value>Fensterstil</value></data>
-    <data name="General_WindowStyle_Tooltip"><value>Farbschema dieses Einstellungsfensters. Standard folgt deinem Dalamud-Design; die anderen Stile bringen eigene Farben mit und werden sofort angezeigt.</value></data>
-    <data name="WindowStyle_Option_Default"><value>Standard</value></data>
+    <data name="General_WindowTheme_Name"><value>Fensterdesign</value></data>
+    <data name="General_WindowTheme_Tooltip"><value>Farbschema dieses Einstellungsfensters. Dalamud Theme folgt deinem Dalamud-Design; die anderen Designs bringen eigene Farben mit und werden sofort angezeigt.</value></data>
+    <!-- Theme names: the proper-noun part stays untranslated, only the color descriptor in
+         parentheses is localized. Dalamud Theme has no descriptor — neutral fallback covers it. -->
+    <data name="WindowTheme_Option_Yojiberry"><value>Yojiberry Theme (Pastellrosa)</value></data>
+    <data name="WindowTheme_Option_Ginoberry"><value>Ginoberry Theme (Dunkelgrün/Gold)</value></data>
+    <data name="WindowTheme_Option_SoftOctopus"><value>Soft Octopus Theme (Pastellviolett)</value></data>
+    <data name="WindowTheme_Option_Octopus"><value>Octopus Theme (Violett)</value></data>
+    <data name="WindowTheme_Option_Ruby"><value>Ruby Theme (Dunkelrot)</value></data>
     <data name="General_OptionalPlugins_Header"><value>Optionale Plugins</value></data>
     <data name="General_OptionalPlugins_Tooltip"><value>Plugins, mit denen GobchatEx zusammenarbeitet, wenn sie verfügbar sind.</value></data>
     <data name="General_ChatTwo_NotInstalled"><value>Chat 2 ist nicht installiert oder nicht geladen.</value></data>

@@ -16,11 +16,11 @@ public class GeneralConfig
 
     /// <summary>
     /// Color scheme of the settings window itself (background + title bar):
-    /// a Windows.SettingsWindowStyle.Id. Guid.Empty — the natural default —
-    /// is the Default style (follow the Dalamud theme); unknown ids fall
+    /// a Windows.SettingsWindowTheme.Id. Guid.Empty — the natural default —
+    /// is the Dalamud Theme (follow the Dalamud theme); unknown ids fall
     /// back to it on lookup.
     /// </summary>
-    public Guid WindowStyleId { get; set; }
+    public Guid WindowThemeId { get; set; }
 
     /// <summary>Shows the Quickbar overlay (drag grip, feature toggles, settings/hide buttons).</summary>
     public bool ShowQuickbar { get; set; }

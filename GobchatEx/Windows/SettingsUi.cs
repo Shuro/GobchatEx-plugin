@@ -31,8 +31,8 @@ internal static class SettingsUi
     internal static readonly Vector4 ToggleOffTrackHover = new(0.78f, 0.22f, 0.22f, 1f);
 
     /// <summary>
-    /// One set of <see cref="ToggleSwitch"/> track colors. Styles that want
-    /// non-default tracks define a palette in <see cref="SettingsWindowStyle"/>.
+    /// One set of <see cref="ToggleSwitch"/> track colors. Themes that want
+    /// non-default tracks define a palette in <see cref="SettingsWindowTheme"/>.
     /// </summary>
     internal readonly record struct TogglePalette(Vector4 On, Vector4 OnHover, Vector4 Off, Vector4 OffHover);
 

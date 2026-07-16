@@ -39,7 +39,7 @@ internal sealed class GeneralTab : ISettingsTab
         DrawLanguage();
 
         ImGuiHelpers.ScaledDummy(6f);
-        DrawWindowStyle();
+        DrawWindowTheme();
 
         ImGuiHelpers.ScaledDummy(6f);
         var showQuickbar = config.ShowQuickbar;
@@ -185,20 +185,20 @@ internal sealed class GeneralTab : ISettingsTab
     /// Color scheme of the settings window itself. Applied live by
     /// SettingsWindow.PreDraw, so switching previews instantly.
     /// </summary>
-    private void DrawWindowStyle()
+    private void DrawWindowTheme()
     {
-        ImGui.TextUnformatted(Loc.Get("General_WindowStyle_Name"));
-        ImGuiComponents.HelpMarker(Loc.Get("General_WindowStyle_Tooltip"));
+        ImGui.TextUnformatted(Loc.Get("General_WindowTheme_Name"));
+        ImGuiComponents.HelpMarker(Loc.Get("General_WindowTheme_Tooltip"));
 
         ImGui.SetNextItemWidth(320f * ImGuiHelpers.GlobalScale);
-        using (var combo = ImRaii.Combo("##window-style", SettingsWindowStyle.ById(config.WindowStyleId).Name))
+        using (var combo = ImRaii.Combo("##window-theme", SettingsWindowTheme.ById(config.WindowThemeId).Name))
         {
             if (combo)
             {
-                foreach (var option in SettingsWindowStyle.All)
+                foreach (var option in SettingsWindowTheme.All)
                 {
-                    if (ImGui.Selectable(option.Name, option.Id == config.WindowStyleId))
-                        config.WindowStyleId = option.Id;
+                    if (ImGui.Selectable(option.Name, option.Id == config.WindowThemeId))
+                        config.WindowThemeId = option.Id;
                 }
             }
         }
