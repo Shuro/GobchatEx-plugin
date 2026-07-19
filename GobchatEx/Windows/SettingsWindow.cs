@@ -84,7 +84,9 @@ public class SettingsWindow : Window
     /// <see cref="PreDraw"/> (which runs before ImGui.Begin, so they reach
     /// the background and title bar) and disposed in <see cref="PostDraw"/>,
     /// which the window host pairs with PreDraw unconditionally — even
-    /// collapsed.
+    /// collapsed. The theme's optional Text/Surface/DisabledText overrides
+    /// are pushed separately, scoped to <see cref="Draw"/> only — see the
+    /// comment there for why.
     /// </summary>
     private ImRaii.ColorDisposable? windowThemeColors;
 
@@ -245,8 +247,25 @@ public class SettingsWindow : Window
         return snapshot;
     }
 
+    /// <summary>
+    /// Draw() runs between the window host's title-bar rendering (inside
+    /// ImGui.Begin) and its title-bar *button* rendering (which happens
+    /// after Draw() returns — see WindowHost.DrawInternal). Scoping the
+    /// theme's Text/PopupBg overrides to this method, rather than pushing
+    /// them alongside the frame colors in PreDraw, keeps them off the title
+    /// text and its buttons (hamburger, pin, collapse, close), which fall
+    /// back to the same ImGuiCol.Text and read fine with the default light
+    /// color against the frame colors already applied — recoloring them to
+    /// match body text made them hard to read.
+    /// </summary>
     public override void Draw()
     {
+        var theme = SettingsWindowTheme.ById(plugin.Configuration.General.WindowThemeId);
+        using var contentColors = ImRaii.PushColor(ImGuiCol.Text, theme.Text)
+            .Push(ImGuiCol.PopupBg, theme.Surface)
+            .Push(ImGuiCol.TableHeaderBg, theme.Surface)
+            .Push(ImGuiCol.TextDisabled, theme.DisabledText);
+
         using (var table = ImRaii.Table("##gobchatex-settings-table", 2, ImGuiTableFlags.BordersInnerV))
         {
             if (table)
@@ -346,6 +365,11 @@ public class SettingsWindow : Window
         var textOffsetY = (rowHeight - ImGui.GetTextLineHeight()) / 2f;
         var rowRightX = ImGui.GetCursorPos().X + ImGui.GetContentRegionAvail().X;
 
+        // Themed DisabledText (if the active theme sets one) keeps dimmed rows below legible on
+        // pastel backgrounds where flat DalamudGrey3 washes out; other themes keep the stock grey.
+        var theme = SettingsWindowTheme.ById(plugin.Configuration.General.WindowThemeId);
+        var dimColor = theme.DisabledText ?? ImGuiColors.DalamudGrey3;
+
         for (var sectionIndex = 0; sectionIndex < sections.Count; sectionIndex++)
         {
             var section = sections[sectionIndex];
@@ -361,7 +385,7 @@ public class SettingsWindow : Window
                 var chatTwoUnavailable = tab is ChatTwoTab && !plugin.ChatTwoStyles.IsConnected;
 
                 // Not-yet-implemented pages and an unavailable Chat 2 tab stay visible but dimmed.
-                using var dim = ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey3,
+                using var dim = ImRaii.PushColor(ImGuiCol.Text, dimColor,
                     tab is PlaceholderTab || chatTwoUnavailable);
 
                 // Full-width invisible selectable, then icon + label (and, for toggleable tabs,

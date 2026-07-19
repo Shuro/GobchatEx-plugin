@@ -15,22 +15,30 @@ internal readonly record struct FrameColors(
 
 /// <summary>
 /// One selectable color scheme for the settings window itself (background +
-/// title bar, and optionally the toggle tracks), applied live by
-/// SettingsWindow.PreDraw so switching previews instantly. Only the frame
-/// slots are overridden — all widget colors still come from the user's
-/// Dalamud theme. Themes are identified by <see cref="Id"/>, persisted as
-/// GeneralConfig.WindowThemeId, so display names can change freely without
-/// affecting saved configs. Adding a theme takes two touches: an entry in
-/// <see cref="All"/> with a freshly generated Guid, and its display name in
-/// Language.resx (plus a de entry translating only the parenthesized color
-/// descriptor — the proper-noun part stays untranslated, Loc falls back per
-/// key).
+/// title bar, optionally the toggle tracks, and optionally body/dimmed text
+/// + an elevated-surface color for dropdowns and table headers), applied
+/// live by SettingsWindow.PreDraw and Draw so switching previews instantly.
+/// <see cref="Text"/>, <see cref="DisabledText"/> and <see cref="Surface"/>
+/// are scoped to the window's content only (pushed and popped inside Draw,
+/// not PreDraw) so they don't recolor the title bar text or its buttons,
+/// which are drawn outside that scope — see SettingsWindow.Draw. Beyond the
+/// frame slots and those three, all widget colors still come from the
+/// user's Dalamud theme. Themes are identified by
+/// <see cref="Id"/>, persisted as GeneralConfig.WindowThemeId, so display
+/// names can change freely without affecting saved configs. Adding a theme
+/// takes two touches: an entry in <see cref="All"/> with a freshly generated
+/// Guid, and its display name in Language.resx (plus a de entry translating
+/// only the parenthesized color descriptor — the proper-noun part stays
+/// untranslated, Loc falls back per key).
 /// </summary>
 internal sealed record SettingsWindowTheme(
     Guid Id,
     string NameKey,
     FrameColors? Frame = null,
-    SettingsUi.TogglePalette? Tracks = null)
+    SettingsUi.TogglePalette? Tracks = null,
+    Vector4? Text = null,
+    Vector4? Surface = null,
+    Vector4? DisabledText = null)
 {
     /// <summary>Display name, resolved per use so it follows the UI language.</summary>
     public string Name => Loc.Get(NameKey);
@@ -45,13 +53,21 @@ internal sealed record SettingsWindowTheme(
     [
         new(Guid.Empty, "WindowTheme_Option_Dalamud"),
 
-        // Yojiberry: a dusty pastel pink background kept dark enough that
-        // the theme's light text stays readable, and a fuller pink title bar.
-        // Toggle tracks are pastel green/red versions of the defaults,
-        // matching the pastel look while keeping on/off distinguishable by hue.
+        // Yojiberry: a dusty pastel pink background and a fuller pink title
+        // bar. The background is too light for the default (light) Dalamud
+        // text color, so Text overrides to a deep wine tint — dark enough
+        // for contrast without going flat black, tinted to match the
+        // theme's hue. Surface reuses the TitleBg tone (rather than
+        // matching WindowBg) for combo dropdowns and table headers: it
+        // needs to read as a visually distinct raised panel, not blend
+        // into the body, while still being light enough for the dark Text
+        // to stay legible — the default near-black popup/header made Text
+        // nearly invisible there. Toggle tracks are pastel green/red
+        // versions of the defaults, matching the pastel look while keeping
+        // on/off distinguishable by hue.
         new(new Guid("8365f08a-4126-483d-af1e-681b7123bfbc"), "WindowTheme_Option_Yojiberry",
             new FrameColors(
-                WindowBg: new(0.55f, 0.36f, 0.41f, 0.94f),
+                WindowBg: new(0.94f, 0.72f, 0.78f, 0.94f),
                 TitleBg: new(0.55f, 0.22f, 0.35f, 0.90f),
                 TitleBgActive: new(0.78f, 0.33f, 0.50f, 1f),
                 TitleBgCollapsed: new(0.55f, 0.22f, 0.35f, 0.75f)),
@@ -59,7 +75,10 @@ internal sealed record SettingsWindowTheme(
                 On: new(0.55f, 0.82f, 0.55f, 1f),
                 OnHover: new(0.62f, 0.89f, 0.62f, 1f),
                 Off: new(0.91f, 0.49f, 0.46f, 1f),
-                OffHover: new(0.96f, 0.58f, 0.55f, 1f))),
+                OffHover: new(0.96f, 0.58f, 0.55f, 1f)),
+            Text: new(0.16f, 0.05f, 0.08f, 1f),
+            Surface: new(0.55f, 0.22f, 0.35f, 0.96f),
+            DisabledText: new(0.30f, 0.14f, 0.18f, 1f)),
 
         // Ginoberry: "green darkmode" — a near-black green background with a
         // dark golden title bar: deep muted gold unfocused, stepping up to a
@@ -73,9 +92,12 @@ internal sealed record SettingsWindowTheme(
                 TitleBgCollapsed: new(0.18f, 0.13f, 0.04f, 0.75f))),
 
         // Soft Octopus: the Yojiberry recipe in lavender — dusty purple
-        // background, fuller purple title bar. Tracks are the same pastel
-        // green/red idea shifted cooler (mint on, rose off) to sit well on
-        // the lavender window.
+        // background, fuller purple title bar. Same contrast problem as
+        // Yojiberry, same fix: Text overrides to a deep purple tint, and
+        // Surface reuses the TitleBg tone so dropdowns/table headers read
+        // as a distinct raised panel instead of blending into the body.
+        // Tracks are the same pastel green/red idea shifted cooler (mint
+        // on, rose off) to sit well on the lavender window.
         new(new Guid("101391d6-245e-4885-b342-ab68f126c8e9"), "WindowTheme_Option_SoftOctopus",
             new FrameColors(
                 WindowBg: new(0.47f, 0.38f, 0.55f, 0.94f),
@@ -86,7 +108,10 @@ internal sealed record SettingsWindowTheme(
                 On: new(0.53f, 0.82f, 0.64f, 1f),
                 OnHover: new(0.60f, 0.89f, 0.71f, 1f),
                 Off: new(0.90f, 0.52f, 0.58f, 1f),
-                OffHover: new(0.95f, 0.60f, 0.66f, 1f))),
+                OffHover: new(0.95f, 0.60f, 0.66f, 1f)),
+            Text: new(0.12f, 0.06f, 0.15f, 1f),
+            Surface: new(0.40f, 0.24f, 0.55f, 0.96f),
+            DisabledText: new(0.24f, 0.16f, 0.30f, 1f)),
 
         // Octopus: near-black plum background and a deep dark purple title
         // bar. Deliberately no track palette — this theme has no pastels,
