@@ -66,13 +66,13 @@
     <data name="General_Language_Name"><value>Language</value></data>
     <data name="General_Language_Tooltip"><value>Changes the language of GobchatEx's own settings window. Does not translate in-game chat text.</value></data>
     <data name="General_WindowTheme_Name"><value>Window theme</value></data>
-    <data name="General_WindowTheme_Tooltip"><value>Color scheme of this settings window. Dalamud Theme follows your Dalamud theme; the other themes bring their own colors and preview instantly.</value></data>
+    <data name="General_WindowTheme_Tooltip"><value>Color scheme of this settings window.</value></data>
     <!-- Theme names: the proper-noun part is never translated; de entries exist only to
          localize the color descriptor in parentheses. -->
     <data name="WindowTheme_Option_Dalamud"><value>Dalamud Theme</value></data>
     <data name="WindowTheme_Option_Yojiberry"><value>Yojiberry Theme (Pastel Pink)</value></data>
     <data name="WindowTheme_Option_Ginoberry"><value>Ginoberry Theme (Dark Green/Gold)</value></data>
-    <data name="WindowTheme_Option_SoftOctopus"><value>Soft Octopus Theme (Pastel Purple)</value></data>
+    <data name="WindowTheme_Option_SoftOctopus"><value>Lavender Theme (Pastel Purple)</value></data>
     <data name="WindowTheme_Option_Octopus"><value>Octopus Theme (Purple)</value></data>
     <data name="WindowTheme_Option_Ruby"><value>Ruby Theme (Dark Red)</value></data>
     <data name="General_OptionalPlugins_Header"><value>Optional plugins</value></data>
@@ -84,12 +84,12 @@
     <data name="Language_Option_UseDalamudDefault"><value>Use Dalamud's default language</value></data>
 
     <data name="Quickbar_StartLog_Tooltip"><value>Start chat logging</value></data>
-    <data name="Quickbar_StartLog_NoFolder_Tooltip"><value>Chat logging needs a log folder — choose one in the settings (Logs tab).</value></data>
+    <data name="Quickbar_StartLog_NoFolder_Tooltip"><value>Chat logging needs a log folder.</value></data>
     <data name="Quickbar_StopLog_Tooltip"><value>Stop chat logging</value></data>
     <data name="Quickbar_OpenSettings_Tooltip"><value>Open the GobchatEx settings.</value></data>
     <data name="Quickbar_Hide_Tooltip"><value>Hide the Quickbar. Re-enable it under General settings.</value></data>
     <data name="Quickbar_AttachToChat_Name"><value>Attach to chat window</value></data>
-    <data name="Quickbar_AttachToChat_Tooltip"><value>Glue the Quickbar to the top edge of the chat window (Chat 2 when present, otherwise the game's chat log). The drag grip is hidden while attached; if no chat window is visible, the bar floats freely at its last position (or hides, while 'Hide when chat is hidden' is on).</value></data>
+    <data name="Quickbar_AttachToChat_Tooltip"><value>Glue the Quickbar to the top edge of the chat window (Chat 2 when present, otherwise the game's chat log).</value></data>
     <data name="Quickbar_HideDuringCutscenes_Name"><value>Hide during cutscenes</value></data>
     <data name="Quickbar_HideDuringCutscenes_Tooltip"><value>Hide the Quickbar during cutscenes and group pose.</value></data>
     <data name="Quickbar_HideWhenNotLoggedIn_Name"><value>Hide when not logged in</value></data>
@@ -101,7 +101,7 @@
     <data name="Quickbar_HideInBattle_Name"><value>Hide during battle</value></data>
     <data name="Quickbar_HideInBattle_Tooltip"><value>Hide the Quickbar during battle.</value></data>
     <data name="Quickbar_HideWhenChatHidden_Name"><value>Hide when chat is hidden</value></data>
-    <data name="Quickbar_HideWhenChatHidden_Tooltip"><value>Hide the Quickbar when no chat window is visible (Chat 2 or the game's chat log).</value></data>
+    <data name="Quickbar_HideWhenChatHidden_Tooltip"><value>Hide the Quickbar when no chat window is visible.</value></data>
 
     <data name="Formatting_TabName"><value>Formatting</value></data>
     <data name="Formatting_ColorSelection_Header"><value>Color selection for text types</value></data>
@@ -155,7 +155,7 @@
     <data name="Mentions_TabName"><value>Mentions</value></data>
     <data name="Mentions_General_Header"><value>General Settings</value></data>
     <data name="Mentions_Highlight_SuppressSelf"><value>Don't highlight mentions for my own messages</value></data>
-    <data name="Mentions_Highlight_SuppressSelf_Tooltip"><value>Messages you send (including outgoing tells) keep their Say/Emote/OOC styling but skip the mention highlight. /echo is exempt so you can always test your mentions there. Already-printed lines don't change — send a new message after toggling.</value></data>
+    <data name="Mentions_Highlight_SuppressSelf_Tooltip"><value>Messages you send (including outgoing tells) keep their Say/Emote/OOC styling but skip the mention highlight.</value></data>
     <data name="Mentions_Sound_PlayOnMatch"><value>Play a sound when a mention matches</value></data>
     <data name="Mentions_Sound_PlayOnMatch_Tooltip"><value>Game sound effects follow the game's sound-effects volume; a custom file has its own volume slider.</value></data>
     <data name="Mentions_Sound_Cooldown"><value>Cooldown</value></data>
@@ -171,7 +171,7 @@
     <data name="Mentions_Column_Glow"><value>Glow</value></data>
     <data name="Mentions_Trigger_Remove_Tooltip"><value>Hold Ctrl+Shift and click to remove this word.</value></data>
     <data name="Mentions_Player_Header"><value>Player Mentions</value></data>
-    <data name="Mentions_Player_Header_Tooltip"><value>Match your character's name automatically. Add your character with the button below and keep it active.</value></data>
+    <data name="Mentions_Player_Header_Tooltip"><value>Match your character's name automatically.</value></data>
     <data name="Mentions_Player_MatchLoggedIn"><value>Match logged-in characters' names</value></data>
     <data name="Mentions_Player_Empty"><value>No characters added yet. Add the current character above.</value></data>
     <data name="Mentions_Player_CurrentNotActive"><value>Mentions of {0} won't match — add this character and keep it active.</value></data>
@@ -188,17 +188,17 @@
     <data name="Mentions_Character_FirstNamePartial"><value>Partial first name (substring)</value></data>
     <data name="Mentions_Character_LastNamePartial"><value>Partial last name (substring)</value></data>
     <data name="Mentions_Character_Miqote"><value>Miqo'te short name</value></data>
-    <data name="Mentions_Character_Miqote_Tooltip"><value>Also matches the short form of an apostrophe name, e.g. A'nabelle → nabelle. Only available when this character's name contains an apostrophe.</value></data>
-    <data name="Mentions_Character_Partial_Tooltip"><value>Matches as a substring anywhere inside a word, not just as a whole word. Requires the matching name part on the left to be enabled.</value></data>
+    <data name="Mentions_Character_Miqote_Tooltip"><value>Also matches the short form of an apostrophe name, e.g. A'nabelle → nabelle.</value></data>
+    <data name="Mentions_Character_Partial_Tooltip"><value>Matches as a substring anywhere inside a word, not just as a whole word.</value></data>
     <data name="Mentions_Character_Fuzzy"><value>Typo-tolerant (fuzzy) matching</value></data>
     <data name="Mentions_Character_Fuzzy_Tooltip"><value>Also matches close misspellings of the names above, e.g. "Elora" for "Elara".</value></data>
     <data name="Mentions_Character_NameStyle"><value>Name highlight color</value></data>
-    <data name="Mentions_Character_NameStyle_Tooltip"><value>Color and glow for every match derived from this character's name above (full name, first/last name, partial, Miqo'te, fuzzy). Right-click a swatch to clear it back to the default mention color.</value></data>
+    <data name="Mentions_Character_NameStyle_Tooltip"><value>Color and glow for every match derived from this character's name above. Right-click to clear it back to the default mention color.</value></data>
     <data name="Mentions_Character_CustomWords"><value>Custom words</value></data>
     <data name="Mentions_Character_CustomWord_Hint"><value>add a custom word…</value></data>
     <data name="Mentions_CustomWord_Remove_Tooltip"><value>Hold Ctrl+Shift and click to remove this word.</value></data>
     <data name="Mentions_Test_Header"><value>Tester</value></data>
-    <data name="Mentions_Test_Header_Tooltip"><value>Type a sample message to see what would count as a mention right now — trigger words, character names and the fuzzy level apply exactly as they do in chat.</value></data>
+    <data name="Mentions_Test_Header_Tooltip"><value>Type a sample message to see what would count as a mention right now.</value></data>
     <data name="Mentions_Test_Hint"><value>type a message to test…</value></data>
 
     <data name="Groups_TabName"><value>Groups</value></data>
@@ -216,10 +216,10 @@
     <data name="Groups_Custom_Players"><value>Players</value></data>
     <data name="Groups_Custom_NameHint"><value>new group name…</value></data>
     <data name="Groups_Custom_Add"><value>Add</value></data>
-    <data name="Groups_Custom_NumericName_Error"><value>A group name can't be just a number (that would be ambiguous with the /gobchat group command's index).</value></data>
+    <data name="Groups_Custom_NumericName_Error"><value>A group name can't be just a number.</value></data>
     <data name="Groups_Custom_AddTarget"><value>Add target player</value></data>
     <data name="Groups_Custom_AddTarget_Tooltip"><value>Adds your current target, {0}, to this group.</value></data>
-    <data name="Groups_Custom_NoPlayerTarget"><value>Target a player first (NPCs, monsters, and other non-player targets can't be added).</value></data>
+    <data name="Groups_Custom_NoPlayerTarget"><value>Target a player first.</value></data>
     <data name="Groups_Friend_Header"><value>Friend Groups</value></data>
     <data name="Groups_Friend_Header_Tooltip"><value>The game's own seven friend-list groups. Assign players to these from the Friend List window in-game.</value></data>
     <data name="Groups_Friend_Column_Active"><value>Active</value></data>
@@ -243,8 +243,8 @@
     <data name="Debug_TabName"><value>Debug</value></data>
 
     <data name="About_TabName"><value>About</value></data>
-    <data name="About_Description"><value>GobchatEx highlights roleplay in the native chat log: quoted speech, emotes, OOC and mention trigger words each get their own colors.</value></data>
-    <data name="About_Lineage"><value>Based on the idea of Gobchat by MarbleBag and GobchatEx by Shuro - reimagined as a Dalamud plugin instead of an external tool.</value></data>
+    <data name="About_Description"><value>GobchatEx roleplay suite contains everything you might need for a nice roleplay session.</value></data>
+    <data name="About_Lineage"><value>Based on the idea of Gobchat by MarbleBag and GobchatEx by Shuro - reimagined as a Dalamud plugin.</value></data>
     <data name="About_RepoLink"><value>Source code &amp; issues</value></data>
     <data name="About_ByAuthor"><value>by {0}</value></data>
     <data name="About_ViewChangelog"><value>View Changelog</value></data>
@@ -277,41 +277,41 @@
     <data name="ChatLog_TabName"><value>Logs</value></data>
     <data name="ChatLog_Button_Start"><value>Start logging</value></data>
     <data name="ChatLog_Button_Stop"><value>Stop logging</value></data>
-    <data name="ChatLog_Button_StartStop_Tooltip"><value>Logging never starts by itself and always stops at logout. Stopping does not finalize the current file — starting again during the same login continues it; a new file begins at login, character switch, or when the folder settings change.</value></data>
-    <data name="ChatLog_Button_NoFolder_Tooltip"><value>Logging needs a log folder — choose one below.</value></data>
+    <data name="ChatLog_Button_StartStop_Tooltip"><value>Logging never starts by itself and always stops at logout. Stopping does not finalize the current file; a new file begins at login, character switch, or when the folder settings change.</value></data>
+    <data name="ChatLog_Button_NoFolder_Tooltip"><value>Logging needs a log folder - choose one below.</value></data>
     <data name="ChatLog_Status_Inactive"><value>Logging is stopped.</value></data>
     <data name="ChatLog_Status_NoFolder"><value>Choose a log folder below to enable logging.</value></data>
     <data name="ChatLog_Status_Active"><value>Logging is active.</value></data>
-    <data name="ChatLog_Status_WaitingForMessage"><value>Logging is active — the log file is created with the first message.</value></data>
+    <data name="ChatLog_Status_WaitingForMessage"><value>Logging is active. The log file is created with the first message.</value></data>
     <data name="ChatLog_Status_CurrentFile"><value>Current file: {0}</value></data>
     <data name="ChatLog_Folder_Header"><value>Log folder</value></data>
-    <data name="ChatLog_Folder_Tooltip"><value>Log files are written here, one file per login or character switch. There is no default folder — logging stays disabled until one is chosen.</value></data>
+    <data name="ChatLog_Folder_Tooltip"><value>There is no default folder - logging stays disabled until one is chosen.</value></data>
     <data name="ChatLog_Folder_Hint"><value>No folder chosen</value></data>
     <data name="ChatLog_Folder_Browse_Tooltip"><value>Choose a folder.</value></data>
     <data name="ChatLog_Folder_PickerTitle"><value>Choose log folder</value></data>
     <data name="ChatLog_Folder_Reset_Tooltip"><value>Clear the folder. Logging is disabled until a new one is chosen.</value></data>
     <data name="ChatLog_Folder_Resolved"><value>Writing to: {0}</value></data>
-    <data name="ChatLog_Folder_InvalidPath"><value>The configured folder is not usable — logging is disabled until it is fixed.</value></data>
+    <data name="ChatLog_Folder_InvalidPath"><value>The configured folder is not usable - logging is disabled until it is fixed.</value></data>
     <data name="ChatLog_CharacterFolders"><value>Create a subfolder per character</value></data>
     <data name="ChatLog_CharacterFolders_Tooltip"><value>Each character's log files go into their own subfolder, named after the character.</value></data>
     <data name="ChatLog_Channels_Header"><value>Logged channels</value></data>
     <data name="ChatLog_Channels_Tooltip"><value>Only messages from the selected channels are written to the log file.</value></data>
 
     <data name="Formatting_Reset_Tooltip"><value>Hold Ctrl+Shift and click to reset to the default color.</value></data>
-    <data name="Formatting_ImportGame_Tooltip"><value>Import the game's own color for this channel (Character Configuration → Log Text Color), mapped to the closest UIColor row.</value></data>
+    <data name="Formatting_ImportGame_Tooltip"><value>Import the game's own color for this channel.</value></data>
 
     <data name="Range_TabName"><value>Range filter</value></data>
     <data name="Range_FadeOut_Name"><value>Start fading at (yalms)</value></data>
     <data name="Range_FadeOut_Tooltip"><value>Up to this distance, messages stay fully readable; beyond it they darken step by step.</value></data>
     <data name="Range_CutOff_Name"><value>Cut-off (yalms)</value></data>
-    <data name="Range_CutOff_Tooltip"><value>Beyond this distance messages dim to the darkest step in the native log — never removed, so they stay in the chat history and logs. In Chat 2 they can be hidden from display only. Set it equal to the fade start for a hard transition without fading. The slider goes up to 60 yalms; Ctrl+click it to type a higher value.</value></data>
+    <data name="Range_CutOff_Tooltip"><value>Beyond this distance messages dim to the darkest step in the native log. Chat 2 might hide the message if support is implemented.</value></data>
     <data name="Range_Preview_Button"><value>Show ranges in-game</value></data>
     <data name="Range_Preview_Tooltip"><value>Shows both distances as rings around your character for about 8 seconds: yellow = fade start, orange = cut-off.</value></data>
     <data name="Range_MentionsIgnore_Name"><value>Mentions ignore the range filter</value></data>
     <data name="Range_MentionsIgnore_Tooltip"><value>A message that mentions you is never faded or hidden, no matter how far away the sender is.</value></data>
     <data name="Range_Channels_Header"><value>Filtered channels</value></data>
-    <data name="Range_Channels_Tooltip"><value>Only proximity channels are offered — filtering a server-wide channel by distance would hide messages based on where the sender happens to be standing.</value></data>
-    <data name="Range_EngineLimit_Tooltip"><value>The game engine already limits this channel to a maximum of 20 yalms — messages from further away never arrive, regardless of the distances set above.</value></data>
+    <data name="Range_Channels_Tooltip"><value>Fine-adjust the channels with enabled range filter..</value></data>
+    <data name="Range_EngineLimit_Tooltip"><value>The game engine already limits this channel to a maximum of 20 yalms - messages from further away never arrive, regardless of the distances set above.</value></data>
     <data name="Range_ChatTwo_Header"><value>Chat 2</value></data>
     <data name="Range_ChatTwo_Header_Tooltip"><value>In Chat 2 the range filter can use real per-message transparency instead of the darkened color steps of the native chat log.</value></data>
     <data name="Range_StartOpacity_Name"><value>Opacity start (%)</value></data>
@@ -327,7 +327,7 @@
     <data name="ChatTwo_Connect"><value>Connect</value></data>
     <data name="ChatTwo_Disconnect"><value>Disconnect</value></data>
     <data name="ChatTwo_Tabs_Header"><value>Chat 2 tabs</value></data>
-    <data name="ChatTwo_Tabs_Header_Tooltip"><value>Choose which styling may apply in each Chat 2 tab. Unchecked features are suppressed there — for example, never hide anything in a tab that should log everything.</value></data>
+    <data name="ChatTwo_Tabs_Header_Tooltip"><value>Choose which styling may apply in each Chat 2 tab.</value></data>
     <data name="ChatTwo_Tabs_Empty"><value>No tabs known yet — Chat 2 sends its tab list once connected.</value></data>
     <data name="ChatTwo_Policy_Column_Tab"><value>Tab</value></data>
     <data name="ChatTwo_Policy_Column_Backgrounds"><value>Backgrounds</value></data>
@@ -344,12 +344,12 @@
     <data name="Sound_BrowseTitle"><value>Select a sound file</value></data>
     <data name="Sound_Browse_Tooltip"><value>Browse for a sound file</value></data>
     <data name="Sound_Volume"><value>Volume</value></data>
-    <data name="Sound_FileMissing"><value>File not found — the game sound effect plays instead.</value></data>
-    <data name="Sound_PreviewFailed"><value>The file could not be played — the game sound effect plays instead (details in the plugin log).</value></data>
-    <data name="Sound_FileTooLong"><value>The file is {0:0.#} seconds long — alert sounds work best at {1:0} seconds or less.</value></data>
+    <data name="Sound_FileMissing"><value>File not found - the game sound effect plays instead.</value></data>
+    <data name="Sound_PreviewFailed"><value>The file could not be played - the game sound effect plays instead (details in the plugin log).</value></data>
+    <data name="Sound_FileTooLong"><value>The file is {0:0.#} seconds long - alert sounds work best at {1:0} seconds or less.</value></data>
 
     <data name="Groups_Sound_PlayOnMessage"><value>Play a sound when a group member's message arrives</value></data>
-    <data name="Groups_Sound_PlayOnMessage_Tooltip"><value>At most one sound plays per message — when the message also matches a mention and the mention sound is enabled, the mention sound wins. Your own messages never play a group sound.</value></data>
+    <data name="Groups_Sound_PlayOnMessage_Tooltip"><value>At most one sound plays per message — when the message also matches a mention and the mention sound is enabled, the mention sound wins.</value></data>
     <data name="Groups_Sound_Cooldown"><value>Sound cooldown</value></data>
     <data name="Groups_Sound_Cooldown_Tooltip"><value>Shared by all groups: after any group sound plays, further group sounds stay quiet for this long.</value></data>
 
@@ -396,9 +396,9 @@
     <data name="Commands_Log_AlreadyLogging"><value>Chat logging is already running.</value></data>
     <data name="Commands_Log_Stopped"><value>Chat logging stopped.</value></data>
     <data name="Commands_Log_NotLogging"><value>Chat logging isn't running.</value></data>
-    <data name="Commands_Log_NoFolder"><value>No log folder chosen — pick one in the settings' Logs tab first.</value></data>
-    <data name="Commands_Log_StatusOn"><value>Chat logging is on — the log file is created with the first message.</value></data>
-    <data name="Commands_Log_StatusOnFile"><value>Chat logging is on — writing to {0}.</value></data>
+    <data name="Commands_Log_NoFolder"><value>No log folder chosen - pick one in the settings' Logs tab first.</value></data>
+    <data name="Commands_Log_StatusOn"><value>Chat logging is on - the log file is created with the first message.</value></data>
+    <data name="Commands_Log_StatusOnFile"><value>Chat logging is on - writing to {0}.</value></data>
     <data name="Commands_Log_StatusOff"><value>Chat logging is off.</value></data>
     <data name="Commands_Log_InvalidSyntax"><value>Invalid syntax. Try: /gex log start|stop|status</value></data>
 
@@ -417,5 +417,5 @@
     <data name="Commands_Help_Log"><value>/gex log start|stop|status - control chat logging for this session.</value></data>
 
     <data name="General_LegacyEchoFallback_Name"><value>Enable legacy /e gc commands</value></data>
-    <data name="General_LegacyEchoFallback_Tooltip"><value>When enabled, GobchatEx also recognizes old-style "/e gc ..." echo commands from the original desktop app, so existing macros keep working. Only your own local echo messages are read — nothing is sent to other players. Note: any echo text that happens to start with "gc " (yours or another plugin's) may trigger a harmless "Unknown command" reply; disable this if that becomes annoying.</value></data>
+    <data name="General_LegacyEchoFallback_Tooltip"><value>When enabled, GobchatEx also recognizes old-style "/e gc ..." echo commands from the original desktop app, so existing macros keep working.</value></data>
 </root>

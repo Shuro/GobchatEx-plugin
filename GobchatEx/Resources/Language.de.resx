@@ -66,12 +66,12 @@
     <data name="General_Language_Name"><value>Sprache</value></data>
     <data name="General_Language_Tooltip"><value>Ändert die Sprache des GobchatEx-Einstellungsfensters. Übersetzt keinen Chattext im Spiel.</value></data>
     <data name="General_WindowTheme_Name"><value>Fensterdesign</value></data>
-    <data name="General_WindowTheme_Tooltip"><value>Farbschema dieses Einstellungsfensters. Dalamud Theme folgt deinem Dalamud-Design; die anderen Designs bringen eigene Farben mit und werden sofort angezeigt.</value></data>
+    <data name="General_WindowTheme_Tooltip"><value>Farbschema dieses Einstellungsfensters.</value></data>
     <!-- Theme names: the proper-noun part stays untranslated, only the color descriptor in
          parentheses is localized. Dalamud Theme has no descriptor — neutral fallback covers it. -->
     <data name="WindowTheme_Option_Yojiberry"><value>Yojiberry Theme (Pastellrosa)</value></data>
     <data name="WindowTheme_Option_Ginoberry"><value>Ginoberry Theme (Dunkelgrün/Gold)</value></data>
-    <data name="WindowTheme_Option_SoftOctopus"><value>Soft Octopus Theme (Pastellviolett)</value></data>
+    <data name="WindowTheme_Option_SoftOctopus"><value>Lavender Theme (Pastellviolett)</value></data>
     <data name="WindowTheme_Option_Octopus"><value>Octopus Theme (Violett)</value></data>
     <data name="WindowTheme_Option_Ruby"><value>Ruby Theme (Dunkelrot)</value></data>
     <data name="General_OptionalPlugins_Header"><value>Optionale Plugins</value></data>
@@ -83,12 +83,12 @@
     <data name="Language_Option_UseDalamudDefault"><value>Dalamuds Standardsprache verwenden</value></data>
 
     <data name="Quickbar_StartLog_Tooltip"><value>Chat-Protokollierung starten</value></data>
-    <data name="Quickbar_StartLog_NoFolder_Tooltip"><value>Die Chat-Protokollierung benötigt einen Protokollordner — in den Einstellungen (Protokolle) auswählen.</value></data>
+    <data name="Quickbar_StartLog_NoFolder_Tooltip"><value>Die Chat-Protokollierung benötigt einen Protokollordner.</value></data>
     <data name="Quickbar_StopLog_Tooltip"><value>Chat-Protokollierung stoppen</value></data>
     <data name="Quickbar_OpenSettings_Tooltip"><value>Öffnet die GobchatEx-Einstellungen.</value></data>
     <data name="Quickbar_Hide_Tooltip"><value>Blendet die Schnellleiste aus. Unter Allgemein wieder aktivierbar.</value></data>
     <data name="Quickbar_AttachToChat_Name"><value>An Chatfenster anheften</value></data>
-    <data name="Quickbar_AttachToChat_Tooltip"><value>Heftet die Schnellleiste an die Oberkante des Chatfensters (Chat 2, falls vorhanden, sonst das Chatfenster des Spiels). Der Verschiebe-Griff ist währenddessen ausgeblendet; ist kein Chatfenster sichtbar, schwebt die Leiste frei an ihrer letzten Position (oder wird ausgeblendet, solange 'Ausblenden, wenn der Chat verborgen ist' aktiv ist).</value></data>
+    <data name="Quickbar_AttachToChat_Tooltip"><value>Heftet die Schnellleiste an die Oberkante des Chatfensters (Chat 2, falls vorhanden, sonst das Chatfenster des Spiels).</value></data>
     <data name="Quickbar_HideDuringCutscenes_Name"><value>Während Cutscenes ausblenden</value></data>
     <data name="Quickbar_HideDuringCutscenes_Tooltip"><value>Blendet die Schnellleiste während Cutscenes und im Gruppenpose-Modus aus.</value></data>
     <data name="Quickbar_HideWhenNotLoggedIn_Name"><value>Ausblenden, wenn nicht eingeloggt</value></data>
@@ -100,7 +100,7 @@
     <data name="Quickbar_HideInBattle_Name"><value>Im Kampf ausblenden</value></data>
     <data name="Quickbar_HideInBattle_Tooltip"><value>Blendet die Schnellleiste im Kampf aus.</value></data>
     <data name="Quickbar_HideWhenChatHidden_Name"><value>Ausblenden, wenn der Chat verborgen ist</value></data>
-    <data name="Quickbar_HideWhenChatHidden_Tooltip"><value>Blendet die Schnellleiste aus, wenn kein Chatfenster sichtbar ist (Chat 2 oder das Chatfenster des Spiels).</value></data>
+    <data name="Quickbar_HideWhenChatHidden_Tooltip"><value>Blendet die Schnellleiste aus, wenn kein Chatfenster sichtbar ist.</value></data>
 
     <data name="Formatting_TabName"><value>Formatierung</value></data>
     <data name="Formatting_ColorSelection_Header"><value>Farbwahl für Textarten</value></data>
@@ -154,7 +154,7 @@
     <data name="Mentions_TabName"><value>Erwähnungen</value></data>
     <data name="Mentions_General_Header"><value>Allgemeine Einstellungen</value></data>
     <data name="Mentions_Highlight_SuppressSelf"><value>Erwähnungen in eigenen Nachrichten nicht hervorheben</value></data>
-    <data name="Mentions_Highlight_SuppressSelf_Tooltip"><value>Eigene Nachrichten (auch ausgehende Tells) behalten ihre Sagen/Emote/OOC-Formatierung, nur die Erwähnungs-Hervorhebung entfällt. /echo ist ausgenommen, damit Erwähnungen dort immer testbar bleiben. Bereits angezeigte Zeilen ändern sich nicht — nach dem Umschalten eine neue Nachricht senden.</value></data>
+    <data name="Mentions_Highlight_SuppressSelf_Tooltip"><value>Eigene Nachrichten (auch ausgehende Tells) behalten ihre Sagen/Emote/OOC-Formatierung, nur die Erwähnungs-Hervorhebung entfällt.</value></data>
     <data name="Mentions_Sound_PlayOnMatch"><value>Ton abspielen, wenn eine Erwähnung zutrifft</value></data>
     <data name="Mentions_Sound_PlayOnMatch_Tooltip"><value>Spiel-Soundeffekte folgen der Soundeffekt-Lautstärke des Spiels; eine eigene Sounddatei hat ihren eigenen Lautstärkeregler.</value></data>
     <data name="Mentions_Sound_Cooldown"><value>Abklingzeit</value></data>
@@ -170,7 +170,7 @@
     <data name="Mentions_Column_Glow"><value>Leuchten</value></data>
     <data name="Mentions_Trigger_Remove_Tooltip"><value>Strg+Umschalt gedrückt halten und klicken, um dieses Wort zu entfernen.</value></data>
     <data name="Mentions_Player_Header"><value>Spieler-Erwähnungen</value></data>
-    <data name="Mentions_Player_Header_Tooltip"><value>Erkennt automatisch den Namen deines Charakters. Füge deinen Charakter mit dem Button unten hinzu und lasse ihn aktiv.</value></data>
+    <data name="Mentions_Player_Header_Tooltip"><value>Erkennt automatisch den Namen deines Charakters.</value></data>
     <data name="Mentions_Player_MatchLoggedIn"><value>Namen eingeloggter Charaktere abgleichen</value></data>
     <data name="Mentions_Player_Empty"><value>Noch keine Charaktere hinzugefügt. Füge den aktuellen Charakter oben hinzu.</value></data>
     <data name="Mentions_Player_CurrentNotActive"><value>Erwähnungen von {0} werden nicht erkannt — Charakter hinzufügen und aktiv lassen.</value></data>
@@ -187,17 +187,17 @@
     <data name="Mentions_Character_FirstNamePartial"><value>Teil-Vorname (Teilzeichenkette)</value></data>
     <data name="Mentions_Character_LastNamePartial"><value>Teil-Nachname (Teilzeichenkette)</value></data>
     <data name="Mentions_Character_Miqote"><value>Miqo'te-Kurzname</value></data>
-    <data name="Mentions_Character_Miqote_Tooltip"><value>Erkennt auch die Kurzform eines Apostroph-Namens, z. B. A'nabelle → nabelle. Nur verfügbar, wenn der Name dieses Charakters einen Apostroph enthält.</value></data>
-    <data name="Mentions_Character_Partial_Tooltip"><value>Erkennt den Namen als Teilzeichenkette auch innerhalb eines Wortes, nicht nur als ganzes Wort. Erfordert, dass der zugehörige Namensteil links aktiviert ist.</value></data>
+    <data name="Mentions_Character_Miqote_Tooltip"><value>Erkennt auch die Kurzform eines Apostroph-Namens, z. B. A'nabelle → nabelle.</value></data>
+    <data name="Mentions_Character_Partial_Tooltip"><value>Erkennt den Namen als Teilzeichenkette auch innerhalb eines Wortes, nicht nur als ganzes Wort.</value></data>
     <data name="Mentions_Character_Fuzzy"><value>Tippfehlertolerante (unscharfe) Erkennung</value></data>
     <data name="Mentions_Character_Fuzzy_Tooltip"><value>Erkennt auch ähnliche Tippfehler der obigen Namen, z. B. „Elora" für „Elara".</value></data>
     <data name="Mentions_Character_NameStyle"><value>Namens-Hervorhebungsfarbe</value></data>
-    <data name="Mentions_Character_NameStyle_Tooltip"><value>Farbe und Leuchten für jeden Treffer, der vom Namen dieses Charakters oben abgeleitet ist (vollständiger Name, Vor-/Nachname, teilweise, Miqo'te, unscharf). Rechtsklick auf ein Farbfeld setzt es auf die Standard-Erwähnungsfarbe zurück.</value></data>
+    <data name="Mentions_Character_NameStyle_Tooltip"><value>Farbe und Leuchten für jeden Treffer, der vom Namen dieses Charakters oben abgeleitet ist. Rechtsklick setzt es auf die Standard-Erwähnungsfarbe zurück.</value></data>
     <data name="Mentions_Character_CustomWords"><value>Eigene Wörter</value></data>
     <data name="Mentions_Character_CustomWord_Hint"><value>Eigenes Wort hinzufügen…</value></data>
     <data name="Mentions_CustomWord_Remove_Tooltip"><value>Strg+Umschalt gedrückt halten und klicken, um dieses Wort zu entfernen.</value></data>
     <data name="Mentions_Test_Header"><value>Tester</value></data>
-    <data name="Mentions_Test_Header_Tooltip"><value>Gib eine Beispielnachricht ein, um zu sehen, was gerade als Erwähnung zählen würde — Auslösewörter, Charakternamen und die Fuzzy-Stufe gelten genau wie im Chat.</value></data>
+    <data name="Mentions_Test_Header_Tooltip"><value>Gib eine Beispielnachricht ein, um zu sehen, was gerade als Erwähnung zählen würde.</value></data>
     <data name="Mentions_Test_Hint"><value>Nachricht zum Testen eingeben…</value></data>
 
     <data name="Groups_TabName"><value>Gruppen</value></data>
@@ -215,10 +215,10 @@
     <data name="Groups_Custom_Players"><value>Spieler</value></data>
     <data name="Groups_Custom_NameHint"><value>Name der neuen Gruppe…</value></data>
     <data name="Groups_Custom_Add"><value>Hinzufügen</value></data>
-    <data name="Groups_Custom_NumericName_Error"><value>Ein Gruppenname darf nicht nur aus einer Zahl bestehen (das wäre mehrdeutig mit dem Index im /gobchat-group-Befehl).</value></data>
+    <data name="Groups_Custom_NumericName_Error"><value>Ein Gruppenname darf nicht nur aus einer Zahl bestehen.</value></data>
     <data name="Groups_Custom_AddTarget"><value>Ziel-Spieler hinzufügen</value></data>
     <data name="Groups_Custom_AddTarget_Tooltip"><value>Fügt dein aktuelles Ziel, {0}, dieser Gruppe hinzu.</value></data>
-    <data name="Groups_Custom_NoPlayerTarget"><value>Ziele zuerst einen Spieler an (NPCs, Monster und andere Nicht-Spieler-Ziele können nicht hinzugefügt werden).</value></data>
+    <data name="Groups_Custom_NoPlayerTarget"><value>Ziele zuerst einen Spieler an.</value></data>
     <data name="Groups_Friend_Header"><value>Freundesgruppen</value></data>
     <data name="Groups_Friend_Header_Tooltip"><value>Die sieben eigenen Freundesgruppen des Spiels. Weise Spieler diesen über das Freundeslisten-Fenster im Spiel zu.</value></data>
     <data name="Groups_Friend_Column_Active"><value>Aktiv</value></data>
@@ -242,8 +242,8 @@
     <data name="Debug_TabName"><value>Debug</value></data>
 
     <data name="About_TabName"><value>Über</value></data>
-    <data name="About_Description"><value>GobchatEx hebt Rollenspiel im normalen Chatverlauf hervor: wörtliche Rede, Emotes, OOC und Erwähnungs-Auslösewörter erhalten jeweils eigene Farben.</value></data>
-    <data name="About_Lineage"><value>Basiert auf der Idee von Gobchat von MarbleBag und GobchatEx von Shuro - statt eines externen Tools nun direkt als Dalamud-Plugin ins Spiel integriert.</value></data>
+    <data name="About_Description"><value>Die GobchatEx Roleplay Suite bietet alles, was du für eine gelungene Rollenspiel-Sitzung brauchst.</value></data>
+    <data name="About_Lineage"><value>Basiert auf der Idee von Gobchat von MarbleBag und GobchatEx von Shuro - neu gedacht als Dalamud-Plugin.</value></data>
     <data name="About_RepoLink"><value>Quellcode &amp; Fehlermeldungen</value></data>
     <data name="About_ByAuthor"><value>von {0}</value></data>
     <data name="About_ViewChangelog"><value>Änderungsprotokoll ansehen</value></data>
@@ -276,41 +276,41 @@
     <data name="ChatLog_TabName"><value>Protokolle</value></data>
     <data name="ChatLog_Button_Start"><value>Protokollierung starten</value></data>
     <data name="ChatLog_Button_Stop"><value>Protokollierung stoppen</value></data>
-    <data name="ChatLog_Button_StartStop_Tooltip"><value>Die Protokollierung startet nie von selbst und stoppt immer beim Ausloggen. Stoppen schließt die aktuelle Datei nicht ab — ein erneuter Start im selben Login setzt sie fort; eine neue Datei beginnt bei Login, Charakterwechsel oder geänderten Ordner-Einstellungen.</value></data>
-    <data name="ChatLog_Button_NoFolder_Tooltip"><value>Die Protokollierung benötigt einen Protokollordner — unten einen auswählen.</value></data>
+    <data name="ChatLog_Button_StartStop_Tooltip"><value>Die Protokollierung startet nie von selbst und stoppt immer beim Ausloggen. Stoppen schließt die aktuelle Datei nicht ab; eine neue Datei beginnt bei Login, Charakterwechsel oder geänderten Ordner-Einstellungen.</value></data>
+    <data name="ChatLog_Button_NoFolder_Tooltip"><value>Die Protokollierung benötigt einen Protokollordner - unten einen auswählen.</value></data>
     <data name="ChatLog_Status_Inactive"><value>Protokollierung ist gestoppt.</value></data>
     <data name="ChatLog_Status_NoFolder"><value>Unten einen Protokollordner auswählen, um die Protokollierung zu aktivieren.</value></data>
     <data name="ChatLog_Status_Active"><value>Protokollierung ist aktiv.</value></data>
-    <data name="ChatLog_Status_WaitingForMessage"><value>Protokollierung ist aktiv — die Protokolldatei wird mit der ersten Nachricht angelegt.</value></data>
+    <data name="ChatLog_Status_WaitingForMessage"><value>Protokollierung ist aktiv. Die Protokolldatei wird mit der ersten Nachricht angelegt.</value></data>
     <data name="ChatLog_Status_CurrentFile"><value>Aktuelle Datei: {0}</value></data>
     <data name="ChatLog_Folder_Header"><value>Protokollordner</value></data>
-    <data name="ChatLog_Folder_Tooltip"><value>Protokolldateien werden hier abgelegt, eine Datei pro Login oder Charakterwechsel. Es gibt keinen Standardordner — die Protokollierung bleibt deaktiviert, bis einer gewählt ist.</value></data>
+    <data name="ChatLog_Folder_Tooltip"><value>Es gibt keinen Standardordner - die Protokollierung bleibt deaktiviert, bis einer gewählt ist.</value></data>
     <data name="ChatLog_Folder_Hint"><value>Kein Ordner gewählt</value></data>
     <data name="ChatLog_Folder_Browse_Tooltip"><value>Ordner auswählen.</value></data>
     <data name="ChatLog_Folder_PickerTitle"><value>Protokollordner auswählen</value></data>
     <data name="ChatLog_Folder_Reset_Tooltip"><value>Ordner leeren. Die Protokollierung ist deaktiviert, bis ein neuer gewählt ist.</value></data>
     <data name="ChatLog_Folder_Resolved"><value>Schreibt nach: {0}</value></data>
-    <data name="ChatLog_Folder_InvalidPath"><value>Der eingestellte Ordner ist nicht nutzbar — die Protokollierung ist deaktiviert, bis er korrigiert ist.</value></data>
+    <data name="ChatLog_Folder_InvalidPath"><value>Der eingestellte Ordner ist nicht nutzbar - die Protokollierung ist deaktiviert, bis er korrigiert ist.</value></data>
     <data name="ChatLog_CharacterFolders"><value>Unterordner pro Charakter anlegen</value></data>
     <data name="ChatLog_CharacterFolders_Tooltip"><value>Die Protokolldateien jedes Charakters landen in einem eigenen, nach dem Charakter benannten Unterordner.</value></data>
     <data name="ChatLog_Channels_Header"><value>Protokollierte Kanäle</value></data>
     <data name="ChatLog_Channels_Tooltip"><value>Nur Nachrichten aus den ausgewählten Kanälen werden in die Protokolldatei geschrieben.</value></data>
 
     <data name="Formatting_Reset_Tooltip"><value>Strg+Umschalt gedrückt halten und klicken, um auf die Standardfarbe zurückzusetzen.</value></data>
-    <data name="Formatting_ImportGame_Tooltip"><value>Übernimmt die Farbe, die das Spiel selbst für diesen Kanal nutzt (Charakterkonfiguration → Log-Textfarbe), abgebildet auf die nächstgelegene UIColor-Zeile.</value></data>
+    <data name="Formatting_ImportGame_Tooltip"><value>Übernimmt die Farbe, die das Spiel selbst für diesen Kanal nutzt.</value></data>
 
     <data name="Range_TabName"><value>Entfernungsfilter</value></data>
     <data name="Range_FadeOut_Name"><value>Abblenden ab (Yalms)</value></data>
     <data name="Range_FadeOut_Tooltip"><value>Bis zu dieser Entfernung bleiben Nachrichten voll lesbar; darüber hinaus werden sie stufenweise dunkler.</value></data>
     <data name="Range_CutOff_Name"><value>Grenze (Yalms)</value></data>
-    <data name="Range_CutOff_Tooltip"><value>Jenseits dieser Entfernung werden Nachrichten im normalen Chatverlauf auf die dunkelste Stufe abgeblendet — nie entfernt, sie bleiben in Verlauf und Protokollen. In Chat 2 können sie nur aus der Anzeige ausgeblendet werden. Gleich dem Abblend-Beginn gesetzt ergibt das einen harten Übergang ohne Abblenden. Der Regler reicht bis 60 Yalms; per Strg+Klick lässt sich ein höherer Wert eintippen.</value></data>
+    <data name="Range_CutOff_Tooltip"><value>Jenseits dieser Entfernung werden Nachrichten im normalen Chatverlauf auf die dunkelste Stufe abgeblendet. Chat 2 könnte die Nachricht ausblenden, sobald Unterstützung dafür implementiert ist.</value></data>
     <data name="Range_Preview_Button"><value>Entfernungen im Spiel anzeigen</value></data>
     <data name="Range_Preview_Tooltip"><value>Zeigt beide Entfernungen für etwa 8 Sekunden als Ringe um deinen Charakter: gelb = Abblend-Beginn, orange = Grenze.</value></data>
     <data name="Range_MentionsIgnore_Name"><value>Erwähnungen ignorieren den Filter</value></data>
     <data name="Range_MentionsIgnore_Tooltip"><value>Eine Nachricht, die dich erwähnt, wird nie abgeblendet oder versteckt, egal wie weit der Absender entfernt ist.</value></data>
     <data name="Range_Channels_Header"><value>Gefilterte Kanäle</value></data>
-    <data name="Range_Channels_Tooltip"><value>Nur Nähe-Kanäle stehen zur Auswahl — einen serverweiten Kanal nach Entfernung zu filtern würde Nachrichten davon abhängig machen, wo der Absender gerade steht.</value></data>
-    <data name="Range_EngineLimit_Tooltip"><value>Die Spiel-Engine begrenzt diesen Kanal bereits auf maximal 20 Yalms — Nachrichten von weiter weg kommen unabhängig von den oben eingestellten Entfernungen nie an.</value></data>
+    <data name="Range_Channels_Tooltip"><value>Kanäle mit aktiviertem Entfernungsfilter feinabstimmen.</value></data>
+    <data name="Range_EngineLimit_Tooltip"><value>Die Spiel-Engine begrenzt diesen Kanal bereits auf maximal 20 Yalms - Nachrichten von weiter weg kommen unabhängig von den oben eingestellten Entfernungen nie an.</value></data>
     <data name="Range_ChatTwo_Header"><value>Chat 2</value></data>
     <data name="Range_ChatTwo_Header_Tooltip"><value>In Chat 2 kann der Entfernungsfilter echte Transparenz pro Nachricht nutzen statt der dunkleren Farbstufen des normalen Chatverlaufs.</value></data>
     <data name="Range_StartOpacity_Name"><value>Start-Deckkraft (%)</value></data>
@@ -326,7 +326,7 @@
     <data name="ChatTwo_Connect"><value>Verbinden</value></data>
     <data name="ChatTwo_Disconnect"><value>Trennen</value></data>
     <data name="ChatTwo_Tabs_Header"><value>Chat-2-Tabs</value></data>
-    <data name="ChatTwo_Tabs_Header_Tooltip"><value>Legt fest, welche Gestaltung in welchem Chat-2-Tab wirken darf. Abgewählte Funktionen werden dort unterdrückt — zum Beispiel nie etwas in einem Tab verstecken, der alles protokollieren soll.</value></data>
+    <data name="ChatTwo_Tabs_Header_Tooltip"><value>Legt fest, welche Gestaltung in welchem Chat-2-Tab wirken darf.</value></data>
     <data name="ChatTwo_Tabs_Empty"><value>Noch keine Tabs bekannt — Chat 2 sendet seine Tab-Liste nach dem Verbinden.</value></data>
     <data name="ChatTwo_Policy_Column_Tab"><value>Tab</value></data>
     <data name="ChatTwo_Policy_Column_Backgrounds"><value>Hintergründe</value></data>
@@ -343,12 +343,12 @@
     <data name="Sound_BrowseTitle"><value>Sounddatei auswählen</value></data>
     <data name="Sound_Browse_Tooltip"><value>Nach einer Sounddatei suchen</value></data>
     <data name="Sound_Volume"><value>Lautstärke</value></data>
-    <data name="Sound_FileMissing"><value>Datei nicht gefunden — stattdessen wird der Spiel-Soundeffekt abgespielt.</value></data>
-    <data name="Sound_PreviewFailed"><value>Die Datei konnte nicht abgespielt werden — stattdessen wird der Spiel-Soundeffekt abgespielt (Details im Plugin-Log).</value></data>
-    <data name="Sound_FileTooLong"><value>Die Datei ist {0:0.#} Sekunden lang — Hinweistöne wirken am besten mit höchstens {1:0} Sekunden.</value></data>
+    <data name="Sound_FileMissing"><value>Datei nicht gefunden - stattdessen wird der Spiel-Soundeffekt abgespielt.</value></data>
+    <data name="Sound_PreviewFailed"><value>Die Datei konnte nicht abgespielt werden - stattdessen wird der Spiel-Soundeffekt abgespielt (Details im Plugin-Log).</value></data>
+    <data name="Sound_FileTooLong"><value>Die Datei ist {0:0.#} Sekunden lang - Hinweistöne wirken am besten mit höchstens {1:0} Sekunden.</value></data>
 
     <data name="Groups_Sound_PlayOnMessage"><value>Sound abspielen, wenn eine Nachricht eines Gruppenmitglieds eintrifft</value></data>
-    <data name="Groups_Sound_PlayOnMessage_Tooltip"><value>Pro Nachricht spielt höchstens ein Sound — trifft die Nachricht auch eine Erwähnung und der Erwähnungs-Sound ist aktiviert, gewinnt der Erwähnungs-Sound. Eigene Nachrichten spielen nie einen Gruppen-Sound.</value></data>
+    <data name="Groups_Sound_PlayOnMessage_Tooltip"><value>Pro Nachricht spielt höchstens ein Sound — trifft die Nachricht auch eine Erwähnung und der Erwähnungs-Sound ist aktiviert, gewinnt der Erwähnungs-Sound.</value></data>
     <data name="Groups_Sound_Cooldown"><value>Sound-Abklingzeit</value></data>
     <data name="Groups_Sound_Cooldown_Tooltip"><value>Gilt für alle Gruppen gemeinsam: Nachdem ein Gruppen-Sound gespielt hat, bleiben weitere Gruppen-Sounds so lange stumm.</value></data>
 
@@ -395,9 +395,9 @@
     <data name="Commands_Log_AlreadyLogging"><value>Die Chat-Protokollierung läuft bereits.</value></data>
     <data name="Commands_Log_Stopped"><value>Chat-Protokollierung gestoppt.</value></data>
     <data name="Commands_Log_NotLogging"><value>Die Chat-Protokollierung läuft nicht.</value></data>
-    <data name="Commands_Log_NoFolder"><value>Kein Protokollordner gewählt — wähle zuerst einen im Protokolle-Tab der Einstellungen.</value></data>
-    <data name="Commands_Log_StatusOn"><value>Chat-Protokollierung ist an — die Protokolldatei wird mit der ersten Nachricht angelegt.</value></data>
-    <data name="Commands_Log_StatusOnFile"><value>Chat-Protokollierung ist an — schreibt nach {0}.</value></data>
+    <data name="Commands_Log_NoFolder"><value>Kein Protokollordner gewählt - wähle zuerst einen im Protokolle-Tab der Einstellungen.</value></data>
+    <data name="Commands_Log_StatusOn"><value>Chat-Protokollierung ist an - die Protokolldatei wird mit der ersten Nachricht angelegt.</value></data>
+    <data name="Commands_Log_StatusOnFile"><value>Chat-Protokollierung ist an - schreibt nach {0}.</value></data>
     <data name="Commands_Log_StatusOff"><value>Chat-Protokollierung ist aus.</value></data>
     <data name="Commands_Log_InvalidSyntax"><value>Ungültige Syntax. Versuch's mit: /gex log start|stop|status</value></data>
 
@@ -416,5 +416,5 @@
     <data name="Commands_Help_Log"><value>/gex log start|stop|status - steuert die Chat-Protokollierung für diese Sitzung.</value></data>
 
     <data name="General_LegacyEchoFallback_Name"><value>Alte /e gc-Befehle aktivieren</value></data>
-    <data name="General_LegacyEchoFallback_Tooltip"><value>Wenn aktiviert, erkennt GobchatEx auch die alten "/e gc ..."-Echo-Befehle der ursprünglichen Desktop-App, damit bestehende Makros weiter funktionieren. Es werden nur deine eigenen lokalen Echo-Nachrichten gelesen — es wird nichts an andere Spieler gesendet. Hinweis: Echo-Text, der zufällig mit "gc " beginnt (von dir oder einem anderen Plugin), kann eine harmlose "Unbekannter Befehl"-Antwort auslösen; deaktiviere die Option, falls das stört.</value></data>
+    <data name="General_LegacyEchoFallback_Tooltip"><value>Wenn aktiviert, erkennt GobchatEx auch die alten "/e gc ..."-Echo-Befehle der ursprünglichen Desktop-App, damit bestehende Makros weiter funktionieren.</value></data>
 </root>
