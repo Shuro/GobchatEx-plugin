@@ -7,6 +7,13 @@ PR description for the eventual DalamudPluginsD17 submission can be written
 accurately, since git commit attribution is disabled for this project and
 nothing else in the repo records what was AI-assisted.
 
+**General disclosure:** The entire plugin, from the initial project scaffold
+through the current release, has been developed with Claude Code at the
+**Copilot** level throughout (AI implements from human-approved direction;
+the author reviews every change, builds it, and smoke-tests it in-game
+before accepting). The log below is a non-exhaustive sample of individual
+work sessions kept for illustration, not a complete history.
+
 ## Log
 
 | Date | Scope | Tool | Level | Notes |

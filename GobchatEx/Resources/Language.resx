@@ -248,7 +248,7 @@
     <data name="About_RepoLink"><value>Source code &amp; issues</value></data>
     <data name="About_ByAuthor"><value>by {0}</value></data>
     <data name="About_ViewChangelog"><value>View Changelog</value></data>
-    <data name="About_ArtCredit"><value>Character art and logo illustrated by TsuShi Illustrations.</value></data>
+    <data name="About_ArtCredit"><value>Character and logo illustrated by TsuShi Illustrations.</value></data>
     <data name="About_ArtCreditLink"><value>TsuShi Illustrations</value></data>
 
     <data name="Settings_WindowTitle"><value>GobchatEx Roleplay Suite</value></data>
