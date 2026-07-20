@@ -25,6 +25,11 @@ TestResults/
 # Local-only reference material (not part of this project)
 .reference/
 
+# Local-only API-source clones of Dalamud + FFXIVClientStructs (API ground
+# truth for grepping — see CLAUDE.md). Formerly git submodules; untracked so
+# Plogon doesn't fetch them when building the plugin for DalamudPluginsD17.
+.references/
+
 # Local-only external plugin survey clones (not part of this project)
 .research/
 
